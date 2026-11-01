@@ -8,6 +8,15 @@
 
 **Input**: User description: "Especificación VendeProductos v0 para Productos Eli's: catálogo web para mostrar productos a los clientes y registro simple de ventas, apartados y encargos con sus pagos (EU1–EU7, RF1–RF25, CA1–CA5)". Las referencias entre paréntesis (RF, EU, CA) remiten a esa descripción original.
 
+## Clarifications
+
+### Session 2026-10-31
+
+- Q: ¿La subcategoría "Todos" es una subcategoría real o solo el filtro que muestra toda la categoría? → A: Solo filtro; muestra todos los productos de la categoría y no se asigna a ningún producto.
+- Q: ¿Cómo entran los vendedores a la sección de administrador? → A: Con un único usuario y contraseña compartido.
+- Q: ¿Qué se hace cuando una venta se registró por error? → A: Se anula con un motivo, esté o no entregada, las unidades regresan y se registra la venta correcta; la anulada queda visible como Anulada.
+- Q: ¿Qué datos se pueden corregir en un apartado o encargo ya registrado? → A: Nombre, teléfono y precio acordado, hasta antes de entregar; el total no puede quedar por debajo de lo pagado.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Administrar el catálogo de productos (Priority: P1)
@@ -63,6 +72,7 @@ El cliente compra un producto disponible. El vendedor registra la venta; el prec
 3. **Given** una venta sin nombre ni teléfono del comprador, **When** el administrador la registra, **Then** el sistema la acepta.
 4. **Given** una venta registrada de N unidades, **When** se consulta el producto en cualquier sección, **Then** la cantidad disponible disminuyó en N.
 5. **Given** una venta registrada, **When** el administrador marca la entrega, **Then** la venta queda en estado Entregada.
+6. **Given** una venta de N unidades registrada por error, **When** el administrador la anula con un motivo, **Then** queda en estado Anulada, sigue visible en las búsquedas y la existencia y la disponibilidad aumentan en N.
 
 ---
 
@@ -84,6 +94,7 @@ El cliente quiere apartar un producto. El vendedor registra el apartado con nomb
 6. **Given** un apartado con saldo restante, **When** el administrador intenta marcar la entrega, **Then** el sistema no lo permite.
 7. **Given** un apartado Pagado, **When** el administrador marca la entrega, **Then** el estado cambia a Entregado, la existencia disminuye y la cantidad disponible no vuelve a cambiar.
 8. **Given** un apartado no entregado de 2 unidades con pagos registrados, **When** el administrador lo cancela con un motivo, **Then** el estado cambia a Cancelado, la disponibilidad aumenta en 2 y los pagos siguen visibles como no devueltos.
+9. **Given** un apartado con $300.00 MXN pagados de un total de $500.00 MXN, **When** el administrador corrige el precio para que el total sea $400.00 MXN, **Then** el saldo restante es $100.00 MXN; si intenta un total de $200.00 MXN, el sistema lo rechaza.
 
 ---
 
@@ -164,24 +175,24 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 
 **Acceso y roles**
 
-- **FR-001**: El sistema MUST ofrecer una sección de administrador protegida por inicio de sesión desde la que se gestionan productos, categorías, ventas, apartados, encargos y pagos. (RF1)
+- **FR-001**: El sistema MUST ofrecer una sección de administrador protegida por un único usuario y contraseña, compartido por quienes venden, desde la que se gestionan productos, categorías, ventas, apartados, encargos y pagos. (RF1)
 - **FR-002**: El sistema MUST ofrecer una sección de cliente de libre acceso, sin inicio de sesión, solo de consulta. (RF6)
 - **FR-003**: El precio de compra MUST ser visible únicamente en la sección de administrador; el precio de venta es visible en ambas secciones. (RF24)
 
 **Categorías**
 
-- **FR-004**: El sistema MUST organizar los productos en exactamente dos niveles, categoría y subcategoría, y cada producto MUST pertenecer a una subcategoría. (RF4)
-- **FR-005**: El sistema MUST iniciar con estas categorías: Juguetes (Todos, Niñas, Niños, Bebés), Ropa (Todos, Adulto mujer, Adulto hombre, Niño, Niña) y Otros artículos (Todos). (RF4)
+- **FR-004**: El sistema MUST organizar los productos en un máximo de dos niveles, categoría y subcategoría. Cada producto MUST pertenecer a una categoría y, si aplica, a una de sus subcategorías. (RF4)
+- **FR-005**: El sistema MUST iniciar con estas categorías: Juguetes (Niñas, Niños, Bebés), Ropa (Adulto mujer, Adulto hombre, Niño, Niña) y Otros artículos (sin subcategorías). "Todos" MUST mostrarse como opción de filtro en cada categoría, y al elegirla se ven todos sus productos; no es una subcategoría y no se asigna a productos. (RF4)
 - **FR-006**: El administrador MUST poder crear, renombrar y dar de baja categorías y subcategorías. (RF2)
 - **FR-007**: Al dar de alta un producto, el sistema MUST crear la categoría o subcategoría indicada si no existe. (RF3)
 
 **Productos y catálogo**
 
-- **FR-008**: El administrador MUST poder registrar un producto con nombre, descripción, categoría, subcategoría, cantidad existente, precio de compra, precio de venta y fotos. (RF8)
+- **FR-008**: El administrador MUST poder registrar un producto con nombre, descripción, categoría, subcategoría si aplica, cantidad existente, precio de compra, precio de venta y fotos. (RF8)
 - **FR-009**: El administrador MUST poder editar esos mismos datos, incluidas las fotos y la cantidad existente para reflejar nueva mercancía o ajustes. (RF5)
 - **FR-010**: Ambas secciones MUST mostrar al entrar todos los productos activos y permitir filtrar por categoría y por subcategoría. (RF6, RF7)
 - **FR-011**: La cantidad disponible MUST ser igual a la existencia menos las unidades de apartados vigentes, es decir, sin entregar ni cancelar. (EU2)
-- **FR-012**: La sección de cliente MUST mostrar por producto sus fotos, nombre, descripción, categoría, subcategoría, precio de venta y cantidad disponible, junto con el teléfono de contacto del negocio.
+- **FR-012**: La sección de cliente MUST mostrar por producto sus fotos, nombre, descripción, categoría, subcategoría si tiene, precio de venta y cantidad disponible, junto con el teléfono de contacto del negocio.
 - **FR-013**: Cada producto mostrado MUST incluir la leyenda "Favor de revisar el producto antes de comprarlo, ya que no hay devoluciones." (RF17)
 - **FR-014**: Todo producto del catálogo con unidades disponibles MUST corresponder a mercancía física; lo que no está en existencia solo se muestra según FR-015. (RF18)
 - **FR-015**: Un producto sin unidades disponibles MUST seguir en el catálogo marcado como "Agotado, disponible por encargo". La sección de cliente MUST incluir una sección de artículos por encargo, claramente separada del catálogo, para que estos artículos no se confundan con mercancía en existencia. (RF18, RF19, RF21)
@@ -194,6 +205,7 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 - **FR-019**: Al registrar una operación, el sistema MUST proponer como precio unitario el precio de venta vigente, permitir cambiarlo y guardarlo como precio acordado, independiente del precio de catálogo. (EU4, RF9)
 - **FR-020**: El total de la operación MUST ser el precio acordado por la cantidad, exacto al centavo. No se calcula ni se registra IVA.
 - **FR-021**: Una venta MUST pedir nombre y teléfono del comprador de forma opcional y considerarse pagada por completo al registrarse. (RF10)
+- **FR-042**: El administrador MUST poder anular una venta registrada por error, entregada o no, capturando un motivo. La anulación es lógica, regresa las unidades a la existencia y a la disponibilidad, y la venta anulada MUST NOT contarse como vendida. No sustituye a una devolución: se usa solo para corregir la captura. (RF25)
 - **FR-022**: Un apartado o encargo MUST exigir nombre, teléfono y un pago inicial mayor a cero. (RF11, RF12)
 - **FR-023**: El sistema MUST actualizar la cantidad disponible en ambas secciones al registrar una venta o un apartado. (RF16)
 - **FR-024**: Los encargos MUST NOT modificar la existencia ni la disponibilidad de ningún producto.
@@ -203,6 +215,7 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 
 **Pagos y estados**
 
+- **FR-043**: El administrador MUST poder corregir nombre, teléfono y precio acordado de un apartado o encargo que no esté entregado ni cancelado. El sistema MUST rechazar un precio cuyo total quede por debajo de lo pagado y recalcular el saldo y el estado. El producto y la cantidad no se pueden corregir.
 - **FR-028**: El administrador MUST poder registrar pagos sucesivos en un apartado o encargo; cada pago guarda importe, fecha y hora. (RF13)
 - **FR-029**: El sistema MUST mostrar el desglose de pagos por producto y por nombre y teléfono del cliente, con total pagado y saldo restante. (RF13)
 - **FR-030**: El sistema MUST rechazar cualquier pago que exceda el saldo restante.
@@ -228,10 +241,10 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 
 - **Categoría**: primer nivel de clasificación; tiene nombre y estado activo o de baja; contiene subcategorías.
 - **Subcategoría**: segundo nivel; pertenece a una categoría; agrupa productos.
-- **Producto**: artículo del catálogo; tiene nombre, descripción, subcategoría, una o más fotos, existencia, precio de compra, precio de venta y estado activo o de baja. Su cantidad disponible se calcula de la existencia y los apartados vigentes.
+- **Producto**: artículo del catálogo; tiene nombre, descripción, categoría, subcategoría opcional, una o más fotos, existencia, precio de compra, precio de venta y estado activo o de baja. Su cantidad disponible se calcula de la existencia y los apartados vigentes.
 - **Artículo por encargo**: artículo sin existencia, gestionado por el vendedor y visible para el cliente; tiene nombre, descripción, precio, fotos opcionales y estado activo o de baja.
 - **Cliente (datos de contacto)**: nombre y teléfono capturados en cada operación; no es una cuenta.
-- **Venta**: operación pagada por completo al registrarse; tiene producto, cantidad, precio acordado, fecha, comprador opcional y estado Pagada o Entregada.
+- **Venta**: operación pagada por completo al registrarse; tiene producto, cantidad, precio acordado, fecha, comprador opcional, estado Pagada, Entregada o Anulada, y motivo si se anuló.
 - **Apartado**: reserva de unidades de un producto; tiene cantidad, precio acordado, cliente, pagos, estado Pendiente, Pagado, Entregado o Cancelado, y motivo si se canceló.
 - **Encargo**: pedido de un producto agotado o de un artículo por encargo; tiene cantidad, precio acordado, cliente, pagos, estado Pendiente, Pagado, Entregado o Cancelado, y motivo si se canceló.
 - **Pago**: abono a un apartado o encargo; tiene importe, fecha y hora, y estado vigente o anulado.
@@ -252,9 +265,8 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 
 ## Assumptions
 
-- **"Todos" como subcategoría**: "Todos" es una subcategoría real para artículos sin público específico, no un filtro. Filtrar por Juguetes muestra toda la categoría; filtrar por Juguetes > Niñas no incluye los de Juguetes > Todos.
 - **Precio de venta visible (RF24)**: como la sección 2 de la descripción indica que el cliente ve su precio, RF24 se interpreta como que solo el precio de compra es exclusivo del administrador.
-- **Rol único**: todo vendedor usa el mismo rol de administrador; no se registra qué vendedor hizo cada operación. La administración de usuarios queda fuera de esta spec.
+- **Rol único**: todo vendedor usa el mismo acceso de administrador; no se registra qué vendedor hizo cada operación. La administración de usuarios queda fuera de esta spec.
 - **Quién opera**: ventas, apartados, encargos y pagos los registra solo el administrador. El cliente no compra ni aparta desde la página; usa el teléfono publicado o trata con el vendedor (Constitución, Alcance del producto).
 - **Teléfono y WhatsApp**: "teléfono" y "número de WhatsApp" son el mismo dato.
 - **Teléfono del negocio**: es un único número, definido al poner en marcha el sistema; cambiarlo desde la app no forma parte de esta spec.
