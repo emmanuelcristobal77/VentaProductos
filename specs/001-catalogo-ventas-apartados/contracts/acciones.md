@@ -39,7 +39,7 @@ type Resultado<T> =
 | `darDeBajaProducto` | id | `TIENE_DEPENDENCIAS` | FR-038 |
 | `guardarCategoria`, `guardarSubcategoria` | id opcional, nombre | `DATOS_INVALIDOS` | FR-006 |
 | `darDeBajaCategoria`, `darDeBajaSubcategoria` | id | `TIENE_DEPENDENCIAS` | FR-006 |
-| `guardarArticuloEncargo`, `darDeBajaArticuloEncargo` | datos o id | `DATOS_INVALIDOS` | FR-025 |
+| `guardarArticuloEncargo`, `darDeBajaArticuloEncargo` | datos o id | `DATOS_INVALIDOS`, `TIENE_DEPENDENCIAS` | FR-025 |
 | `registrarVenta` | producto, cantidad, precio, comprador opcional | `SIN_DISPONIBILIDAD`, `DATOS_INVALIDOS` | FR-019 a FR-021 |
 | `registrarApartado` | producto, cantidad, precio, nombre, teléfono, pago inicial | `SIN_DISPONIBILIDAD`, `PAGO_EXCEDE_SALDO`, `DATOS_INVALIDOS` | FR-019, FR-022 |
 | `registrarEncargo` | producto o artículo (existente o nuevo), cantidad, precio, nombre, teléfono, pago inicial | `HAY_DISPONIBILIDAD`, `PAGO_EXCEDE_SALDO`, `DATOS_INVALIDOS` | FR-017, FR-022, FR-025 |

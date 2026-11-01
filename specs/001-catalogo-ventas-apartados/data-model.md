@@ -1,15 +1,15 @@
 # Data Model: VendeProductos v0
 
-Convenciones: ids UUID; importes en centavos (`bigint`); fechas `timestamptz`; nada se borra (FR-038), las bajas usan `activo = false`. Los campos `*_norm` guardan el texto en minúsculas, sin acentos y sin espacios sobrantes (FR-037).
+Convenciones: base SQLite con claves foráneas activadas; ids UUID como texto; importes en centavos enteros; fechas en UTC como texto ISO 8601; booleanos como 0 o 1; nada se borra (FR-038), las bajas usan `activo = 0`. Los campos `*_norm` guardan el texto en minúsculas, sin acentos y sin espacios sobrantes (FR-037).
 
 ## categorias
 
 | Campo | Tipo | Reglas |
 |---|---|---|
-| id | uuid | PK |
+| id | text | PK |
 | nombre | text | Obligatorio |
 | nombre_norm | text | Único entre activas; no puede ser "todos" |
-| activo | boolean | Por defecto `true` |
+| activo | integer (0 o 1) | Por defecto 1 |
 
 Datos iniciales: Juguetes, Ropa y Otros artículos (FR-005).
 
@@ -17,11 +17,11 @@ Datos iniciales: Juguetes, Ropa y Otros artículos (FR-005).
 
 | Campo | Tipo | Reglas |
 |---|---|---|
-| id | uuid | PK |
-| categoria_id | uuid | FK a categorias |
+| id | text | PK |
+| categoria_id | text | FK a categorias |
 | nombre | text | Obligatorio |
 | nombre_norm | text | Único entre activas de la misma categoría; no puede ser "todos" |
-| activo | boolean | Por defecto `true` |
+| activo | integer (0 o 1) | Por defecto 1 |
 
 Datos iniciales: Juguetes (Niñas, Niños, Bebés); Ropa (Adulto mujer, Adulto hombre, Niño, Niña). "Todos" no se guarda: es una opción del filtro.
 
@@ -31,40 +31,42 @@ Datos iniciales: Juguetes (Niñas, Niños, Bebés); Ropa (Adulto mujer, Adulto h
 
 | Campo | Tipo | Reglas |
 |---|---|---|
-| id | uuid | PK |
+| id | text | PK |
 | nombre, descripcion | text | Obligatorios |
-| categoria_id | uuid | FK obligatoria |
-| subcategoria_id | uuid | FK opcional; debe pertenecer a la categoría |
+| categoria_id | text | FK obligatoria |
+| subcategoria_id | text | FK opcional; debe pertenecer a la categoría |
 | existencia | integer | `>= 0` |
-| precio_compra_centavos | bigint | `> 0`; solo administración (FR-003) |
-| precio_venta_centavos | bigint | `> 0` |
-| activo | boolean | Por defecto `true` |
-| creado_en, actualizado_en | timestamptz | |
+| precio_compra_centavos | integer | `> 0`; solo administración (FR-003) |
+| precio_venta_centavos | integer | `> 0` |
+| activo | integer (0 o 1) | Por defecto 1 |
+| creado_en, actualizado_en | text | |
 
 **Derivado**: `disponible = existencia − SUMA(cantidad de apartados en Pendiente o Pagado)`.
 
-**Validaciones**: `existencia` no puede ser menor a las unidades de apartados vigentes. La baja se rechaza con apartados vigentes.
+**Validaciones**: `existencia` no puede ser menor a las unidades de apartados vigentes. La baja se rechaza con apartados o encargos vigentes.
 
 ## articulos_encargo
 
 | Campo | Tipo | Reglas |
 |---|---|---|
-| id | uuid | PK |
+| id | text | PK |
 | nombre, descripcion | text | Obligatorios |
-| precio_centavos | bigint | `> 0` |
-| activo | boolean | Por defecto `true` |
-| creado_en, actualizado_en | timestamptz | |
+| precio_centavos | integer | `> 0` |
+| activo | integer (0 o 1) | Por defecto 1 |
+| creado_en, actualizado_en | text | |
+
+**Validación**: la baja se rechaza con encargos vigentes.
 
 ## fotos
 
 | Campo | Tipo | Reglas |
 |---|---|---|
-| id | uuid | PK |
-| producto_id | uuid | FK; exactamente uno de los dos |
-| articulo_encargo_id | uuid | FK; exactamente uno de los dos |
-| url | text | Obligatorio |
-| orden | integer | La menor es la principal |
-| activo | boolean | Quitar una foto es una baja lógica |
+| id | text | PK |
+| producto_id | text | FK; exactamente uno de los dos |
+| articulo_encargo_id | text | FK; exactamente uno de los dos |
+| archivo | text | Nombre generado del archivo en `/datos/fotos` |
+| orden | integer | Orden de carga; la primera es la principal (FR-045) |
+| activo | integer (0 o 1) | Quitar una foto es una baja lógica |
 
 **Validación**: un producto activo conserva al menos una foto activa (FR-016). El texto alternativo se deriva del nombre del producto.
 
@@ -72,17 +74,17 @@ Datos iniciales: Juguetes (Niñas, Niños, Bebés); Ropa (Adulto mujer, Adulto h
 
 | Campo | Tipo | Reglas |
 |---|---|---|
-| id | uuid | PK |
-| tipo | enum | `venta`, `apartado`, `encargo` |
-| estado | enum | Ver transiciones |
-| producto_id | uuid | FK; exactamente uno con `articulo_encargo_id` |
-| articulo_encargo_id | uuid | FK; solo en encargos |
+| id | text | PK |
+| tipo | text con CHECK | `venta`, `apartado`, `encargo` |
+| estado | text con CHECK | Ver transiciones |
+| producto_id | text | FK; exactamente uno con `articulo_encargo_id` |
+| articulo_encargo_id | text | FK; solo en encargos |
 | cantidad | integer | `> 0` |
-| precio_unitario_centavos | bigint | `> 0`; precio acordado, independiente del catálogo |
+| precio_unitario_centavos | integer | `> 0`; precio acordado, independiente del catálogo |
 | cliente_nombre, cliente_nombre_norm | text | Obligatorios salvo en venta |
-| cliente_telefono | char(10) | Solo dígitos; obligatorio salvo en venta |
+| cliente_telefono | text | 10 dígitos; obligatorio salvo en venta |
 | motivo | text | Obligatorio si está Anulada o Cancelado |
-| creado_en, entregado_en, cerrado_en | timestamptz | `cerrado_en`: anulación o cancelación |
+| creado_en, entregado_en, cerrado_en | text | `cerrado_en`: anulación o cancelación |
 
 **Derivados**: `total = cantidad × precio_unitario`; `pagado = SUMA(pagos vigentes)`; `saldo = total − pagado`.
 
@@ -92,11 +94,11 @@ Datos iniciales: Juguetes (Niñas, Niños, Bebés); Ropa (Adulto mujer, Adulto h
 
 | Campo | Tipo | Reglas |
 |---|---|---|
-| id | uuid | PK |
-| operacion_id | uuid | FK |
-| importe_centavos | bigint | `> 0` y `<= saldo` al registrarse |
-| fecha | timestamptz | Momento del registro; con índice |
-| anulado_en | timestamptz | Nulo si está vigente |
+| id | text | PK |
+| operacion_id | text | FK |
+| importe_centavos | integer | `> 0` y `<= saldo` al registrarse |
+| fecha | text | Momento del registro; con índice |
+| anulado_en | text | Nulo si está vigente |
 
 El pago automático de una venta no se anula por separado; se anula la venta completa.
 
@@ -106,7 +108,7 @@ El pago automático de una venta no se anula por separado; se anula la venta com
 |---|---|---|
 | clave | text | PK; acción más hash de la IP |
 | intentos | integer | |
-| ventana_inicia | timestamptz | |
+| ventana_inicia | text | |
 
 ## Transiciones de estado
 
@@ -142,4 +144,4 @@ Si el pago inicial cubre el total, la operación nace Pagado. Entregado, Cancela
 | Entregar apartado | −N | Sin cambio |
 | Cualquier evento de encargo | Sin cambio | Sin cambio |
 
-Todos estos eventos, y el registro de pagos, corren en una transacción con bloqueo de la fila del producto o de la operación.
+Todos estos eventos, y el registro de pagos, corren en una transacción `BEGIN IMMEDIATE`.

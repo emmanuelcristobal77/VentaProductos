@@ -1,7 +1,10 @@
 <!--
 SYNC IMPACT REPORT
-- Cambio de versión: sin versión (plantilla) → 1.0.0
-- Principios modificados: ninguno (ratificación inicial)
+- Cambio de versión: 1.0.0 → 1.1.0
+- Motivo de la enmienda: el negocio puede operar con más de un vendedor; aprobada por el responsable del proyecto
+- Secciones modificadas: introducción y Alcance del producto ("vendedor principal" → "vendedor")
+- Principios modificados: ninguno
+- Historial: sin versión (plantilla) → 1.0.0, ratificación inicial
 - Principios añadidos:
   I. Spec First
   II. Los números no admiten creatividad
@@ -21,7 +24,7 @@ SYNC IMPACT REPORT
 **VendeProductos** es la herramienta web de **Productos Eli's**, un negocio que va comenzando y que
 vende juguetes, ropa y otros artículos. La página muestra el catálogo para no tener que cargar con
 todo el producto: los clientes lo consultan por su cuenta y usan un contacto telefónico para pedir
-más información, hacer un apartado o solicitar la compra. El vendedor principal administra los
+más información, hacer un apartado o solicitar la compra. El vendedor, que puede ser el dueño o cualquier persona autorizada, administra los
 artículos en venta.
 
 ## Core Principles
@@ -90,8 +93,8 @@ artículos en venta.
 
 - **Cliente**: consulta el catálogo y usa el contacto telefónico publicado para pedir más
   información, hacer un apartado o solicitar la compra.
-- **Vendedor principal**: administra los artículos en venta. Las funciones de administración MUST
-  estar restringidas a este rol.
+- **Vendedor**: administra los artículos en venta. Las funciones de administración MUST
+  estar restringidas a quienes tengan el acceso de administrador.
 - La página muestra el catálogo y conecta con el vendedor; cualquier capacidad adicional, como el
   cobro en línea, queda fuera hasta que exista una spec aprobada (Principio IV).
 
@@ -113,4 +116,4 @@ artículos en venta.
 - Cada spec, plan y revisión MUST verificar el cumplimiento de estos principios. Si hay conflicto,
   se corrige el artefacto o se enmienda la constitución; no se ignora.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-31 | **Last Amended**: 2026-10-31
+**Version**: 1.1.0 | **Ratified**: 2026-10-31 | **Last Amended**: 2026-10-31

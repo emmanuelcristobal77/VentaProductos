@@ -17,22 +17,23 @@ Investigación de la Fase 0. Las versiones se confirmaron en el registro de npm 
 
 ## 3. Base de datos
 
-- **Decision**: PostgreSQL administrado en Neon, con Drizzle ORM y el controlador `pg` sobre la cadena de conexión con pooling.
-- **Rationale**: las reglas de dinero y existencias necesitan transacciones y bloqueos reales. Drizzle mantiene el esquema en TypeScript con SQL explícito. El controlador `pg` admite transacciones interactivas, necesarias para `SELECT ... FOR UPDATE`.
-- **Alternatives considered**: Prisma, también válido y más maduro, pero con más capas para este caso; SQLite/Turso, con menos garantías para escrituras concurrentes.
+- **Decision**: SQLite en modo WAL con `better-sqlite3` 13 y Drizzle ORM, en un archivo dentro de un volumen persistente del VPS. Un solo proceso de la app abre la base.
+- **Rationale**: el negocio tiene de 50 a 80 productos y 1 a 3 vendedores. SQLite ofrece transacciones reales, sin un servicio aparte, sin costo y sin API pública que proteger. `BEGIN IMMEDIATE` atiende las escrituras una tras otra, lo que protege dinero y existencias.
+- **Alternatives considered**: PostgreSQL en Supabase, descartado porque agrega pausas por inactividad, una API pública que bloquear y límites de plan; se reconsidera si la app debe correr en varios servidores o recibe escrituras continuas de muchas personas. Con SQLite, el tamaño del catálogo no es el límite: lo será la pantalla sin paginación, a partir de unos 300 a 500 productos.
 - **Nota**: Drizzle sigue en versión 0.x. Se fija la versión exacta para evitar cambios incompatibles.
 
 ## 4. Fotos
 
-- **Decision**: Vercel Blob con subida directa desde el navegador y `next/image` para servirlas optimizadas. Se aceptan JPEG, PNG y WebP de hasta 10 MB.
-- **Rationale**: las fotos de un móvil pueden superar el límite de cuerpo de una función de servidor; la subida directa lo evita, con un token emitido solo a la sesión de administrador.
-- **Alternatives considered**: Cloudflare R2, más barato a gran volumen pero con otra cuenta y configuración; guardar fotos en la base de datos, que encarece y hace lentas las consultas.
+- **Decision**: archivos en el mismo volumen persistente del VPS, subidos a `/api/fotos` y servidos por la app, con `next/image` para optimizarlos. Se aceptan JPEG, PNG y WebP de hasta 10 MB, verificando el contenido real del archivo. Cada archivo se guarda con un nombre generado.
+- **Rationale**: es la opción más simple cuando la app ya vive en un solo servidor. Las fotos se reducen en el navegador antes de subirlas para ahorrar datos móviles y disco.
+- **Alternatives considered**: Supabase Storage y Cloudflare R2, que suman otra cuenta y configuración; guardar fotos en la base de datos, que encarece y hace lentas las consultas y los respaldos.
+- **Capacidad**: con unos 80 productos y 3 fotos de hasta 300 KB se usan cerca de 72 MB de los 100 GB del VPS.
 
 ## 5. Hospedaje
 
-- **Decision**: Vercel plan Pro (costo estimado de 20 USD al mes por asiento; confirmar antes de contratar), con Neon en su plan gratuito mientras alcance.
-- **Rationale**: el plan Hobby de Vercel es solo para uso personal y no comercial, según sus propios términos, y este es un negocio. Next.js funciona sin configuración adicional en Vercel, lo que importa porque el operador no es técnico.
-- **Alternatives considered**: Cloudflare Workers con OpenNext, sin esa restricción comercial pero con más piezas y más riesgo de incompatibilidades; un servidor virtual, que exige mantenimiento y respaldos. La app no usa funciones exclusivas de Vercel salvo Blob, aislado en un módulo, de modo que migrar es viable.
+- **Decision**: el VPS KVM 2 de Hostinger que ya tiene el propietario (Ubuntu 24.04 con Easypanel), con la app como servicio de Easypanel: imagen Docker con Node.js 24 construida en el VPS desde un repositorio privado, una sola réplica, volumen persistente en `/datos`, y dominio y HTTPS gestionados por Easypanel.
+- **Rationale**: no agrega costo mensual, y el proceso queda siempre activo, sin pausas por inactividad. Easypanel normalmente ya ocupa los puertos 80 y 443, así que instalar otro proxy chocaría con él. Compilar en Docker evita fallos por compilar en Windows componentes que dependen del sistema operativo, como `better-sqlite3` y `sharp`.
+- **Alternatives considered**: Single Web Hosting, descartado porque no incluye Node.js Web Apps; Vercel Pro, más simple pero con un costo estimado de 20 USD al mes, y su plan Hobby no permite uso comercial; Cloudflare Workers con OpenNext, con más piezas y más riesgo de incompatibilidades. La app no usa funciones exclusivas de un hospedaje, de modo que migrar es viable.
 
 ## 6. Acceso de administrador
 
@@ -42,19 +43,19 @@ Investigación de la Fase 0. Las versiones se confirmaron en el registro de npm 
 
 ## 7. Dinero
 
-- **Decision**: guardar todo importe como entero de centavos (`bigint`). La captura se convierte de texto a centavos sin pasar por números flotantes, y el formato `$1,250.00 MXN` se arma con aritmética entera.
+- **Decision**: guardar todo importe como entero de centavos (`integer` de SQLite, de 64 bits). La captura se convierte de texto a centavos sin pasar por números flotantes, y el formato `$1,250.00 MXN` se arma con aritmética entera.
 - **Rationale**: cumple el Principio II; ningún cálculo puede producir redondeos implícitos.
 - **Alternatives considered**: `numeric` con librería decimal, correcto pero con más superficie de error en la app.
 
 ## 8. Fechas y horas
 
-- **Decision**: guardar en `timestamptz` y mostrar en `America/Mexico_City` con un formateador propio.
+- **Decision**: guardar en UTC como texto ISO 8601 y mostrar en `America/Mexico_City` con un formateador propio.
 - **Rationale**: se verificó que `Intl` en es-MX produce `31 de octubre de 2026`, válido, pero también `3:05 p.m. GMT-6`, que no cumple el formato exigido. El formateador produce `3:05 p. m., hora del centro de México`.
 
 ## 9. Disponibilidad y concurrencia
 
-- **Decision**: la disponibilidad se calcula siempre como existencia menos apartados vigentes. Cada operación que la afecta abre una transacción y bloquea la fila del producto con `SELECT ... FOR UPDATE`.
-- **Rationale**: un contador aparte podría desincronizarse; con el bloqueo, dos registros por la última unidad se atienden en orden y el segundo recibe el aviso del caso límite. El volumen esperado permite calcularla en cada lectura.
+- **Decision**: la disponibilidad se calcula siempre como existencia menos apartados vigentes. Cada operación que la afecta corre en una transacción `BEGIN IMMEDIATE`, que recalcula la disponibilidad antes de escribir.
+- **Rationale**: un contador aparte podría desincronizarse. La transacción obtiene el permiso de escritura desde el inicio, así que dos registros por la última unidad se atienden en orden y el segundo recibe el aviso del caso límite. El volumen esperado permite calcularla en cada lectura.
 - **Alternatives considered**: guardar el contador con una restricción `CHECK`, más rápido pero con dos fuentes de verdad.
 
 ## 10. Modelo de operaciones
@@ -65,25 +66,36 @@ Investigación de la Fase 0. Las versiones se confirmaron en el registro de npm 
 
 ## 11. Pruebas
 
-- **Decision**: Vitest para reglas de negocio contra PGlite (PostgreSQL embebido, sin Docker, que no está instalado) y Playwright con axe en viewport móvil y de portátil para flujos y accesibilidad. Cada prueba nombra el FR, SC o escenario que cubre.
+- **Decision**: Vitest para reglas de negocio contra archivos SQLite temporales, con el mismo motor de producción, y Playwright con axe en viewport móvil y de portátil para flujos y accesibilidad. Cada prueba nombra el FR, SC o escenario que cubre.
 - **Rationale**: cumple el Principio V y corre en este equipo sin instalar servidores.
-- **Limitación**: PGlite atiende una conexión a la vez, por lo que no reproduce una carrera real. La prueba de la última unidad concurrente corre contra una rama de prueba de Neon.
+- **Concurrencia**: la prueba de la última unidad usa dos procesos contra el mismo archivo y corre dentro de `npm run verificar`, sin servicios externos.
 - **Puerta de merge**: `npm run verificar` ejecuta tipos, lint y pruebas. Aún no hay remoto configurado, así que la puerta es local hasta que exista uno con integración continua.
 
 ## 12. Límite de intentos
 
-- **Decision**: limitar el inicio de sesión a 5 intentos fallidos y la consulta de clientes a 10 por cada 15 minutos, por IP, con registro en base de datos y solo el hash de la IP.
-- **Rationale**: la consulta muestra datos personales y financieros con solo nombre y teléfono; el límite dificulta probar combinaciones. Se resolvió aquí el punto diferido en la clarificación. No agrega funciones visibles más allá de un mensaje de espera.
+- **Decision**: aplicar FR-044 por IP, con registro en base de datos y solo el hash de la IP.
+- **Rationale**: la consulta muestra datos personales y financieros con solo nombre y teléfono; el límite dificulta probar combinaciones. Se resolvió aquí el punto diferido en la clarificación.
+
+## 13. Respaldos
+
+- **Decision**: una copia diaria fuera del VPS hacia un bucket privado de la cuenta de Supabase del propietario, con la base (`VACUUM INTO`, comprimida) y las fotos nuevas, conservando 14 días de copias de la base. El procedimiento de restauración se prueba antes de registrar ventas reales.
+- **Rationale**: con SQLite, las ventas y los pagos viven en un solo servidor. Los respaldos semanales del VPS incluidos pueden perder hasta una semana y restauran el VPS completo; quedan como segunda protección.
+- **Alternatives considered**: respaldos diarios de Hostinger (122.99 MXN al mes), que restauran todo el VPS; Cloudflare R2, que suma otra cuenta.
 
 ## Riesgos abiertos
 
-- **Aviso de privacidad**: el sistema guarda nombres, teléfonos y pagos de clientes. La legislación mexicana de datos personales (LFPDPPP) normalmente exige un aviso de privacidad. La spec no lo incluye y, por el Principio IV, no se agrega aquí. Debe evaluarse antes de publicar.
+- **Aviso de privacidad**: el sistema guarda nombres, teléfonos y pagos de clientes. La legislación mexicana de datos personales (LFPDPPP) normalmente exige un aviso de privacidad. La spec no lo incluye y, por el Principio IV, no se agrega aquí. Debe evaluarse antes de capturar datos de clientes en producción, es decir, antes de publicar US3 o posteriores. El MVP solo muestra el catálogo y no los captura.
 - **TypeScript 7**: es la versión vigente en npm. Si `next` o `drizzle-kit` no la admiten aún al iniciar, se fija la última 5.x compatible.
-- **Costos**: los límites gratuitos de Neon y Blob deben confirmarse antes de contratar.
+- **Costos**: el destino de los respaldos usa el plan gratuito de Supabase (según fuentes externas, 1 GB de archivos). Sus límites y condiciones comerciales deben confirmarse antes de publicar.
+- **Mantenimiento del VPS**: a diferencia de un hospedaje administrado, el sistema operativo, el firewall y las actualizaciones de seguridad quedan a cargo del propietario. Se reduce con actualizaciones automáticas y solo los puertos 22, 80 y 443 abiertos.
+- **VPS compartido**: si ya aloja otros sistemas, esta app no debe interferir con ellos; se revisa antes de instalar.
+- **Pausa del destino de respaldos**: los proyectos gratuitos de Supabase se pausan tras unos 7 días sin actividad. Si eso detiene las copias, deben fallar de forma visible en los registros de Easypanel; se confirma en T093.
+- **Punto único de falla**: si el VPS se pierde, la app queda fuera de línea hasta reinstalarla y restaurar la copia más reciente; se pueden perder las operaciones del último día.
 
 ## Fuentes
 
 - [Vercel: plan Hobby](https://vercel.com/docs/plans/hobby)
-- [Vercel Blob: uso y precios](https://vercel.com/docs/vercel-blob/usage-and-pricing)
+- [Node.js en Hostinger](https://docs.hostinger.com/node.js/overview)
+- [Límites del plan gratuito de Supabase](https://automationatlas.io/answers/supabase-free-tier-limits-2026/)
 - [Drizzle vs Prisma en 2026](https://makerkit.dev/blog/md/tutorials/drizzle-vs-prisma)
 - [Librerías de componentes para Tailwind v4](https://www.pkgpulse.com/guides/best-tailwind-v4-component-libraries-2026)

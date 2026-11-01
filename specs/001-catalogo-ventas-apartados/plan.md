@@ -6,19 +6,19 @@
 
 ## Summary
 
-Aplicación web para Productos Eli's con una sección pública (catálogo, artículos por encargo y consulta de saldos) y una sección de administrador (productos, categorías, ventas, apartados, encargos, pagos y búsquedas). Se construye como un solo proyecto Next.js con interfaz Tailwind y shadcn/ui, PostgreSQL y reglas de negocio aisladas y probadas. Los importes se guardan como centavos enteros, y la disponibilidad se calcula dentro de transacciones con bloqueo. El detalle de las decisiones está en [research.md](research.md).
+Aplicación web para Productos Eli's con una sección pública (catálogo, artículos por encargo y consulta de saldos) y una sección de administrador (productos, categorías, ventas, apartados, encargos, pagos y búsquedas). Se construye como un solo proyecto Next.js con interfaz Tailwind y shadcn/ui, SQLite y reglas de negocio aisladas y probadas, publicado en Easypanel sobre el VPS del propietario. Los importes se guardan como centavos enteros, y la disponibilidad se calcula dentro de transacciones de escritura. El detalle de las decisiones está en [research.md](research.md).
 
 ## Technical Context
 
 **Language/Version**: TypeScript 7.0 sobre Node.js 24 (última 5.x si `next` o `drizzle-kit` aún no admiten la 7)
 
-**Primary Dependencies**: Next.js 16.4, React 19.3, Tailwind CSS 4.3, shadcn/ui, lucide-react, sonner, Geist, Drizzle ORM 0.45, `pg` 8, `@vercel/blob` 2, Zod 4, jose 6
+**Primary Dependencies**: Next.js 16.4, React 19.3, Tailwind CSS 4.3, shadcn/ui, lucide-react, sonner, Geist, Drizzle ORM 0.45, `better-sqlite3` 13, `sharp` 0.35, `@supabase/supabase-js` 2 (solo respaldos), Zod 4, jose 6
 
-**Storage**: PostgreSQL en Neon para datos; Vercel Blob para fotos
+**Storage**: SQLite y archivos de fotos en un volumen persistente del VPS; copia diaria en un bucket privado de Supabase
 
-**Testing**: Vitest 5 con PGlite para reglas de negocio; Playwright 1.64 con axe para flujos y accesibilidad
+**Testing**: Vitest 5 con archivos SQLite temporales para reglas de negocio; Playwright 1.64 con axe para flujos y accesibilidad
 
-**Target Platform**: Navegadores móviles y de portátil actuales; despliegue en Vercel Pro
+**Target Platform**: Navegadores móviles y de portátil actuales; despliegue como servicio de Easypanel en el VPS KVM 2 de Hostinger (ver research 5)
 
 **Project Type**: Aplicación web de un solo proyecto
 
@@ -26,7 +26,7 @@ Aplicación web para Productos Eli's con una sección pública (catálogo, artí
 
 **Constraints**: Importes exactos al centavo; todo en español de México; precio de compra nunca en respuestas públicas; sin borrado físico; operable por una persona no técnica
 
-**Scale/Scope**: Hasta unos 1,000 productos, 5,000 operaciones al año, decenas de visitas simultáneas y 1 a 3 vendedores
+**Scale/Scope**: De 50 a 80 productos al inicio, algunos cientos de operaciones al año, pocas visitas simultáneas y 1 a 3 vendedores
 
 ## Constitution Check
 
@@ -34,15 +34,13 @@ Aplicación web para Productos Eli's con una sección pública (catálogo, artí
 
 | Principio | Cómo se cumple | Inicial | Post-diseño |
 |---|---|---|---|
-| I. Spec First | Spec registrada en `specs/MAPA.md` con un propietario; sigue en Borrador y su aprobación formal debe constar antes de implementar | PASS | PASS |
+| I. Spec First | Spec aprobada por su propietario el 2026-10-31 y registrada en `specs/MAPA.md` | PASS | PASS |
 | II. Números | Centavos enteros, sin flotantes; formateadores de precio, fecha y hora (research 7 y 8) | PASS | PASS |
 | III. Idioma y mercado | Mensajes centralizados en es-MX; solo MXN | PASS | PASS |
 | IV. Cero alcance fantasma | Tema claro únicamente; sin reportes ni reactivaciones; aviso de privacidad señalado, no agregado | PASS | PASS |
 | V. Tests con la spec | Pruebas nombradas por FR, SC o escenario; `npm run verificar` como puerta | PASS | PASS |
 | VI. Verificable sin técnica | [quickstart.md](quickstart.md) comprueba los criterios usando la app | PASS | PASS |
 | VII. Interfaz accesible | Primitivas accesibles, axe en pruebas, móvil y portátil | PASS | PASS |
-
-**Nota**: el límite de intentos (research 12) agrega un mensaje de espera no descrito en la spec. Se considera protección de FR-001 y FR-035, no una función nueva.
 
 ## Project Structure
 
@@ -83,10 +81,13 @@ src/
 ├── db/                         # Esquema, migraciones, semilla
 └── lib/                        # Sesión, fotos, límite de intentos, mensajes
 
+scripts/                        # Hash de contraseña, arranque y respaldos
+Dockerfile                      # Imagen de producción para Easypanel
+
 tests/
 ├── unit/                       # Reglas puras
-├── integration/                # Servicios contra PGlite
-├── concurrency/                # Última unidad contra rama de prueba de Neon
+├── integration/                # Servicios contra SQLite temporal
+├── concurrency/                # Última unidad con dos procesos sobre el mismo archivo
 └── e2e/                        # Flujos y accesibilidad con Playwright
 ```
 

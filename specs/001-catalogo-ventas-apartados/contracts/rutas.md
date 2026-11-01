@@ -30,4 +30,5 @@ Las consultas sin coincidencia responden siempre con el mismo mensaje, sin revel
 
 | Ruta | Uso |
 |---|---|
-| `POST /api/fotos` | Emite el token de subida directa; requiere sesión |
+| `POST /api/fotos` | Recibe y valida una foto; requiere sesión (FR-045) |
+| `GET /api/fotos/[archivo]` | Sirve una foto; es público y no expone rutas del servidor |

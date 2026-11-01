@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-31
 
-**Status**: Draft
+**Status**: Approved
 
 **Input**: User description: "Especificación VendeProductos v0 para Productos Eli's: catálogo web para mostrar productos a los clientes y registro simple de ventas, apartados y encargos con sus pagos (EU1–EU7, RF1–RF25, CA1–CA5)". Las referencias entre paréntesis (RF, EU, CA) remiten a esa descripción original.
 
@@ -32,7 +32,7 @@ El vendedor entra a la sección de administrador, da de alta un producto con sus
 1. **Given** un administrador con sesión iniciada, **When** registra un producto con todos sus datos, **Then** el producto aparece en la lista de administrador con su foto, cantidad, precio de compra y precio de venta.
 2. **Given** una categoría que no existe, **When** el administrador la escribe al dar de alta un producto, **Then** la categoría queda creada y disponible para otros productos.
 3. **Given** un producto registrado, **When** el administrador edita nombre, descripción, precio de compra, precio de venta o existencia, **Then** los cambios se ven de inmediato en ambas secciones, y las ventas, apartados y encargos ya registrados conservan su precio acordado.
-4. **Given** un producto sin apartados activos, **When** el administrador lo da de baja, **Then** deja de mostrarse en el catálogo y su historial sigue consultable en la sección de administrador.
+4. **Given** un producto sin apartados ni encargos vigentes, **When** el administrador lo da de baja, **Then** deja de mostrarse en el catálogo y su historial sigue consultable en la sección de administrador.
 5. **Given** una persona sin sesión de administrador, **When** intenta entrar a la sección de administrador, **Then** el sistema le niega el acceso.
 6. **Given** un alta de producto sin foto, **When** el administrador intenta guardarla, **Then** el sistema no la guarda e indica que falta la foto.
 
@@ -155,11 +155,12 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 
 - **Última unidad**: si dos registros compiten por la última unidad disponible, solo el primero se completa y el segundo recibe un aviso de que ya no hay disponibilidad.
 - **Cantidad mayor a la disponible**: una venta o apartado por más unidades de las disponibles se rechaza, indicando cuántas hay.
+- **Cliente que pide más de lo disponible**: se registra primero una venta o un apartado por las unidades disponibles y después un encargo por el resto.
 - **Pago inicial que cubre el total**: el apartado o encargo nace en estado Pagado.
 - **Importes inválidos**: se rechazan precios y pagos en cero, negativos o con más de dos decimales.
 - **Pago capturado por error**: no se borra; se anula de forma lógica, sigue visible como anulado para el administrador, deja de sumar y el saldo y el estado se recalculan.
 - **Cambio de precio con operaciones abiertas**: los apartados y encargos conservan su precio acordado.
-- **Baja de producto con apartados activos**: no se permite hasta que esos apartados se entreguen o se cancelen.
+- **Baja con operaciones vigentes**: un producto con apartados o encargos vigentes, o un artículo por encargo con encargos vigentes, no se puede dar de baja hasta que se entreguen o se cancelen.
 - **Cancelación con saldo cubierto**: un apartado o encargo Pagado aún puede cancelarse antes de entregarse; lo pagado queda como no devuelto.
 - **Producto que se agota y se resurte**: al aumentar la existencia, deja de mostrarse como agotado y vuelve a ofrecer venta y apartado.
 - **Última foto**: no se puede quitar la única foto de un producto.
@@ -205,7 +206,7 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 - **FR-019**: Al registrar una operación, el sistema MUST proponer como precio unitario el precio de venta vigente, permitir cambiarlo y guardarlo como precio acordado, independiente del precio de catálogo. (EU4, RF9)
 - **FR-020**: El total de la operación MUST ser el precio acordado por la cantidad, exacto al centavo. No se calcula ni se registra IVA.
 - **FR-021**: Una venta MUST pedir nombre y teléfono del comprador de forma opcional y considerarse pagada por completo al registrarse. (RF10)
-- **FR-042**: El administrador MUST poder anular una venta registrada por error, entregada o no, capturando un motivo. La anulación es lógica, regresa las unidades a la existencia y a la disponibilidad, y la venta anulada MUST NOT contarse como vendida. No sustituye a una devolución: se usa solo para corregir la captura. (RF25)
+- **FR-042**: El administrador MUST poder anular una venta registrada por error, entregada o no, capturando un motivo. La anulación es lógica, regresa las unidades a la existencia y a la disponibilidad, y la venta anulada MUST NOT contarse como vendida. No sustituye a una devolución: se usa solo para corregir la captura. El pago automático de la venta anulada se conserva como registro, y la venta sigue apareciendo en las búsquedas por fecha con estado Anulada. (RF25)
 - **FR-022**: Un apartado o encargo MUST exigir nombre, teléfono y un pago inicial mayor a cero. (RF11, RF12)
 - **FR-023**: El sistema MUST actualizar la cantidad disponible en ambas secciones al registrar una venta o un apartado. (RF16)
 - **FR-024**: Los encargos MUST NOT modificar la existencia ni la disponibilidad de ningún producto.
@@ -226,8 +227,8 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 
 **Consultas**
 
-- **FR-035**: La sección de cliente MUST permitir consultar con nombre y teléfono, ambos coincidiendo, los apartados y encargos por producto, con estado, desglose de pagos y saldo restante. (RF14, CA5)
-- **FR-036**: La sección de administrador MUST permitir buscar ventas, apartados y encargos por rango de fechas de pago, nombre o teléfono, solos o combinados. (RF22, CA4)
+- **FR-035**: La sección de cliente MUST permitir consultar con nombre y teléfono, ambos coincidiendo, los apartados y encargos por producto, con estado, desglose de pagos y saldo restante. Las operaciones canceladas se muestran con su estado y lo pagado, sin saldo por cubrir; los pagos anulados no se muestran al cliente. (RF14, CA5)
+- **FR-036**: La sección de administrador MUST permitir buscar ventas, apartados y encargos por rango de fechas de pago, nombre completo o parcial, o teléfono, solos o combinados. (RF22, CA4)
 - **FR-037**: Las búsquedas por nombre MUST ignorar mayúsculas, acentos y espacios sobrantes; el teléfono se compara solo por sus dígitos.
 
 **Reglas generales**
@@ -236,6 +237,8 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 - **FR-039**: Todo el producto MUST mostrarse en español de México, con importes como `$1,250.00 MXN`, fechas como `31 de octubre de 2026` y horas con a. m. o p. m. y zona horaria. (Constitución II, III)
 - **FR-040**: El sistema MUST validar que el teléfono tenga 10 dígitos, tanto el obligatorio como el opcional cuando se captura.
 - **FR-041**: La administración y el catálogo MUST funcionar en móvil; la administración además en portátil. La interfaz MUST tener etiquetas claras y buen contraste. (Constitución VII)
+- **FR-044**: El sistema MUST bloquear temporalmente el inicio de sesión tras 5 intentos fallidos en 15 minutos y la consulta de clientes tras 10 consultas en 15 minutos, mostrando un mensaje que pida intentar más tarde.
+- **FR-045**: Las fotos MUST ser JPEG, PNG o WebP de hasta 10 MB; el sistema rechaza otros archivos con un mensaje claro. La primera foto agregada es la principal.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -247,7 +250,7 @@ El administrador busca operaciones por fecha de pago, nombre o teléfono, solos 
 - **Venta**: operación pagada por completo al registrarse; tiene producto, cantidad, precio acordado, fecha, comprador opcional, estado Pagada, Entregada o Anulada, y motivo si se anuló.
 - **Apartado**: reserva de unidades de un producto; tiene cantidad, precio acordado, cliente, pagos, estado Pendiente, Pagado, Entregado o Cancelado, y motivo si se canceló.
 - **Encargo**: pedido de un producto agotado o de un artículo por encargo; tiene cantidad, precio acordado, cliente, pagos, estado Pendiente, Pagado, Entregado o Cancelado, y motivo si se canceló.
-- **Pago**: abono a un apartado o encargo; tiene importe, fecha y hora, y estado vigente o anulado.
+- **Pago**: abono a un apartado o encargo, o el cobro total de una venta; tiene importe, fecha y hora, y estado vigente o anulado.
 
 ## Success Criteria *(mandatory)*
 

@@ -5,8 +5,8 @@ Esta guía comprueba que la funcionalidad cumple la spec. Los detalles están en
 ## Requisitos previos
 
 - Node.js 24 y npm.
-- Una base de datos en Neon y un almacén de Vercel Blob para ejecutar la app. Las pruebas de reglas de negocio no los necesitan.
-- Archivo `.env.local` con `DATABASE_URL`, `BLOB_READ_WRITE_TOKEN`, `ADMIN_USUARIO`, `ADMIN_HASH_CONTRASENA`, `SESION_SECRETO` y `TELEFONO_NEGOCIO`.
+- La app corre en su equipo sin servicios externos. Solo el script de respaldos necesita un bucket privado de Supabase.
+- Archivo `.env.local` con `DATOS_DIR`, `ADMIN_USUARIO`, `ADMIN_HASH_CONTRASENA`, `SESION_SECRETO`, `IP_SAL` y `TELEFONO_NEGOCIO`.
 
 ## Puesta en marcha
 
