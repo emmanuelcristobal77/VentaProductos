@@ -34,14 +34,14 @@ description: "Lista de tareas para implementar VendeProductos v0"
 **Purpose**: inicialización del proyecto y herramientas
 
 - [X] T001 Registrar la aprobación formal de la spec por su propietario: cambiar **Status** a Approved en specs/001-catalogo-ventas-apartados/spec.md y el estado a Aprobada en specs/MAPA.md. No continuar sin esa aprobación (Constitución, Flujo de desarrollo, paso 2)
-- [ ] T002 Crear el proyecto Next.js 16.4 con App Router, TypeScript y `src/` en la raíz, sin borrar `.specify/`, `.claude/` ni `specs/`, en package.json y tsconfig.json, con `output: 'standalone'` en next.config.ts. Fijar `next`, `react` y `drizzle-orm` a versiones exactas. Usar TypeScript 7.0 solo si `next build` y `drizzle-kit` funcionan con él; si no, fijar la última 5.x y anotarlo en specs/001-catalogo-ventas-apartados/research.md
-- [ ] T003 Instalar `drizzle-orm`, `drizzle-kit`, `better-sqlite3`, `sharp`, `@supabase/supabase-js`, `zod`, `jose`, `lucide-react`, `sonner`, `geist` y, como desarrollo, `vitest`, `@playwright/test`, `@axe-core/playwright` y `tsx` en package.json
-- [ ] T004 Definir en package.json los scripts `dev`, `build`, `lint`, `test`, `test:e2e`, `db:generar`, `db:migrar`, `db:semilla` y `verificar`, donde `verificar` ejecuta tipos, lint y Vitest, incluida la prueba de concurrencia, sin servicios externos
-- [ ] T005 [P] Configurar Tailwind CSS 4 y shadcn/ui con components.json y agregar `button`, `input`, `textarea`, `label`, `select`, `card`, `badge`, `sheet`, `dialog`, `table`, `tabs` y `skeleton` en src/components/ui/
-- [ ] T006 [P] Definir tokens de diseño en OKLCH, radios y tipografía Geist en src/app/globals.css, solo tema claro, con contraste WCAG AA y animaciones desactivadas bajo `prefers-reduced-motion`
-- [ ] T007 [P] Configurar Vitest con proyectos `unit` e `integration` en vitest.config.ts
-- [ ] T008 [P] Configurar Playwright con perfiles de móvil (390×844) y portátil (1366×768) en playwright.config.ts
-- [ ] T009 [P] Documentar `DATOS_DIR`, `ADMIN_USUARIO`, `ADMIN_HASH_CONTRASENA`, `SESION_SECRETO`, `IP_SAL`, `TELEFONO_NEGOCIO` y, solo para respaldos, `RESPALDO_SUPABASE_URL` y `RESPALDO_SUPABASE_LLAVE` en .env.example, y validarlas al arrancar en src/lib/entorno.ts
+- [X] T002 Crear el proyecto Next.js 16.4 con App Router, TypeScript y `src/` en la raíz, sin borrar `.specify/`, `.claude/` ni `specs/`, en package.json y tsconfig.json, con `output: 'standalone'` en next.config.ts. Fijar `next`, `react` y `drizzle-orm` a versiones exactas. Usar TypeScript 7.0 solo si `next build` y `drizzle-kit` funcionan con él; si no, fijar la última 5.x y anotarlo en specs/001-catalogo-ventas-apartados/research.md
+- [X] T003 Instalar `drizzle-orm`, `drizzle-kit`, `better-sqlite3`, `sharp`, `@supabase/supabase-js`, `zod`, `jose`, `lucide-react`, `sonner`, `geist` y, como desarrollo, `vitest`, `@playwright/test`, `@axe-core/playwright` y `tsx` en package.json
+- [X] T004 Definir en package.json los scripts `dev`, `build`, `lint`, `test`, `test:e2e`, `db:generar`, `db:migrar`, `db:semilla` y `verificar`, donde `verificar` ejecuta tipos, lint y Vitest, incluida la prueba de concurrencia, sin servicios externos
+- [X] T005 [P] Configurar Tailwind CSS 4 y shadcn/ui con components.json y agregar `button`, `input`, `textarea`, `label`, `select`, `card`, `badge`, `sheet`, `dialog`, `table`, `tabs` y `skeleton` en src/components/ui/
+- [X] T006 [P] Definir tokens de diseño en OKLCH, radios y tipografía Geist en src/app/globals.css, solo tema claro, con contraste WCAG AA y animaciones desactivadas bajo `prefers-reduced-motion`
+- [X] T007 [P] Configurar Vitest con proyectos `unit` e `integration` en vitest.config.ts
+- [X] T008 [P] Configurar Playwright con perfiles de móvil (390×844) y portátil (1366×768) en playwright.config.ts
+- [X] T009 [P] Documentar `DATOS_DIR`, `ADMIN_USUARIO`, `ADMIN_HASH_CONTRASENA`, `SESION_SECRETO`, `IP_SAL`, `TELEFONO_NEGOCIO` y, solo para respaldos, `RESPALDO_SUPABASE_URL` y `RESPALDO_SUPABASE_LLAVE` en .env.example, y validarlas al arrancar en src/lib/entorno.ts
 
 ---
 
@@ -53,31 +53,31 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 ### Pruebas de reglas puras
 
-- [ ] T010 [P] Escribir pruebas de dinero en tests/unit/dinero.test.ts: `parsearPrecio` acepta `1250`, `1,250.50` y `0.01`, rechaza cero, negativos y más de dos decimales; `formatearPrecio(125000)` da `$1,250.00 MXN` (FR-039, Principio II); `calcularTotal` multiplica precio por cantidad exacto al centavo (FR-020)
-- [ ] T011 [P] Escribir pruebas de fechas en tests/unit/fechas.test.ts: `31 de octubre de 2026` y `3:05 p. m., hora del centro de México` para `2026-10-31T21:05:00Z` (FR-039)
-- [ ] T012 [P] Escribir pruebas en tests/unit/normalizacion.test.ts: nombres sin mayúsculas, acentos ni espacios sobrantes (FR-037); teléfonos reducidos a dígitos y validados a 10 (FR-040)
-- [ ] T013 [P] Escribir pruebas de estados en tests/unit/estados.test.ts con las transiciones de data-model.md, incluidas las inválidas
+- [X] T010 [P] Escribir pruebas de dinero en tests/unit/dinero.test.ts: `parsearPrecio` acepta `1250`, `1,250.50` y `0.01`, rechaza cero, negativos y más de dos decimales; `formatearPrecio(125000)` da `$1,250.00 MXN` (FR-039, Principio II); `calcularTotal` multiplica precio por cantidad exacto al centavo (FR-020)
+- [X] T011 [P] Escribir pruebas de fechas en tests/unit/fechas.test.ts: `31 de octubre de 2026` y `3:05 p. m., hora del centro de México` para `2026-10-31T21:05:00Z` (FR-039)
+- [X] T012 [P] Escribir pruebas en tests/unit/normalizacion.test.ts: nombres sin mayúsculas, acentos ni espacios sobrantes (FR-037); teléfonos reducidos a dígitos y validados a 10 (FR-040)
+- [X] T013 [P] Escribir pruebas de estados en tests/unit/estados.test.ts con las transiciones de data-model.md, incluidas las inválidas
 
 ### Implementación
 
-- [ ] T014 [P] Implementar `parsearPrecio`, `formatearPrecio` y `calcularTotal` con aritmética entera, sin `parseFloat` ni `Number` sobre decimales, en src/dominio/dinero.ts
-- [ ] T015 [P] Implementar `formatearFecha` y `formatearHora` con zona `America/Mexico_City` en src/dominio/fechas.ts
-- [ ] T016 [P] Implementar `normalizarNombre` y `normalizarTelefono` en src/dominio/normalizacion.ts
-- [ ] T017 [P] Implementar transiciones de venta, apartado y encargo y `calcularEstado(total, pagado)` en src/dominio/estados.ts
-- [ ] T018 [P] Definir `Resultado<T>`, `CodigoError` y mensajes en es-MX en src/lib/resultado.ts y src/lib/mensajes.ts
-- [ ] T019 Definir el esquema Drizzle de data-model.md en src/db/esquema.ts: tablas `categorias`, `subcategorias`, `productos`, `articulos_encargo`, `fotos`, `operaciones`, `pagos` y `limite_intentos`; importes `integer` con `> 0`; `existencia >= 0`; `cantidad > 0`; `cliente_telefono` de 10 dígitos con CHECK; exactamente uno entre `producto_id` y `articulo_encargo_id` en `fotos` y `operaciones`; `nombre_norm` único entre activos; índices en `cliente_telefono`, `cliente_nombre_norm`, `(tipo, estado)` y `pagos.fecha`
-- [ ] T020 Crear la conexión `better-sqlite3` única en src/db/cliente.ts, con WAL, `foreign_keys = ON` y `busy_timeout = 5000`, el ayudante `conTransaccion` con `BEGIN IMMEDIATE`, y generar la migración inicial en src/db/migraciones/
-- [ ] T021 Crear la semilla idempotente de FR-005 en src/db/semilla.ts: Juguetes (Niñas, Niños, Bebés), Ropa (Adulto mujer, Adulto hombre, Niño, Niña) y Otros artículos sin subcategorías, sin guardar "Todos"
-- [ ] T022 Crear el arnés de pruebas con un archivo SQLite temporal por prueba, migraciones y datos de fábrica en tests/integration/arnes.ts
-- [ ] T023 [P] Escribir pruebas en tests/integration/sesion.test.ts: inicio correcto, contraseña incorrecta, 5 fallos en 15 minutos activan `DEMASIADOS_INTENTOS` (FR-044) y una acción sin sesión da `NO_AUTORIZADO` (FR-001)
-- [ ] T024 Implementar `verificarContrasena` con `scrypt`, cookie firmada con `jose` (`HttpOnly`, `Secure`, `SameSite=Lax`, 30 días) y `exigirSesion()` en src/lib/sesion.ts, y un generador de hash en scripts/generar-hash.ts
-- [ ] T025 Implementar el límite de intentos por hash de IP de FR-044, 5 fallos de inicio de sesión o 10 consultas en una ventana de 15 minutos, en src/lib/limite-intentos.ts, tomando la IP real del encabezado del proxy de Easypanel
-- [ ] T026 Implementar `iniciarSesion` y `cerrarSesion` en src/acciones/sesion.ts
-- [ ] T027 Proteger `/admin` salvo `/admin/entrar` en src/proxy.ts y crear la pantalla en src/app/admin/entrar/page.tsx
-- [ ] T028 [P] Crear el layout público con encabezado, navegación inferior móvil y pie con teléfono en src/app/(cliente)/layout.tsx y src/components/cliente/navegacion.tsx
-- [ ] T029 [P] Crear el layout de administración, adaptable a móvil y portátil, en src/app/admin/layout.tsx y src/components/admin/navegacion.tsx
-- [ ] T030 [P] Implementar en src/app/api/fotos/route.ts la subida con sesión requerida, JPEG, PNG y WebP de hasta 10 MB (FR-045), verificando el contenido real con `sharp`; en src/app/api/fotos/[archivo]/route.ts la lectura pública, sin permitir rutas fuera de `DATOS_DIR/fotos`; y el acceso a disco en src/lib/fotos.ts
-- [ ] T031 [P] Crear el selector de fotos con vista previa, reducción de tamaño en el navegador antes de subir, mensaje de archivo rechazado (FR-045) y quitar en src/components/admin/selector-fotos.tsx
+- [X] T014 [P] Implementar `parsearPrecio`, `formatearPrecio` y `calcularTotal` con aritmética entera, sin `parseFloat` ni `Number` sobre decimales, en src/dominio/dinero.ts
+- [X] T015 [P] Implementar `formatearFecha` y `formatearHora` con zona `America/Mexico_City` en src/dominio/fechas.ts
+- [X] T016 [P] Implementar `normalizarNombre` y `normalizarTelefono` en src/dominio/normalizacion.ts
+- [X] T017 [P] Implementar transiciones de venta, apartado y encargo y `calcularEstado(total, pagado)` en src/dominio/estados.ts
+- [X] T018 [P] Definir `Resultado<T>`, `CodigoError` y mensajes en es-MX en src/lib/resultado.ts y src/lib/mensajes.ts
+- [X] T019 Definir el esquema Drizzle de data-model.md en src/db/esquema.ts: tablas `categorias`, `subcategorias`, `productos`, `articulos_encargo`, `fotos`, `operaciones`, `pagos` y `limite_intentos`; importes `integer` con `> 0`; `existencia >= 0`; `cantidad > 0`; `cliente_telefono` de 10 dígitos con CHECK; exactamente uno entre `producto_id` y `articulo_encargo_id` en `fotos` y `operaciones`; `nombre_norm` único entre activos; índices en `cliente_telefono`, `cliente_nombre_norm`, `(tipo, estado)` y `pagos.fecha`
+- [X] T020 Crear la conexión `better-sqlite3` única en src/db/cliente.ts, con WAL, `foreign_keys = ON` y `busy_timeout = 5000`, el ayudante `conTransaccion` con `BEGIN IMMEDIATE`, y generar la migración inicial en src/db/migraciones/
+- [X] T021 Crear la semilla idempotente de FR-005 en src/db/semilla.ts: Juguetes (Niñas, Niños, Bebés), Ropa (Adulto mujer, Adulto hombre, Niño, Niña) y Otros artículos sin subcategorías, sin guardar "Todos"
+- [X] T022 Crear el arnés de pruebas con un archivo SQLite temporal por prueba, migraciones y datos de fábrica en tests/integration/arnes.ts
+- [X] T023 [P] Escribir pruebas en tests/integration/sesion.test.ts: inicio correcto, contraseña incorrecta, 5 fallos en 15 minutos activan `DEMASIADOS_INTENTOS` (FR-044) y una acción sin sesión da `NO_AUTORIZADO` (FR-001)
+- [X] T024 Implementar `verificarContrasena` con `scrypt`, cookie firmada con `jose` (`HttpOnly`, `Secure`, `SameSite=Lax`, 30 días) y `exigirSesion()` en src/lib/sesion.ts, y un generador de hash en scripts/generar-hash.ts
+- [X] T025 Implementar el límite de intentos por hash de IP de FR-044, 5 fallos de inicio de sesión o 10 consultas en una ventana de 15 minutos, en src/lib/limite-intentos.ts, tomando la IP real del encabezado del proxy de Easypanel
+- [X] T026 Implementar `iniciarSesion` y `cerrarSesion` en src/acciones/sesion.ts
+- [X] T027 Proteger `/admin` salvo `/admin/entrar` en src/proxy.ts y crear la pantalla en src/app/admin/entrar/page.tsx
+- [X] T028 [P] Crear el layout público con encabezado, navegación inferior móvil y pie con teléfono en src/app/(cliente)/layout.tsx y src/components/cliente/navegacion.tsx
+- [X] T029 [P] Crear el layout de administración, adaptable a móvil y portátil, en src/app/admin/(panel)/layout.tsx y src/components/admin/navegacion.tsx
+- [X] T030 [P] Implementar en src/app/api/fotos/route.ts la subida con sesión requerida, JPEG, PNG y WebP de hasta 10 MB (FR-045), verificando el contenido real con `sharp`; en src/app/api/fotos/[archivo]/route.ts la lectura pública, sin permitir rutas fuera de `DATOS_DIR/fotos`; y el acceso a disco en src/lib/fotos.ts
+- [X] T031 [P] Crear el selector de fotos con vista previa, reducción de tamaño en el navegador antes de subir, mensaje de archivo rechazado (FR-045) y quitar en src/components/admin/selector-fotos.tsx
 
 **Checkpoint**: base lista; inicio de sesión funcionando y `npm run verificar` en verde
 
@@ -91,19 +91,19 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 ### Tests for User Story 1
 
-- [ ] T032 [P] [US1] Escribir pruebas en tests/integration/categorias.test.ts: FR-006; FR-007; nombre repetido sin importar mayúsculas ni acentos reutiliza el existente; "Todos" se rechaza; baja con productos activos da `TIENE_DEPENDENCIAS`
-- [ ] T033 [P] [US1] Escribir pruebas en tests/integration/productos.test.ts: FR-008, FR-009, FR-016 (sin foto da `FOTO_REQUERIDA`; no se quita la última), subcategoría de otra categoría se rechaza, baja con apartados o encargos vigentes da `TIENE_DEPENDENCIAS`, existencia menor a apartados da `EXISTENCIA_INSUFICIENTE`, FR-038
-- [ ] T034 [P] [US1] Escribir el flujo en tests/e2e/us1-catalogo-admin.spec.ts con los escenarios 1 a 6 de la User Story 1, incluido el acceso denegado sin sesión
+- [X] T032 [P] [US1] Escribir pruebas en tests/integration/categorias.test.ts: FR-006; FR-007; nombre repetido sin importar mayúsculas ni acentos reutiliza el existente; "Todos" se rechaza; baja con productos activos da `TIENE_DEPENDENCIAS`
+- [X] T033 [P] [US1] Escribir pruebas en tests/integration/productos.test.ts: FR-008, FR-009, FR-016 (sin foto da `FOTO_REQUERIDA`; no se quita la última), subcategoría de otra categoría se rechaza, baja con apartados o encargos vigentes da `TIENE_DEPENDENCIAS`, existencia menor a apartados da `EXISTENCIA_INSUFICIENTE`, FR-038
+- [X] T034 [P] [US1] Escribir el flujo en tests/e2e/us1-catalogo-admin.spec.ts con los escenarios 1 a 6 de la User Story 1, incluido el acceso denegado sin sesión
 
 ### Implementation for User Story 1
 
-- [ ] T035 [US1] Implementar crear, renombrar, dar de baja y resolver-o-crear en src/servicios/categorias.ts. La baja de una categoría sin productos activos da de baja también sus subcategorías
-- [ ] T036 [US1] Implementar alta, edición, baja y fotos con baja lógica en src/servicios/productos.ts
-- [ ] T037 [US1] Implementar `listarProductosAdmin` con disponibilidad y filtros en src/consultas/admin.ts
-- [ ] T038 [US1] Implementar `guardarProducto` y `darDeBajaProducto` en src/acciones/productos.ts, y las acciones de categorías en src/acciones/categorias.ts
-- [ ] T039 [P] [US1] Crear la lista con filtros por categoría, subcategoría y "Todos" en src/app/admin/page.tsx y src/components/filtro-categorias.tsx, mostrando precio de compra y de venta
-- [ ] T040 [US1] Crear el formulario con categoría existente o nueva en src/components/admin/formulario-producto.tsx, usado en src/app/admin/productos/nuevo/page.tsx y src/app/admin/productos/[id]/page.tsx
-- [ ] T041 [P] [US1] Crear la gestión de categorías en src/app/admin/categorias/page.tsx
+- [X] T035 [US1] Implementar crear, renombrar, dar de baja y resolver-o-crear en src/servicios/categorias.ts. La baja de una categoría sin productos activos da de baja también sus subcategorías
+- [X] T036 [US1] Implementar alta, edición, baja y fotos con baja lógica en src/servicios/productos.ts
+- [X] T037 [US1] Implementar `listarProductosAdmin` con disponibilidad y filtros en src/consultas/admin.ts
+- [X] T038 [US1] Implementar `guardarProducto` y `darDeBajaProducto` en src/acciones/productos.ts, y las acciones de categorías en src/acciones/categorias.ts
+- [X] T039 [P] [US1] Crear la lista con filtros por categoría, subcategoría y "Todos" en src/app/admin/(panel)/page.tsx y src/components/filtro-categorias.tsx, mostrando precio de compra y de venta
+- [X] T040 [US1] Crear el formulario con categoría existente o nueva en src/components/admin/formulario-producto.tsx, usado en src/app/admin/(panel)/productos/nuevo/page.tsx y src/app/admin/(panel)/productos/[id]/page.tsx
+- [X] T041 [P] [US1] Crear la gestión de categorías en src/app/admin/(panel)/categorias/page.tsx
 
 **Checkpoint**: la User Story 1 funciona y se puede demostrar sola
 
@@ -117,17 +117,17 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 ### Tests for User Story 2
 
-- [ ] T042 [P] [US2] Escribir pruebas en tests/integration/consultas-publicas.test.ts: el resultado de cada consulta no contiene `precio_compra_centavos` (FR-003, SC-008), oculta productos dados de baja y calcula `disponible` con FR-011
-- [ ] T043 [P] [US2] Escribir el flujo en tests/e2e/us2-catalogo-cliente.spec.ts con los escenarios 1 a 6 de la User Story 2, filtro sin resultados, y una revisión con axe de cada pantalla pública. Debe comprobar que el HTML no incluye el precio de compra capturado en la prueba
+- [X] T042 [P] [US2] Escribir pruebas en tests/integration/consultas-publicas.test.ts: el resultado de cada consulta no contiene `precio_compra_centavos` (FR-003, SC-008), oculta productos dados de baja y calcula `disponible` con FR-011
+- [X] T043 [P] [US2] Escribir el flujo en tests/e2e/us2-catalogo-cliente.spec.ts con los escenarios 1 a 6 de la User Story 2, filtro sin resultados, y una revisión con axe de cada pantalla pública. Debe comprobar que el HTML no incluye el precio de compra capturado en la prueba
 
 ### Implementation for User Story 2
 
-- [ ] T044 [US2] Implementar `listarCatalogo`, `obtenerProducto` y `listarArticulosEncargo` seleccionando columnas de forma explícita, con el contrato de datos de contracts/rutas.md, en src/consultas/publicas.ts
-- [ ] T045 [P] [US2] Crear la tarjeta con foto, precio, disponibilidad y marca "Agotado, disponible por encargo" en src/components/cliente/tarjeta-producto.tsx, con texto alternativo basado en el nombre
-- [ ] T046 [P] [US2] Crear la leyenda exacta "Favor de revisar el producto antes de comprarlo, ya que no hay devoluciones." y el contacto en src/components/cliente/leyenda-producto.tsx
-- [ ] T047 [US2] Crear el catálogo con filtros por URL, render dinámico y mensaje de sin resultados en src/app/(cliente)/page.tsx
-- [ ] T048 [US2] Crear el detalle en src/app/(cliente)/producto/[id]/page.tsx
-- [ ] T049 [P] [US2] Crear artículos por encargo, separados del catálogo, con fotos si tienen, precio, leyenda y teléfono de contacto, y sin cantidad disponible (FR-025), en src/app/(cliente)/encargos/page.tsx
+- [X] T044 [US2] Implementar `listarCatalogo`, `obtenerProducto` y `listarArticulosEncargo` seleccionando columnas de forma explícita, con el contrato de datos de contracts/rutas.md, en src/consultas/publicas.ts
+- [X] T045 [P] [US2] Crear la tarjeta con foto, precio, disponibilidad y marca "Agotado, disponible por encargo" en src/components/cliente/tarjeta-producto.tsx, con texto alternativo basado en el nombre
+- [X] T046 [P] [US2] Crear la leyenda exacta "Favor de revisar el producto antes de comprarlo, ya que no hay devoluciones." y el contacto en src/components/cliente/leyenda-producto.tsx
+- [X] T047 [US2] Crear el catálogo con filtros por URL, render dinámico y mensaje de sin resultados en src/app/(cliente)/page.tsx
+- [X] T048 [US2] Crear el detalle en src/app/(cliente)/producto/[id]/page.tsx
+- [X] T049 [P] [US2] Crear artículos por encargo, separados del catálogo, con fotos si tienen, precio, leyenda y teléfono de contacto, y sin cantidad disponible (FR-025), en src/app/(cliente)/encargos/page.tsx
 
 **Checkpoint**: las User Stories 1 y 2 forman el MVP publicable
 
@@ -164,8 +164,8 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 - [ ] T053 [US3] Implementar `registrarVenta`, `marcarEntregada` y `anularVenta` con bloqueo del producto en src/servicios/operaciones.ts; anular no modifica el pago automático (FR-042)
 - [ ] T054 [US3] Implementar las acciones en src/acciones/operaciones.ts
-- [ ] T055 [US3] Crear la hoja de venta con precio propuesto editable y comprador opcional en src/components/admin/hoja-venta.tsx, y mostrar venta y apartado solo con disponibilidad en src/app/admin/page.tsx (FR-017)
-- [ ] T056 [US3] Crear el detalle con entrega y anulación en src/app/admin/operaciones/[id]/page.tsx
+- [ ] T055 [US3] Crear la hoja de venta con precio propuesto editable y comprador opcional en src/components/admin/hoja-venta.tsx, y mostrar venta y apartado solo con disponibilidad en src/app/admin/(panel)/page.tsx (FR-017)
+- [ ] T056 [US3] Crear el detalle con entrega y anulación en src/app/admin/(panel)/operaciones/[id]/page.tsx
 
 **Checkpoint**: las ventas funcionan y la disponibilidad se actualiza en ambas secciones
 
@@ -189,7 +189,7 @@ description: "Lista de tareas para implementar VendeProductos v0"
 - [ ] T061 [US4] Implementar `registrarPago` y `anularPago` con bloqueo de la operación en src/servicios/pagos.ts
 - [ ] T062 [US4] Agregar las acciones de apartado, pago, cancelación y corrección en src/acciones/operaciones.ts
 - [ ] T063 [P] [US4] Crear la hoja de apartado con nombre, teléfono, precio y pago inicial en src/components/admin/hoja-apartado.tsx
-- [ ] T064 [US4] Agregar el desglose de pagos, saldo, registrar y anular pagos, cancelar y corregir en src/app/admin/operaciones/[id]/page.tsx y src/components/admin/desglose-pagos.tsx
+- [ ] T064 [US4] Agregar el desglose de pagos, saldo, registrar y anular pagos, cancelar y corregir en src/app/admin/(panel)/operaciones/[id]/page.tsx y src/components/admin/desglose-pagos.tsx
 
 **Checkpoint**: apartados y pagos cuadran al centavo
 
@@ -211,9 +211,9 @@ description: "Lista de tareas para implementar VendeProductos v0"
 - [ ] T067 [US5] Implementar `registrarEncargo` para producto agotado o artículo existente o nuevo, sin tocar inventario, en src/servicios/operaciones.ts
 - [ ] T068 [P] [US5] Implementar alta, edición y baja de artículos con nombre, descripción, precio y fotos opcionales, rechazando la baja con encargos vigentes (`TIENE_DEPENDENCIAS`), en src/servicios/articulos-encargo.ts y src/acciones/articulos-encargo.ts
 - [ ] T069 [US5] Implementar `listarEncargosPendientes` en src/consultas/admin.ts
-- [ ] T070 [P] [US5] Crear la gestión de artículos, con selector de fotos opcional, en src/app/admin/articulos-encargo/page.tsx
-- [ ] T071 [US5] Crear la hoja de encargo en src/components/admin/hoja-encargo.tsx y mostrarla solo sin disponibilidad en src/app/admin/page.tsx
-- [ ] T072 [US5] Crear la lista de pendientes en src/app/admin/encargos/page.tsx
+- [ ] T070 [P] [US5] Crear la gestión de artículos, con selector de fotos opcional, en src/app/admin/(panel)/articulos-encargo/page.tsx
+- [ ] T071 [US5] Crear la hoja de encargo en src/components/admin/hoja-encargo.tsx y mostrarla solo sin disponibilidad en src/app/admin/(panel)/page.tsx
+- [ ] T072 [US5] Crear la lista de pendientes en src/app/admin/(panel)/encargos/page.tsx
 
 **Checkpoint**: el ciclo completo de encargos funciona
 
@@ -254,7 +254,7 @@ description: "Lista de tareas para implementar VendeProductos v0"
 ### Implementation for User Story 7
 
 - [ ] T080 [US7] Implementar `buscarOperaciones` por fechas de pagos vigentes, nombre parcial y teléfono en src/consultas/admin.ts
-- [ ] T081 [US7] Crear la búsqueda con filtros por URL y resultados en src/app/admin/operaciones/page.tsx
+- [ ] T081 [US7] Crear la búsqueda con filtros por URL y resultados en src/app/admin/(panel)/operaciones/page.tsx
 
 **Checkpoint**: todas las historias funcionan de forma independiente
 
@@ -264,7 +264,7 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 **Purpose**: calidad que afecta a varias historias
 
-- [ ] T082 [P] Agregar estados vacíos, de carga y de error en es-MX en src/app/(cliente)/ y src/app/admin/ con `loading.tsx`, `error.tsx` y `not-found.tsx`
+- [ ] T082 [P] Agregar estados vacíos, de carga y de error en es-MX en src/app/(cliente)/ y src/app/admin/(panel)/ con `loading.tsx`, `error.tsx` y `not-found.tsx`
 - [ ] T083 [P] Agregar una prueba con axe de todas las pantallas de administración y etiquetas de formularios en tests/e2e/accesibilidad-admin.spec.ts (Principio VII)
 - [ ] T084 [P] Agregar una prueba que recorra las pantallas públicas y compruebe formatos de precio, fecha y hora en tests/e2e/formatos.spec.ts (FR-039)
 - [ ] T085 Ajustar `next/image` con tamaños adaptados en src/app/(cliente)/page.tsx y repetir en producción la medición de T092 tras entregar todas las historias
@@ -306,7 +306,7 @@ description: "Lista de tareas para implementar VendeProductos v0"
 - Fase 2: T010 a T013, T014 a T018 y T028 a T031
 - Pruebas de cada historia, marcadas con [P]
 - US1 y US2 en paralelo después de Foundational
-- Varias tareas tocan el mismo archivo en distintas historias (`src/servicios/operaciones.ts`, `src/acciones/operaciones.ts`, `src/consultas/admin.ts`, `src/app/admin/page.tsx`), así que US3, US4 y US5 van en secuencia
+- Varias tareas tocan el mismo archivo en distintas historias (`src/servicios/operaciones.ts`, `src/acciones/operaciones.ts`, `src/consultas/admin.ts`, `src/app/admin/(panel)/page.tsx`), así que US3, US4 y US5 van en secuencia
 
 ---
 

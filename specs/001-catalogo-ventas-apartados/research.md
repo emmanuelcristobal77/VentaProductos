@@ -85,7 +85,7 @@ Investigación de la Fase 0. Las versiones se confirmaron en el registro de npm 
 ## Riesgos abiertos
 
 - **Aviso de privacidad**: el sistema guarda nombres, teléfonos y pagos de clientes. La legislación mexicana de datos personales (LFPDPPP) normalmente exige un aviso de privacidad. La spec no lo incluye y, por el Principio IV, no se agrega aquí. Debe evaluarse antes de capturar datos de clientes en producción, es decir, antes de publicar US3 o posteriores. El MVP solo muestra el catálogo y no los captura.
-- **TypeScript 7**: es la versión vigente en npm. Si `next` o `drizzle-kit` no la admiten aún al iniciar, se fija la última 5.x compatible.
+- **TypeScript**: se fijó la última versión 5.x, porque `typescript-eslint` aún no admite TypeScript 7 (comprobado el 2026-10-31).
 - **Costos**: el destino de los respaldos usa el plan gratuito de Supabase (según fuentes externas, 1 GB de archivos). Sus límites y condiciones comerciales deben confirmarse antes de publicar.
 - **Mantenimiento del VPS**: a diferencia de un hospedaje administrado, el sistema operativo, el firewall y las actualizaciones de seguridad quedan a cargo del propietario. Se reduce con actualizaciones automáticas y solo los puertos 22, 80 y 443 abiertos.
 - **VPS compartido**: si ya aloja otros sistemas, esta app no debe interferir con ellos; se revisa antes de instalar.

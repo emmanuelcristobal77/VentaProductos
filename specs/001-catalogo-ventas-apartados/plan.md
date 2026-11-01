@@ -10,7 +10,7 @@ Aplicación web para Productos Eli's con una sección pública (catálogo, artí
 
 ## Technical Context
 
-**Language/Version**: TypeScript 7.0 sobre Node.js 24 (última 5.x si `next` o `drizzle-kit` aún no admiten la 7)
+**Language/Version**: TypeScript 5.x sobre Node.js 24 (`typescript-eslint` aún no admite la 7)
 
 **Primary Dependencies**: Next.js 16.4, React 19.3, Tailwind CSS 4.3, shadcn/ui, lucide-react, sonner, Geist, Drizzle ORM 0.45, `better-sqlite3` 13, `sharp` 0.35, `@supabase/supabase-js` 2 (solo respaldos), Zod 4, jose 6
 
