@@ -6,8 +6,12 @@ import { respaldar, type AlmacenRespaldo } from "../src/lib/respaldo";
 const BUCKET = "respaldos";
 const TAMANO_PAGINA = 1000;
 
+function clienteSupabase(url: string, llave: string) {
+  return createClient(url, llave, { auth: { persistSession: false } });
+}
+
 function almacenSupabase(url: string, llave: string): AlmacenRespaldo {
-  const bucket = createClient(url, llave, { auth: { persistSession: false } }).storage.from(BUCKET);
+  const bucket = clienteSupabase(url, llave).storage.from(BUCKET);
 
   return {
     async listar(prefijo) {
@@ -41,6 +45,12 @@ async function principal() {
     throw new Error("Faltan RESPALDO_SUPABASE_URL o RESPALDO_SUPABASE_LLAVE.");
   }
   await respaldar(obtenerBd(), almacenSupabase(RESPALDO_SUPABASE_URL, RESPALDO_SUPABASE_LLAVE));
+
+  // Supabase pausa los proyectos Free sin actividad en la base de datos; subir a Storage no basta.
+  const { error } = await clienteSupabase(RESPALDO_SUPABASE_URL, RESPALDO_SUPABASE_LLAVE)
+    .from("latido")
+    .upsert({ id: 1, ultimo_respaldo: new Date().toISOString() });
+  if (error) throw error;
   console.log("Respaldo completado.");
 }
 

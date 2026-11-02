@@ -98,12 +98,22 @@ Revisado en Easypanel v2.37.0 el 2026-11-01, sin modificar nada.
 
 - **Recursos**: 2 núcleos con 1 % de uso; memoria 2.1 GB de 7.8 GB; disco 10.5 GB de 95.8 GB.
 - **Servicios existentes**: proyecto `orangutania` con `chatwoot`, `chatwoot-db`, `chatwoot-redis`, `chatwoot-sidekiq`, `n8n`, `n8n-db`, `n8n-runner` y `redis_orangutan`, todos activos. La app va en un proyecto aparte para no afectarlos.
-- **Pendiente de confirmar**: dominios en uso, tareas programadas, conexión con GitHub y condiciones de Supabase.
+- **Dominio**: `app.cristobalia.com`, con HTTPS de Let's Encrypt; el repositorio privado es `emmanuelcristobal77/VentaProductos`.
+- **Tareas programadas**: el cron del VPS ejecuta `/usr/local/bin/respaldo-elis.sh` a diario a las 09:00 UTC (3:00 a. m. local). La copia del 2026-11-02 se subió a esa hora (T093).
+- **Supabase**: proyecto `elisproductos-respaldos` en plan Free. Revisado el 2026-11-02:
+  - 1 GB de almacenamiento de archivos, 50 MB por archivo y 5 GB de transferencia al mes; la copia de la base pesa hoy 4.84 KB.
+  - El plan Free no incluye respaldos automáticos propios; el bucket es la única copia fuera del VPS.
+  - El proyecto se pausa tras una semana sin "actividad suficiente de la base de datos", con un correo de aviso antes. Un proyecto pausado se puede restaurar hasta un año después. La documentación no aclara si las subidas a Storage cuentan como actividad, y el respaldo solo usa Storage.
+  - Uso comercial: la página de precios y los términos no lo prohíben de forma explícita para el plan Free; no hay una confirmación oficial.
+- **Decisión contra la pausa**: tras cada respaldo correcto, `scripts/respaldar.ts` actualiza la única fila de la tabla `latido` en Supabase con la hora del respaldo. Así hay actividad diaria en la base de datos sin pagar el plan Pro.
 
 ## Fuentes
 
 - [Vercel: plan Hobby](https://vercel.com/docs/plans/hobby)
 - [Node.js en Hostinger](https://docs.hostinger.com/node.js/overview)
 - [Límites del plan gratuito de Supabase](https://automationatlas.io/answers/supabase-free-tier-limits-2026/)
+- [Precios de Supabase](https://supabase.com/pricing)
+- [Pausa de proyectos en Supabase](https://supabase.com/docs/guides/platform/project-pausing)
+- [Términos de servicio de Supabase](https://supabase.com/terms)
 - [Drizzle vs Prisma en 2026](https://makerkit.dev/blog/md/tutorials/drizzle-vs-prisma)
 - [Librerías de componentes para Tailwind v4](https://www.pkgpulse.com/guides/best-tailwind-v4-component-libraries-2026)
