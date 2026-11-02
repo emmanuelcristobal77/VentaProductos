@@ -105,7 +105,8 @@ Revisado en Easypanel v2.37.0 el 2026-11-01, sin modificar nada.
   - El plan Free no incluye respaldos automáticos propios; el bucket es la única copia fuera del VPS.
   - El proyecto se pausa tras una semana sin "actividad suficiente de la base de datos", con un correo de aviso antes. Un proyecto pausado se puede restaurar hasta un año después. La documentación no aclara si las subidas a Storage cuentan como actividad, y el respaldo solo usa Storage.
   - Uso comercial: la página de precios y los términos no lo prohíben de forma explícita para el plan Free; no hay una confirmación oficial.
-- **Decisión contra la pausa**: tras cada respaldo correcto, `scripts/respaldar.ts` actualiza la única fila de la tabla `latido` en Supabase con la hora del respaldo. Así hay actividad diaria en la base de datos sin pagar el plan Pro.
+- **Decisión contra la pausa**: tras cada respaldo correcto, `scripts/respaldar.ts` actualiza la única fila de la tabla `latido` en Supabase con la hora del respaldo. Así hay actividad diaria en la base de datos sin pagar el plan Pro. Comprobado el 2026-11-02: un respaldo manual dejó `ultimo_respaldo` en 18:32 UTC.
+- **Despliegue**: Easypanel no despliega solo al recibir un `push`; hay que pulsar **Implementar** en el servicio.
 
 ## Fuentes
 
