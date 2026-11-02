@@ -1,8 +1,18 @@
-import { and, desc, eq, type SQL } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull, sql, type SQL } from "drizzle-orm";
 import { obtenerBd } from "@/db/cliente";
-import { articulosEncargo, categorias, productos, subcategorias } from "@/db/esquema";
+import {
+  articulosEncargo,
+  categorias,
+  operaciones,
+  pagos,
+  productos,
+  subcategorias,
+} from "@/db/esquema";
+import { calcularTotal } from "@/dominio/dinero";
+import { normalizarNombre, normalizarTelefono } from "@/dominio/normalizacion";
 import { unidadesDisponibles } from "./disponibilidad";
 import { fotosPorArticulo, fotosPorProducto } from "./fotos";
+import { pagadoCentavos } from "./saldos";
 import type { FiltroProductos } from "./admin";
 
 /*
@@ -67,3 +77,50 @@ export function listarArticulosEncargo() {
 }
 
 export type ProductoPublico = ReturnType<typeof listarCatalogo>[number];
+
+/** Apartados y encargos de quien coincide en nombre y teléfono; nunca ventas (FR-035). */
+export function consultarOperacionesCliente(nombre: string, telefono: string) {
+  const digitos = normalizarTelefono(telefono);
+  if (!digitos) return [];
+
+  const bd = obtenerBd();
+  const filas = bd
+    .select({
+      id: operaciones.id,
+      tipo: operaciones.tipo,
+      estado: operaciones.estado,
+      articulo: sql<string>`coalesce(${productos.nombre}, ${articulosEncargo.nombre})`,
+      cantidad: operaciones.cantidad,
+      precioUnitarioCentavos: operaciones.precioUnitarioCentavos,
+      pagadoCentavos,
+    })
+    .from(operaciones)
+    .leftJoin(productos, eq(operaciones.productoId, productos.id))
+    .leftJoin(articulosEncargo, eq(operaciones.articuloEncargoId, articulosEncargo.id))
+    .where(
+      and(
+        inArray(operaciones.tipo, ["apartado", "encargo"]),
+        eq(operaciones.clienteTelefono, digitos),
+        eq(operaciones.clienteNombreNorm, normalizarNombre(nombre)),
+      ),
+    )
+    .orderBy(desc(operaciones.creadoEn))
+    .all();
+
+  return filas.map((fila) => {
+    const totalCentavos = calcularTotal(fila.precioUnitarioCentavos, fila.cantidad);
+    return {
+      ...fila,
+      totalCentavos,
+      saldoCentavos: fila.estado === "cancelado" ? null : totalCentavos - fila.pagadoCentavos,
+      pagos: bd
+        .select({ id: pagos.id, importeCentavos: pagos.importeCentavos, fecha: pagos.fecha })
+        .from(pagos)
+        .where(and(eq(pagos.operacionId, fila.id), isNull(pagos.anuladoEn)))
+        .orderBy(asc(pagos.fecha))
+        .all(),
+    };
+  });
+}
+
+export type OperacionCliente = ReturnType<typeof consultarOperacionesCliente>[number];

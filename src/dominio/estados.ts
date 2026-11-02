@@ -23,3 +23,19 @@ export function calcularEstado(totalCentavos: number, pagadoCentavos: number): "
 }
 
 export const ESTADOS_APARTADO_VIGENTE = ["pendiente", "pagado"] as const;
+
+export const ETIQUETA_ESTADO: Record<EstadoOperacion, string> = {
+  pagada: "Pagada",
+  entregada: "Entregada",
+  anulada: "Anulada",
+  pendiente: "Pendiente",
+  pagado: "Pagado",
+  entregado: "Entregado",
+  cancelado: "Cancelado",
+};
+
+export const ETIQUETA_TIPO: Record<TipoOperacion, string> = {
+  venta: "Venta",
+  apartado: "Apartado",
+  encargo: "Encargo",
+};

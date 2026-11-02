@@ -5,6 +5,9 @@ import { listarCategorias } from "@/servicios/categorias";
 
 export const dynamic = "force-dynamic";
 
+/** Tarjetas visibles sin desplazarse en un móvil: sus fotos se cargan primero. */
+const PRIMERA_VISTA = 4;
+
 export default async function PaginaCatalogo({
   searchParams,
 }: {
@@ -33,8 +36,8 @@ export default async function PaginaCatalogo({
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-5 lg:grid-cols-4">
-          {productos.map((producto) => (
-            <TarjetaProducto key={producto.id} producto={producto} />
+          {productos.map((producto, indice) => (
+            <TarjetaProducto key={producto.id} producto={producto} prioritaria={indice < PRIMERA_VISTA} />
           ))}
         </div>
       )}

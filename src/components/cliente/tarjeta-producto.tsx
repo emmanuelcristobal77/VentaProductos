@@ -5,7 +5,13 @@ import { formatearPrecio } from "@/dominio/dinero";
 import { LEYENDA_DEVOLUCIONES, textoDisponible } from "./leyenda-producto";
 import type { ProductoPublico } from "@/consultas/publicas";
 
-export function TarjetaProducto({ producto }: { producto: ProductoPublico }) {
+export function TarjetaProducto({
+  producto,
+  prioritaria = false,
+}: {
+  producto: ProductoPublico;
+  prioritaria?: boolean;
+}) {
   return (
     <article className="bg-card flex flex-col overflow-hidden rounded-2xl border shadow-xs transition-shadow hover:shadow-md">
       <Link href={`/producto/${producto.id}`} className="focus-visible:ring-ring outline-none focus-visible:ring-2">
@@ -15,6 +21,7 @@ export function TarjetaProducto({ producto }: { producto: ProductoPublico }) {
               src={`/api/fotos/${producto.fotos[0]}`}
               alt={producto.nombre}
               fill
+              priority={prioritaria}
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
               className="object-cover"
             />

@@ -1,4 +1,4 @@
-import { PackageSearch, Store } from "lucide-react";
+import { PackageSearch, Receipt, Store } from "lucide-react";
 import { EnlaceNavegacion } from "@/components/enlace-navegacion";
 
 const ENLACES = [
@@ -7,6 +7,12 @@ const ENLACES = [
     href: "/encargos",
     etiqueta: "Por encargo",
     icono: <PackageSearch aria-hidden className="size-5" />,
+    exacto: false,
+  },
+  {
+    href: "/mis-apartados",
+    etiqueta: "Mis apartados",
+    icono: <Receipt aria-hidden className="size-5" />,
     exacto: false,
   },
 ];

@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es-MX" className={GeistSans.variable}>
       <body className="min-h-dvh font-sans">
         {children}
-        <Toaster position="top-center" richColors />
+        <Toaster position="top-center" />
       </body>
     </html>
   );

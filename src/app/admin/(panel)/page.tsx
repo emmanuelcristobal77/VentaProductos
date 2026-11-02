@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { BotonBajaProducto } from "@/components/admin/boton-baja-producto";
+import { HojaApartado } from "@/components/admin/hoja-apartado";
+import { HojaEncargo } from "@/components/admin/hoja-encargo";
+import { HojaVenta } from "@/components/admin/hoja-venta";
 import { FiltroCategorias } from "@/components/filtro-categorias";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -85,7 +88,22 @@ export default async function PaginaProductos({
                     <dd className="inline">{producto.disponible}</dd>
                   </div>
                 </dl>
-                <div className="mt-1 flex gap-2">
+                <div className="mt-1 flex flex-wrap gap-2">
+                  {producto.disponible > 0 ? (
+                    <>
+                      <HojaVenta producto={producto} />
+                      <HojaApartado producto={producto} />
+                    </>
+                  ) : (
+                    <HojaEncargo
+                      origen={{
+                        campo: "productoId",
+                        id: producto.id,
+                        nombre: producto.nombre,
+                        precioCentavos: producto.precioVentaCentavos,
+                      }}
+                    />
+                  )}
                   <Button asChild variant="outline" size="sm">
                     <Link href={`/admin/productos/${producto.id}`}>
                       Editar<span className="sr-only"> {producto.nombre}</span>

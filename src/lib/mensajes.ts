@@ -1,3 +1,5 @@
+import { formatearPrecio } from "@/dominio/dinero";
+
 export type CodigoError =
   | "NO_AUTORIZADO"
   | "DEMASIADOS_INTENTOS"
@@ -26,3 +28,28 @@ export const MENSAJES: Record<CodigoError, string> = {
   EXISTENCIA_INSUFICIENTE: "La existencia no puede ser menor a las unidades apartadas.",
   FOTO_REQUERIDA: "Agrega al menos una foto del producto.",
 };
+
+export const CAMPOS = {
+  cantidad: "Escribe una cantidad entera, de 1 en adelante.",
+  precio: "Escribe un precio mayor a cero, con hasta dos decimales.",
+  importe: "Escribe un importe mayor a cero, con hasta dos decimales.",
+  pagoInicial: "Escribe un pago inicial mayor a cero.",
+  anticipo: "Escribe un anticipo mayor a cero.",
+  articuloNombre: "Escribe el nombre del artículo.",
+  articuloDescripcion: "Escribe la descripción del artículo.",
+  clienteNombre: "Escribe el nombre del cliente.",
+  clienteTelefono: "Escribe un teléfono de 10 dígitos.",
+  motivo: "Escribe el motivo.",
+  rangoFechas: "Revisa las fechas: el inicio no puede ser posterior al final.",
+};
+
+export const SIN_INFORMACION = "No encontramos información con esos datos.";
+
+export function mensajeSinDisponibilidad(disponible: number): string {
+  if (disponible <= 0) return "Ya no hay unidades disponibles.";
+  return disponible === 1 ? "Solo hay 1 unidad disponible." : `Solo hay ${disponible} unidades disponibles.`;
+}
+
+export function mensajePagoExcedeSaldo(saldoCentavos: number): string {
+  return `El pago es mayor al saldo restante de ${formatearPrecio(saldoCentavos)}.`;
+}

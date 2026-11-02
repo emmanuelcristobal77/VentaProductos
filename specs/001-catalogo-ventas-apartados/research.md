@@ -92,6 +92,14 @@ Investigación de la Fase 0. Las versiones se confirmaron en el registro de npm 
 - **Pausa del destino de respaldos**: los proyectos gratuitos de Supabase se pausan tras unos 7 días sin actividad. Si eso detiene las copias, deben fallar de forma visible en los registros de Easypanel; se confirma en T093.
 - **Punto único de falla**: si el VPS se pierde, la app queda fuera de línea hasta reinstalarla y restaurar la copia más reciente; se pueden perder las operaciones del último día.
 
+## Estado del VPS (T089)
+
+Revisado en Easypanel v2.37.0 el 2026-11-01, sin modificar nada.
+
+- **Recursos**: 2 núcleos con 1 % de uso; memoria 2.1 GB de 7.8 GB; disco 10.5 GB de 95.8 GB.
+- **Servicios existentes**: proyecto `orangutania` con `chatwoot`, `chatwoot-db`, `chatwoot-redis`, `chatwoot-sidekiq`, `n8n`, `n8n-db`, `n8n-runner` y `redis_orangutan`, todos activos. La app va en un proyecto aparte para no afectarlos.
+- **Pendiente de confirmar**: dominios en uso, tareas programadas, conexión con GitHub y condiciones de Supabase.
+
 ## Fuentes
 
 - [Vercel: plan Hobby](https://vercel.com/docs/plans/hobby)

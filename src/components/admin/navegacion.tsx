@@ -1,4 +1,4 @@
-import { LayoutGrid, Package } from "lucide-react";
+import { ClipboardList, LayoutGrid, Package, PackagePlus, Search } from "lucide-react";
 import { EnlaceNavegacion } from "@/components/enlace-navegacion";
 
 const ENLACES = [
@@ -7,6 +7,24 @@ const ENLACES = [
     href: "/admin/categorias",
     etiqueta: "Categorías",
     icono: <LayoutGrid aria-hidden className="size-5" />,
+    exacto: false,
+  },
+  {
+    href: "/admin/operaciones",
+    etiqueta: "Operaciones",
+    icono: <Search aria-hidden className="size-5" />,
+    exacto: false,
+  },
+  {
+    href: "/admin/encargos",
+    etiqueta: "Encargos",
+    icono: <ClipboardList aria-hidden className="size-5" />,
+    exacto: false,
+  },
+  {
+    href: "/admin/articulos-encargo",
+    etiqueta: "Artículos",
+    icono: <PackagePlus aria-hidden className="size-5" />,
     exacto: false,
   },
 ];

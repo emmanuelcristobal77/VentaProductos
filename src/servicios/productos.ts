@@ -1,10 +1,11 @@
 import { and, eq, inArray } from "drizzle-orm";
 import { conTransaccion, type Conexion } from "@/db/cliente";
-import { fotos, operaciones, productos } from "@/db/esquema";
+import { operaciones, productos } from "@/db/esquema";
 import { ESTADOS_APARTADO_VIGENTE } from "@/dominio/estados";
 import { ErrorNegocio } from "@/lib/resultado";
 import { unidadesApartadas } from "@/consultas/disponibilidad";
 import { resolverCategoria, resolverSubcategoria, type ReferenciaCategoria } from "./categorias";
+import { sincronizarFotos } from "./fotos";
 
 export interface DatosProducto {
   nombre: string;
@@ -33,23 +34,6 @@ function columnas(tx: Conexion, datos: DatosProducto) {
   };
 }
 
-function sincronizarFotos(tx: Conexion, productoId: string, archivos: string[]) {
-  const actuales = tx.select().from(fotos).where(eq(fotos.productoId, productoId)).all();
-
-  for (const foto of actuales) {
-    if (foto.activo && !archivos.includes(foto.archivo)) {
-      tx.update(fotos).set({ activo: false }).where(eq(fotos.id, foto.id)).run();
-    }
-  }
-
-  let orden = actuales.reduce((mayor, foto) => Math.max(mayor, foto.orden + 1), 0);
-  for (const archivo of archivos) {
-    if (!actuales.some((foto) => foto.activo && foto.archivo === archivo)) {
-      tx.insert(fotos).values({ productoId, archivo, orden: orden++ }).run();
-    }
-  }
-}
-
 export function crearProducto(datos: DatosProducto) {
   return conTransaccion((tx) => {
     const producto = tx
@@ -57,7 +41,7 @@ export function crearProducto(datos: DatosProducto) {
       .values(columnas(tx, datos))
       .returning({ id: productos.id })
       .get();
-    sincronizarFotos(tx, producto.id, datos.fotos);
+    sincronizarFotos(tx, "productoId", producto.id, datos.fotos);
     return producto;
   });
 }
@@ -76,7 +60,7 @@ export function actualizarProducto(id: string, datos: DatosProducto) {
       .set({ ...columnas(tx, datos), actualizadoEn: new Date().toISOString() })
       .where(eq(productos.id, id))
       .run();
-    sincronizarFotos(tx, id, datos.fotos);
+    sincronizarFotos(tx, "productoId", id, datos.fotos);
   });
 }
 

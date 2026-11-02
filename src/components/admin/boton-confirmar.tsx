@@ -20,12 +20,14 @@ export function BotonConfirmar({
   descripcion,
   accion,
   exito,
+  confirmacion = "Confirmar baja",
 }: {
   etiqueta: React.ReactNode;
   titulo: string;
   descripcion: string;
   accion: () => Promise<Resultado<null>>;
   exito: string;
+  confirmacion?: string;
 }) {
   const [abierto, setAbierto] = useState(false);
   const [enviando, iniciar] = useTransition();
@@ -56,7 +58,7 @@ export function BotonConfirmar({
             Volver
           </Button>
           <Button variant="destructive" disabled={enviando} onClick={confirmar}>
-            Confirmar baja
+            {confirmacion}
           </Button>
         </DialogFooter>
       </DialogContent>

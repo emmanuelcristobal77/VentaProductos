@@ -156,16 +156,16 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 ### Tests for User Story 3
 
-- [ ] T050 [P] [US3] Escribir pruebas en tests/integration/ventas.test.ts: FR-018 (cantidad de una o más unidades), FR-019, FR-021 (comprador opcional, pago automático por el total), FR-023, cantidad mayor a la disponible da `SIN_DISPONIBILIDAD`, FR-032, FR-042 (entregada o no, las unidades regresan, motivo obligatorio)
-- [ ] T051 [P] [US3] Escribir la prueba de última unidad concurrente en tests/concurrency/ultima-unidad.test.ts con dos procesos sobre el mismo archivo SQLite: de dos registros simultáneos, solo uno se completa
-- [ ] T052 [P] [US3] Escribir el flujo en tests/e2e/us3-venta.spec.ts con los escenarios 1 a 6 de la User Story 3
+- [X] T050 [P] [US3] Escribir pruebas en tests/integration/ventas.test.ts: FR-018 (cantidad de una o más unidades), FR-019, FR-021 (comprador opcional, pago automático por el total), FR-023, cantidad mayor a la disponible da `SIN_DISPONIBILIDAD`, FR-032, FR-042 (entregada o no, las unidades regresan, motivo obligatorio)
+- [X] T051 [P] [US3] Escribir la prueba de última unidad concurrente en tests/concurrency/ultima-unidad.test.ts con dos procesos sobre el mismo archivo SQLite: de dos registros simultáneos, solo uno se completa
+- [X] T052 [P] [US3] Escribir el flujo en tests/e2e/us3-venta.spec.ts con los escenarios 1 a 6 de la User Story 3
 
 ### Implementation for User Story 3
 
-- [ ] T053 [US3] Implementar `registrarVenta`, `marcarEntregada` y `anularVenta` con bloqueo del producto en src/servicios/operaciones.ts; anular no modifica el pago automático (FR-042)
-- [ ] T054 [US3] Implementar las acciones en src/acciones/operaciones.ts
-- [ ] T055 [US3] Crear la hoja de venta con precio propuesto editable y comprador opcional en src/components/admin/hoja-venta.tsx, y mostrar venta y apartado solo con disponibilidad en src/app/admin/(panel)/page.tsx (FR-017)
-- [ ] T056 [US3] Crear el detalle con entrega y anulación en src/app/admin/(panel)/operaciones/[id]/page.tsx
+- [X] T053 [US3] Implementar `registrarVenta`, `marcarEntregada` y `anularVenta` con bloqueo del producto en src/servicios/operaciones.ts; anular no modifica el pago automático (FR-042)
+- [X] T054 [US3] Implementar las acciones en src/acciones/operaciones.ts
+- [X] T055 [US3] Crear la hoja de venta con precio propuesto editable y comprador opcional en src/components/admin/hoja-venta.tsx, y mostrar venta y apartado solo con disponibilidad en src/app/admin/(panel)/page.tsx (FR-017)
+- [X] T056 [US3] Crear el detalle con entrega y anulación en src/app/admin/(panel)/operaciones/[id]/page.tsx
 
 **Checkpoint**: las ventas funcionan y la disponibilidad se actualiza en ambas secciones
 
@@ -179,17 +179,17 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 ### Tests for User Story 4
 
-- [ ] T057 [P] [US4] Escribir pruebas en tests/integration/apartados.test.ts: FR-022, FR-011, FR-033, FR-027 (Pendiente y Pagado se cancelan; las unidades regresan; los pagos se conservan), pago inicial que cubre el total nace Pagado, entrega con saldo da `SALDO_PENDIENTE`
-- [ ] T058 [P] [US4] Escribir pruebas en tests/integration/pagos.test.ts: FR-028, FR-030, FR-031, FR-034 (anular recalcula saldo y estado; rechazado en operación entregada o cancelada; el pago de una venta no se anula por separado), FR-043 (total menor a lo pagado da `PRECIO_MENOR_A_PAGADO`; subir el precio regresa de Pagado a Pendiente; total igual a lo pagado pasa a Pagado), y SC-005 con 20 operaciones con pagos parciales
-- [ ] T059 [P] [US4] Escribir el flujo en tests/e2e/us4-apartado.spec.ts con los escenarios 1 a 9 de la User Story 4
+- [X] T057 [P] [US4] Escribir pruebas en tests/integration/apartados.test.ts: FR-022, FR-011, FR-033, FR-027 (Pendiente y Pagado se cancelan; las unidades regresan; los pagos se conservan), pago inicial que cubre el total nace Pagado, entrega con saldo da `SALDO_PENDIENTE`
+- [X] T058 [P] [US4] Escribir pruebas en tests/integration/pagos.test.ts: FR-028, FR-030, FR-031, FR-034 (anular recalcula saldo y estado; rechazado en operación entregada o cancelada; el pago de una venta no se anula por separado), FR-043 (total menor a lo pagado da `PRECIO_MENOR_A_PAGADO`; subir el precio regresa de Pagado a Pendiente; total igual a lo pagado pasa a Pagado), y SC-005 con 20 operaciones con pagos parciales
+- [X] T059 [P] [US4] Escribir el flujo en tests/e2e/us4-apartado.spec.ts con los escenarios 1 a 9 de la User Story 4
 
 ### Implementation for User Story 4
 
-- [ ] T060 [US4] Implementar `registrarApartado`, `cancelarOperacion` y `corregirOperacion` en src/servicios/operaciones.ts
-- [ ] T061 [US4] Implementar `registrarPago` y `anularPago` con bloqueo de la operación en src/servicios/pagos.ts
-- [ ] T062 [US4] Agregar las acciones de apartado, pago, cancelación y corrección en src/acciones/operaciones.ts
-- [ ] T063 [P] [US4] Crear la hoja de apartado con nombre, teléfono, precio y pago inicial en src/components/admin/hoja-apartado.tsx
-- [ ] T064 [US4] Agregar el desglose de pagos, saldo, registrar y anular pagos, cancelar y corregir en src/app/admin/(panel)/operaciones/[id]/page.tsx y src/components/admin/desglose-pagos.tsx
+- [X] T060 [US4] Implementar `registrarApartado`, `cancelarOperacion` y `corregirOperacion` en src/servicios/operaciones.ts
+- [X] T061 [US4] Implementar `registrarPago` y `anularPago` con bloqueo de la operación en src/servicios/pagos.ts
+- [X] T062 [US4] Agregar las acciones de apartado, pago, cancelación y corrección en src/acciones/operaciones.ts
+- [X] T063 [P] [US4] Crear la hoja de apartado con nombre, teléfono, precio y pago inicial en src/components/admin/hoja-apartado.tsx
+- [X] T064 [US4] Agregar el desglose de pagos, saldo, registrar y anular pagos, cancelar y corregir en src/app/admin/(panel)/operaciones/[id]/page.tsx y src/components/admin/desglose-pagos.tsx
 
 **Checkpoint**: apartados y pagos cuadran al centavo
 
@@ -203,17 +203,17 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 ### Tests for User Story 5
 
-- [ ] T065 [P] [US5] Escribir pruebas en tests/integration/encargos.test.ts: FR-017 (con disponibilidad da `HAY_DISPONIBILIDAD`), FR-022, FR-024, FR-025, FR-026 (excluye entregados y cancelados), artículo nuevo creado al registrar el encargo, encargo permitido después de agotar el producto con otra operación
-- [ ] T066 [P] [US5] Escribir el flujo en tests/e2e/us5-encargo.spec.ts con los escenarios 1 a 7 de la User Story 5
+- [X] T065 [P] [US5] Escribir pruebas en tests/integration/encargos.test.ts: FR-017 (con disponibilidad da `HAY_DISPONIBILIDAD`), FR-022, FR-024, FR-025, FR-026 (excluye entregados y cancelados), artículo nuevo creado al registrar el encargo, encargo permitido después de agotar el producto con otra operación
+- [X] T066 [P] [US5] Escribir el flujo en tests/e2e/us5-encargo.spec.ts con los escenarios 1 a 7 de la User Story 5
 
 ### Implementation for User Story 5
 
-- [ ] T067 [US5] Implementar `registrarEncargo` para producto agotado o artículo existente o nuevo, sin tocar inventario, en src/servicios/operaciones.ts
-- [ ] T068 [P] [US5] Implementar alta, edición y baja de artículos con nombre, descripción, precio y fotos opcionales, rechazando la baja con encargos vigentes (`TIENE_DEPENDENCIAS`), en src/servicios/articulos-encargo.ts y src/acciones/articulos-encargo.ts
-- [ ] T069 [US5] Implementar `listarEncargosPendientes` en src/consultas/admin.ts
-- [ ] T070 [P] [US5] Crear la gestión de artículos, con selector de fotos opcional, en src/app/admin/(panel)/articulos-encargo/page.tsx
-- [ ] T071 [US5] Crear la hoja de encargo en src/components/admin/hoja-encargo.tsx y mostrarla solo sin disponibilidad en src/app/admin/(panel)/page.tsx
-- [ ] T072 [US5] Crear la lista de pendientes en src/app/admin/(panel)/encargos/page.tsx
+- [X] T067 [US5] Implementar `registrarEncargo` para producto agotado o artículo existente o nuevo, sin tocar inventario, en src/servicios/operaciones.ts
+- [X] T068 [P] [US5] Implementar alta, edición y baja de artículos con nombre, descripción, precio y fotos opcionales, rechazando la baja con encargos vigentes (`TIENE_DEPENDENCIAS`), en src/servicios/articulos-encargo.ts y src/acciones/articulos-encargo.ts
+- [X] T069 [US5] Implementar `listarEncargosPendientes` en src/consultas/admin.ts
+- [X] T070 [P] [US5] Crear la gestión de artículos, con selector de fotos opcional, en src/app/admin/(panel)/articulos-encargo/page.tsx
+- [X] T071 [US5] Crear la hoja de encargo en src/components/admin/hoja-encargo.tsx y mostrarla solo sin disponibilidad en src/app/admin/(panel)/page.tsx
+- [X] T072 [US5] Crear la lista de pendientes en src/app/admin/(panel)/encargos/page.tsx
 
 **Checkpoint**: el ciclo completo de encargos funciona
 
@@ -227,14 +227,14 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 ### Tests for User Story 6
 
-- [ ] T073 [P] [US6] Escribir pruebas en tests/integration/consulta-cliente.test.ts: FR-035, FR-037, mismo mensaje si falla cualquiera de los datos, sin datos de otros clientes ni precio de compra, sin ventas, canceladas visibles sin saldo por cubrir, pagos anulados ocultos, 11 consultas en 15 minutos dan `DEMASIADOS_INTENTOS`
-- [ ] T074 [P] [US6] Escribir el flujo en tests/e2e/us6-consulta.spec.ts con los escenarios 1 a 3 de la User Story 6
+- [X] T073 [P] [US6] Escribir pruebas en tests/integration/consulta-cliente.test.ts: FR-035, FR-037, mismo mensaje si falla cualquiera de los datos, sin datos de otros clientes ni precio de compra, sin ventas, canceladas visibles sin saldo por cubrir, pagos anulados ocultos, 11 consultas en 15 minutos dan `DEMASIADOS_INTENTOS`
+- [X] T074 [P] [US6] Escribir el flujo en tests/e2e/us6-consulta.spec.ts con los escenarios 1 a 3 de la User Story 6
 
 ### Implementation for User Story 6
 
-- [ ] T075 [US6] Implementar `consultarOperacionesCliente`, solo apartados y encargos, con pagos vigentes, en src/consultas/publicas.ts
-- [ ] T076 [US6] Implementar `consultarMisApartados` con límite de intentos en src/acciones/consulta-cliente.ts
-- [ ] T077 [US6] Crear la consulta y sus resultados en src/app/(cliente)/mis-apartados/page.tsx
+- [X] T075 [US6] Implementar `consultarOperacionesCliente`, solo apartados y encargos, con pagos vigentes, en src/consultas/publicas.ts
+- [X] T076 [US6] Implementar `consultarMisApartados` con límite de intentos en src/acciones/consulta-cliente.ts
+- [X] T077 [US6] Crear la consulta y sus resultados en src/app/(cliente)/mis-apartados/page.tsx
 
 **Checkpoint**: el cliente consulta su saldo sin ayuda
 
@@ -248,13 +248,13 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 ### Tests for User Story 7
 
-- [ ] T078 [P] [US7] Escribir pruebas en tests/integration/busqueda.test.ts: FR-036 solos y combinados, FR-037, rango interpretado en hora del centro de México, venta sin comprador encontrada por fecha, venta anulada encontrada por fecha (FR-042), operaciones anuladas y canceladas visibles, y una persona con varias operaciones
-- [ ] T079 [P] [US7] Escribir el flujo en tests/e2e/us7-busqueda.spec.ts con los escenarios 1 a 4 de la User Story 7
+- [X] T078 [P] [US7] Escribir pruebas en tests/integration/busqueda.test.ts: FR-036 solos y combinados, FR-037, rango interpretado en hora del centro de México, venta sin comprador encontrada por fecha, venta anulada encontrada por fecha (FR-042), operaciones anuladas y canceladas visibles, y una persona con varias operaciones
+- [X] T079 [P] [US7] Escribir el flujo en tests/e2e/us7-busqueda.spec.ts con los escenarios 1 a 4 de la User Story 7
 
 ### Implementation for User Story 7
 
-- [ ] T080 [US7] Implementar `buscarOperaciones` por fechas de pagos vigentes, nombre parcial y teléfono en src/consultas/admin.ts
-- [ ] T081 [US7] Crear la búsqueda con filtros por URL y resultados en src/app/admin/(panel)/operaciones/page.tsx
+- [X] T080 [US7] Implementar `buscarOperaciones` por fechas de pagos vigentes, nombre parcial y teléfono en src/consultas/admin.ts
+- [X] T081 [US7] Crear la búsqueda con filtros por URL y resultados en src/app/admin/(panel)/operaciones/page.tsx
 
 **Checkpoint**: todas las historias funcionan de forma independiente
 
@@ -264,12 +264,12 @@ description: "Lista de tareas para implementar VendeProductos v0"
 
 **Purpose**: calidad que afecta a varias historias
 
-- [ ] T082 [P] Agregar estados vacíos, de carga y de error en es-MX en src/app/(cliente)/ y src/app/admin/(panel)/ con `loading.tsx`, `error.tsx` y `not-found.tsx`
-- [ ] T083 [P] Agregar una prueba con axe de todas las pantallas de administración y etiquetas de formularios en tests/e2e/accesibilidad-admin.spec.ts (Principio VII)
-- [ ] T084 [P] Agregar una prueba que recorra las pantallas públicas y compruebe formatos de precio, fecha y hora en tests/e2e/formatos.spec.ts (FR-039)
+- [X] T082 [P] Agregar estados vacíos, de carga y de error en es-MX en src/app/(cliente)/ y src/app/admin/(panel)/ con `loading.tsx`, `error.tsx` y `not-found.tsx`
+- [X] T083 [P] Agregar una prueba con axe de todas las pantallas de administración y etiquetas de formularios en tests/e2e/accesibilidad-admin.spec.ts (Principio VII)
+- [X] T084 [P] Agregar una prueba que recorra las pantallas públicas y compruebe formatos de precio, fecha y hora en tests/e2e/formatos.spec.ts (FR-039)
 - [ ] T085 Ajustar `next/image` con tamaños adaptados en src/app/(cliente)/page.tsx y repetir en producción la medición de T092 tras entregar todas las historias
-- [ ] T086 [P] Escribir la guía de operación en español, con variables, cambio de contraseña y puesta en marcha, en README.md
-- [ ] T087 Ejecutar `npm run verificar` y `npm run test:e2e`, y dejar todo en verde
+- [X] T086 [P] Escribir la guía de operación en español, con variables, cambio de contraseña y puesta en marcha, en README.md
+- [X] T087 Ejecutar `npm run verificar` y `npm run test:e2e`, y dejar todo en verde
 - [ ] T088 Ejecutar la comprobación manual de specs/001-catalogo-ventas-apartados/quickstart.md en un móvil real y registrar resultados, incluidas las acciones del vendedor cronometradas en menos de 1 segundo y la prueba con personas de SC-009, en specs/001-catalogo-ventas-apartados/checklists/aceptacion.md
 
 ---

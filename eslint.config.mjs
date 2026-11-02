@@ -7,6 +7,7 @@ const config = [
   {
     ignores: [
       ".next/**",
+      "arranque/**",
       ".claude/**",
       ".specify/**",
       "node_modules/**",

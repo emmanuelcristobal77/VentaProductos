@@ -1,4 +1,3 @@
-import { and, eq } from "drizzle-orm";
 import { normalizarNombre } from "@/dominio/normalizacion";
 import type { Conexion } from "./cliente";
 import { categorias, subcategorias } from "./esquema";
@@ -9,22 +8,20 @@ const INICIALES: Record<string, string[]> = {
   "Otros artículos": [],
 };
 
+/** Solo actúa en una base sin categorías: corre en cada arranque y no debe revertir lo que capture el vendedor. */
 export function sembrar(bd: Conexion) {
+  if (bd.select({ id: categorias.id }).from(categorias).limit(1).get()) return;
+
   for (const [nombre, subs] of Object.entries(INICIALES)) {
-    const nombreNorm = normalizarNombre(nombre);
-    const existente = bd
-      .select({ id: categorias.id })
-      .from(categorias)
-      .where(and(eq(categorias.nombreNorm, nombreNorm), eq(categorias.activo, true)))
+    const { id: categoriaId } = bd
+      .insert(categorias)
+      .values({ nombre, nombreNorm: normalizarNombre(nombre) })
+      .returning({ id: categorias.id })
       .get();
-    const categoriaId =
-      existente?.id ??
-      bd.insert(categorias).values({ nombre, nombreNorm }).returning({ id: categorias.id }).get().id;
 
     for (const sub of subs) {
       bd.insert(subcategorias)
         .values({ categoriaId, nombre: sub, nombreNorm: normalizarNombre(sub) })
-        .onConflictDoNothing()
         .run();
     }
   }
