@@ -142,7 +142,7 @@ description: "Lista de tareas para implementar VendeProductos v0"
 - [X] T091 Crear en Easypanel el servicio desde el repositorio privado, con una sola réplica, volumen persistente en `/datos`, dominio con HTTPS y las variables de .env.example, incluido el `TELEFONO_NEGOCIO` real, sin afectar otros servicios ni cargar datos de prueba. Comprobar que los datos sobreviven a un redespliegue
 - [ ] T092 Validar en un móvil real, en la dirección pública, los pasos 1 y 2 de specs/001-catalogo-ventas-apartados/quickstart.md, y medir con Lighthouse en perfil móvil, con al menos 30 productos con foto, que la primera vista cargue en menos de 2.5 segundos; anotar el resultado en specs/001-catalogo-ventas-apartados/checklists/aceptacion.md
 - [X] T093 Crear scripts/respaldar.ts, que genera la copia con `VACUUM INTO`, la comprime y la sube junto con las fotos nuevas al bucket privado `respaldos`, conserva 14 días y registra cualquier fallo; programarlo a diario. Debe funcionar antes de registrar ventas reales
-- [ ] T094 Escribir en README.md el procedimiento de restauración y probarlo en una instancia limpia, comparando productos, operaciones, saldos y fotos contra la original
+- [X] T094 Escribir en README.md el procedimiento de restauración y probarlo en una instancia limpia, comparando productos, operaciones, saldos y fotos contra la original
 
 **Checkpoint**: el negocio ya muestra su catálogo en línea
 
