@@ -108,6 +108,14 @@ Revisado en Easypanel v2.37.0 el 2026-11-01, sin modificar nada.
 - **Decisión contra la pausa**: tras cada respaldo correcto, `scripts/respaldar.ts` actualiza la única fila de la tabla `latido` en Supabase con la hora del respaldo. Así hay actividad diaria en la base de datos sin pagar el plan Pro. Comprobado el 2026-11-02: un respaldo manual dejó `ultimo_respaldo` en 18:32 UTC.
 - **Despliegue**: Easypanel no despliega solo al recibir un `push`; hay que pulsar **Implementar** en el servicio.
 
+## Prueba de restauración (T094)
+
+Hecha el 2026-11-02 en la laptop del propietario, con `DATOS_DIR=C:\restauracion-prueba` y credenciales de prueba, siguiendo el README con la copia de las 13:15 (hora local).
+
+- La base descomprimida pasó `integrity_check` y trae 3 productos (1 activo y 2 inactivos), 3 fotos, 3 categorías y 7 subcategorías. Las 3 fotos de `fotos/` coinciden con los registros.
+- El catálogo restaurado se ve igual que el de `app.cristobalia.com`: mismo producto, foto, precio y categoría.
+- Aún no hay operaciones ni pagos, así que los saldos no se pudieron comparar. Conviene repetir la prueba cuando haya ventas registradas.
+
 ## Fuentes
 
 - [Vercel: plan Hobby](https://vercel.com/docs/plans/hobby)
