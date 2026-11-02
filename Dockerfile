@@ -1,4 +1,6 @@
 FROM node:24-bookworm-slim AS compilacion
+# npm ejecuta node-gyp al instalar better-sqlite3 aunque el paquete ya traiga binarios.
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
