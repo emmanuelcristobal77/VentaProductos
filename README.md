@@ -55,7 +55,7 @@ Compruebe después de desplegar que los datos siguen ahí tras un redespliegue.
 
 `node respaldar.cjs`, dentro del contenedor, genera una copia de la base y la sube junto con las fotos nuevas al bucket privado `respaldos` de Supabase. Debe programarse a diario. Conserva 14 días de copias de la base; las fotos no se borran.
 
-Si falla, termina con error y lo escribe en los registros del servicio. Revise esos registros: los proyectos gratuitos de Supabase se pausan tras unos días sin actividad.
+Si falla, termina con error y lo escribe en los registros del servicio. Los proyectos gratuitos de Supabase se pausan tras una semana sin actividad en la base de datos; para evitarlo, cada respaldo correcto anota su hora en la tabla `latido` de Supabase. Si esa hora tiene más de un día, el respaldo diario no está corriendo.
 
 ## Restaurar un respaldo
 
