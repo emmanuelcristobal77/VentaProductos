@@ -25,3 +25,18 @@ Medido el 2026-11-03 en `https://app.cristobalia.com/`, con 34 productos con fot
 |---|---|---|---|
 | 1 | 2026-11-03: alta de un producto real con 3 fotos en unos 1.5 minutos, incluido el guardado de unos 3 s; se ve en el catálogo público. Se usó una subcategoría existente; crear subcategorías lo cubren las pruebas automáticas | SC-001 | Sí |
 | 2 | 2026-11-03: sin sesión, en incógnito, el filtro por categoría funciona y el detalle muestra foto, leyenda y teléfono de contacto; solo aparece el precio de venta, nunca el de compra | SC-002, SC-008 | Sí |
+
+## Comprobación manual de operaciones (T088)
+
+Hecha el 2026-11-03 en una copia local del respaldo de ese día (`C:\prueba-t088`), con compilación de producción y credenciales de prueba, para no dejar operaciones ficticias en producción. Producto de prueba: "Prueba T088", 5 unidades a $1,250.00 MXN. Cada acción del vendedor se completó en menos de 1 segundo.
+
+| # | Resultado | Criterio | Cumple |
+|---|---|---|---|
+| 3 | Venta de 1 unidad a $1,100.00: quedan 4 disponibles y el catálogo sigue en $1,250.00. Marcarla como entregada no cambia la existencia | SC-003, SC-004 | Sí |
+| 4 | Apartado de 2 unidades con $200.00 iniciales, en lugar de $300.00: quedan 2 disponibles y el saldo es $2,300.00 | SC-004 | Sí |
+| 5 | Pago de $2,300.00: saldo $0.00 y estado Pagado; al marcar la entrega pasa a Entregado, la existencia baja a 2 y siguen 2 disponibles | SC-005 | Sí |
+| 6 | Venta de las 2 unidades restantes: el catálogo marca "Agotado, disponible por encargo" | FR-015 | Sí |
+| 7 | Encargo de 1 unidad con $500.00 de anticipo: aparece en encargos pendientes con saldo de $750.00 y el catálogo sigue agotado. Un encargo cancelado conserva su pago como no devuelto (FR-027) | FR-024, FR-026 | Sí |
+| 8 | Consulta en `/mis-apartados`: muestra el encargo con su pago y saldo, sin precio de compra, en menos de 1 minuto. Con un teléfono equivocado responde "No encontramos información con esos datos", sin decir qué dato falló | SC-007 | Sí |
+| 9 | Búsqueda en administración por fecha, nombre y teléfono: encuentra las operaciones y abre su desglose | SC-006 | Sí |
+| 10 | Anulación de la venta de 2 unidades ya entregada: queda Anulada y la existencia vuelve a 2. Apartado nuevo de 1 unidad con $100.00, cancelado: queda Cancelado, vuelven 2 disponibles y el pago sigue visible. Ambas siguen en el historial | FR-027, FR-042 | Sí |
