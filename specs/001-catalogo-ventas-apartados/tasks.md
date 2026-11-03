@@ -267,7 +267,7 @@ description: "Lista de tareas para implementar VendeProductos v0"
 - [X] T082 [P] Agregar estados vacíos, de carga y de error en es-MX en src/app/(cliente)/ y src/app/admin/(panel)/ con `loading.tsx`, `error.tsx` y `not-found.tsx`
 - [X] T083 [P] Agregar una prueba con axe de todas las pantallas de administración y etiquetas de formularios en tests/e2e/accesibilidad-admin.spec.ts (Principio VII)
 - [X] T084 [P] Agregar una prueba que recorra las pantallas públicas y compruebe formatos de precio, fecha y hora en tests/e2e/formatos.spec.ts (FR-039)
-- [ ] T085 Ajustar `next/image` con tamaños adaptados en src/app/(cliente)/page.tsx y repetir en producción la medición de T092 tras entregar todas las historias
+- [X] T085 Ajustar `next/image` con tamaños adaptados en src/app/(cliente)/page.tsx y repetir en producción la medición de T092 tras entregar todas las historias
 - [X] T086 [P] Escribir la guía de operación en español, con variables, cambio de contraseña y puesta en marcha, en README.md
 - [X] T087 Ejecutar `npm run verificar` y `npm run test:e2e`, y dejar todo en verde
 - [ ] T088 Ejecutar la comprobación manual de specs/001-catalogo-ventas-apartados/quickstart.md en un móvil real y registrar resultados, incluidas las acciones del vendedor cronometradas en menos de 1 segundo y la prueba con personas de SC-009, en specs/001-catalogo-ventas-apartados/checklists/aceptacion.md

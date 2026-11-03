@@ -22,7 +22,7 @@ Aplicación web para Productos Eli's con una sección pública (catálogo, artí
 
 **Project Type**: Aplicación web de un solo proyecto
 
-**Performance Goals**: Catálogo de la primera vista en menos de 2.5 segundos en una conexión móvil 4G; acciones del vendedor en menos de 1 segundo, para cumplir los tiempos de SC-001 a SC-007
+**Performance Goals**: Catálogo de la primera vista en menos de 2.5 segundos en una conexión móvil 4G (se mide con Lighthouse en perfil móvil, con el perfil "Fast 4G" de Chrome: 9 Mbps, 60 ms de latencia y CPU 4 veces más lenta); acciones del vendedor en menos de 1 segundo, para cumplir los tiempos de SC-001 a SC-007
 
 **Constraints**: Importes exactos al centavo; todo en español de México; precio de compra nunca en respuestas públicas; sin borrado físico; operable por una persona no técnica
 
