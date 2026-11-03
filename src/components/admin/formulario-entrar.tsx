@@ -19,7 +19,15 @@ export function FormularioEntrar() {
     <form action={accion} className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <Label htmlFor="usuario">Usuario</Label>
-        <Input id="usuario" name="usuario" autoComplete="username" required />
+        <Input
+          id="usuario"
+          name="usuario"
+          autoComplete="username"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          required
+        />
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="contrasena">Contraseña</Label>
