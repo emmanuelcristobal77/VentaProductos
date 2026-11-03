@@ -49,5 +49,7 @@ Meta: 9 de cada 10 personas que usan el catálogo por primera vez en su móvil f
 | Fecha | Personas | Encontraron el producto sin ayuda | Notas |
 |---|---|---|---|
 | 2026-11-03 | 4 | 4 | Tardaron un poco, pero todas lo encontraron. El propietario propone un buscador de productos para una spec nueva |
+| 2026-11-03 | 6 | 4 | 2 personas necesitaron ayuda |
+| **Total** | **10** | **8** | **No cumple**: la meta es 9 de 10 |
 
-- **Pendiente**: 6 personas más para completar 10.
+- **Pendiente**: saber en qué se atoraron las 2 personas y decidir cómo cerrar la diferencia.
