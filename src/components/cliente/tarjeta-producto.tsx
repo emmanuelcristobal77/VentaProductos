@@ -21,7 +21,8 @@ export function TarjetaProducto({
               src={`/api/fotos/${producto.fotos[0]}`}
               alt={producto.nombre}
               fill
-              priority={prioritaria}
+              loading={prioritaria ? "eager" : "lazy"}
+              fetchPriority={prioritaria ? "high" : "auto"}
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
               className="object-cover"
             />
