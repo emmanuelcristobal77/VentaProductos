@@ -18,4 +18,10 @@ Medido el 2026-11-03 en `https://app.cristobalia.com/`, con 34 productos con fot
 - Con un 4G normal (perfil "Fast 4G" de Chrome: 9 Mbps y 60 ms de latencia, con la misma CPU 4 veces más lenta), la versión `affbf4f` da una mediana de puntaje 99, FCP 0.6 s y LCP 0.9 s.
 - **Decisión del propietario (2026-11-03)**: la meta se mide con el perfil 4G normal, que es el que describe plan.md; el perfil 4G lento de Lighthouse queda solo como referencia. **Cumple**: LCP de 0.9 s.
 - **Celular real (2026-11-03)**: con datos 4G, la primera fila de productos con foto apareció en 1.22 s. Con wifi, ver las 34 fotos bajando hasta el final tomó menos de 6 s; ese tiempo no es la primera vista.
-- **Pendiente**: validar en un móvil real, en la dirección pública, los pasos 1 y 2 del quickstart.
+- **Pendiente**: validar en un móvil real el paso 2 del quickstart.
+
+## Comprobación manual en un celular real (T092)
+
+| # | Resultado | Criterio | Cumple |
+|---|---|---|---|
+| 1 | 2026-11-03: alta de un producto real con 3 fotos en unos 1.5 minutos, incluido el guardado de unos 3 s; se ve en el catálogo público. Se usó una subcategoría existente; crear subcategorías lo cubren las pruebas automáticas | SC-001 | Sí |
