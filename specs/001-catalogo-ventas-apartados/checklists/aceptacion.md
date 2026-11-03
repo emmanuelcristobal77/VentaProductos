@@ -41,3 +41,13 @@ Hecha el 2026-11-03 en una copia local del respaldo de ese día (`C:\prueba-t088
 | 9 | Búsqueda en administración por fecha, nombre y teléfono: encuentra las operaciones y abre su desglose | SC-006 | Sí |
 | 10 | Anulación de la venta de 2 unidades ya entregada: queda Anulada y la existencia vuelve a 2. Apartado nuevo de 1 unidad con $100.00, cancelado: queda Cancelado, vuelven 2 disponibles y el pago sigue visible. Ambas siguen en el historial | FR-027, FR-042 | Sí |
 | 11 | 20 operaciones: las 6 anteriores y 14 registradas desde la interfaz con un navegador automático (5 ventas, 5 apartados y 4 encargos, con importes como 3 × $333.33, abonos de $0.01, un pago anulado y un apartado cancelado). Total, pagado y saldo coinciden al centavo con cuentas hechas aparte. El propietario revisó con calculadora 3 de ellas (un apartado y dos encargos, uno con pago anulado) y coinciden | SC-005 | Sí |
+
+## Prueba con personas (SC-009)
+
+Meta: 9 de cada 10 personas que usan el catálogo por primera vez en su móvil filtran por categoría y encuentran un producto sin ayuda. Se hace en `app.cristobalia.com`.
+
+| Fecha | Personas | Encontraron el producto sin ayuda | Notas |
+|---|---|---|---|
+| 2026-11-03 | 4 | 4 | Tardaron un poco, pero todas lo encontraron. El propietario propone un buscador de productos para una spec nueva |
+
+- **Pendiente**: 6 personas más para completar 10.
