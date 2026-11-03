@@ -9,7 +9,9 @@ function Opcion({ href, activa, children }: { href: string; activa: boolean; chi
       aria-current={activa ? "true" : undefined}
       className={cn(
         "focus-visible:ring-ring inline-flex min-h-10 shrink-0 items-center rounded-full border px-4 text-sm font-medium outline-none transition-colors focus-visible:ring-2",
-        activa ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-accent",
+        activa
+          ? "bg-primary text-primary-foreground border-primary"
+          : "bg-card border-primary/40 text-primary hover:bg-accent shadow-xs",
       )}
     >
       {children}
@@ -32,6 +34,8 @@ export function FiltroCategorias({
 
   return (
     <nav aria-label="Filtrar por categoría" className="flex flex-col gap-2">
+      {/* En la prueba con personas (SC-009), una no notó los botones sin un texto que los anunciara. */}
+      <p className="text-sm font-medium">Elige una categoría</p>
       <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
         <Opcion href={rutaBase} activa={!seleccionada}>
           Todos los productos
