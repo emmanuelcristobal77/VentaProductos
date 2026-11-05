@@ -52,4 +52,13 @@ Meta: 9 de cada 10 personas que usan el catálogo por primera vez en su móvil f
 | 2026-11-03 | 6 | 4 | 2 personas necesitaron ayuda |
 | **Total** | **10** | **8** | **No cumple**: la meta es 9 de 10 |
 
-- **Pendiente**: saber en qué se atoraron las 2 personas y decidir cómo cerrar la diferencia.
+Causas: una persona no vio los botones de categoría y otra buscaba un buscador. Se agregó el texto "Elige una categoría" y más contraste a los botones (commit `67172a7`) y se repitió la prueba con personas nuevas.
+
+### Segunda ronda, tras el ajuste de los filtros
+
+| Fecha | Personas | Encontraron el producto sin ayuda | Con los filtros | Bajando por la lista | Preguntaron por un buscador |
+|---|---|---|---|---|---|
+| 2026-11-04 | 10 | 10 | 6 | 4 | 7 |
+
+- **Decisión del propietario (2026-11-04)**: SC-009 se evalúa por encontrar el producto sin ayuda. **Cumple**: 10 de 10.
+- 7 de 10 personas preguntaron por un buscador: es la siguiente prioridad, como spec 002.

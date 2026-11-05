@@ -270,7 +270,7 @@ description: "Lista de tareas para implementar VendeProductos v0"
 - [X] T085 Ajustar `next/image` con tamaños adaptados en src/app/(cliente)/page.tsx y repetir en producción la medición de T092 tras entregar todas las historias
 - [X] T086 [P] Escribir la guía de operación en español, con variables, cambio de contraseña y puesta en marcha, en README.md
 - [X] T087 Ejecutar `npm run verificar` y `npm run test:e2e`, y dejar todo en verde
-- [ ] T088 Ejecutar la comprobación manual de specs/001-catalogo-ventas-apartados/quickstart.md en un móvil real y registrar resultados, incluidas las acciones del vendedor cronometradas en menos de 1 segundo y la prueba con personas de SC-009, en specs/001-catalogo-ventas-apartados/checklists/aceptacion.md
+- [X] T088 Ejecutar la comprobación manual de specs/001-catalogo-ventas-apartados/quickstart.md en un móvil real y registrar resultados, incluidas las acciones del vendedor cronometradas en menos de 1 segundo y la prueba con personas de SC-009, en specs/001-catalogo-ventas-apartados/checklists/aceptacion.md
 
 ---
 
