@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-06
 
-**Status**: Draft
+**Status**: Approved
 
 **Input**: User description: "Aviso de privacidad para VendeProductos (Productos Eli's): una página pública con el aviso integral en /aviso-de-privacidad, enlazada desde el pie de página de la sección de cliente y desde «Mis apartados»; y una casilla en los formularios del vendedor, «Se informó al cliente del aviso de privacidad», que queda guardada con la operación como comprobante". Nace de research.md de la spec 001, que señaló el aviso como requisito antes de capturar datos reales de clientes.
 
