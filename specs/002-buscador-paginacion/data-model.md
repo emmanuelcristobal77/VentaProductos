@@ -40,7 +40,7 @@ OR (grupo = g AND creado_en = c AND id < i)
 
 Un cursor que no se puede leer, o con valores fuera de su forma, se rechaza con `CURSOR_INVALIDO`.
 
-### Página de resultados
+### Parte de resultados
 
 | Campo | Contenido |
 |---|---|

@@ -42,6 +42,10 @@ La tecnología es la misma de la spec 001 ([research de la 001](../001-catalogo-
 ## 5. Búsqueda mientras se escribe
 
 - **Decision**: se espera 250 ms desde la última tecla antes de pedir resultados. Cada petición nueva cancela la anterior con `AbortController`, y se descarta cualquier respuesta que no corresponda al texto actual. Mientras llega la respuesta, la lista anterior sigue visible y la región `aria-live` dice "Buscando…". Al llegar, anuncia "N productos encontrados".
+
+  **Desplazamiento (FR-014)**:
+  - **Al cambiar el filtro**: si el buscador quedó fuera de la vista, la página sube hasta él, para que la persona vea desde el principio la lista nueva.
+  - **Mientras se escribe**: la página no se mueve, para no quitar el campo de la vista.
 - **Rationale**: cubre el caso límite de la escritura rápida (nunca se muestran resultados de un texto anterior). También cabe con holgura en SC-003: 250 ms de espera más una consulta de milisegundos dan menos de 1 s.
 - **Alternatives considered**: buscar con cada tecla sin esperar. Se descartó porque en un celular con datos móviles genera muchas peticiones inútiles.
 
@@ -85,3 +89,8 @@ La tecnología es la misma de la spec 001 ([research de la 001](../001-catalogo-
 | Región `aria-live` | Buscando… / {N} productos encontrados / Se agregaron {N} productos |
 
 En el mensaje sin resultados del catálogo, "artículos por encargo" enlaza a `/encargos` y el teléfono es un enlace `tel:` (FR-005).
+
+**Catálogo vacío** (caso límite de la spec): el campo de búsqueda se muestra siempre, para que la pantalla conserve su forma.
+- **Sin texto**: se ve el mensaje actual "No hay productos en esta categoría por ahora.".
+- **Con texto**: se ve el mensaje sin resultados del catálogo, con el enlace a los artículos por encargo y el teléfono.
+- **En los dos casos**: no aparece el botón «Ver más».
