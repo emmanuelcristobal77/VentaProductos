@@ -224,8 +224,8 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 - [X] T035 Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de la spec 001, y dejar todo en verde
 - [X] T036 Medir SC-002 y SC-003 con 500 productos de ejemplo según quickstart.md (Lighthouse 12.8.2, perfil Fast 4G, meta de LCP ≤ 1 s; resultados ≤ 1 s después de dejar de escribir), borrar `./datos/prueba-500` y registrar los resultados en specs/002-buscador-paginacion/checklists/aceptacion.md
 - [X] T037 Ejecutar en un celular real los pasos 1 a 8 y 11 a 16 (los pasos 9 y 10 los cubre T036 con la base de 500) de specs/002-buscador-paginacion/quickstart.md, incluido SC-005 cronometrado, y registrar los resultados en specs/002-buscador-paginacion/checklists/aceptacion.md
-- [ ] T038 Hacer la prueba con 10 personas nuevas de SC-001 (quickstart, paso 17) y registrar fecha, personas, cuántas encontraron el producto con el buscador sin ayuda y observaciones en specs/002-buscador-paginacion/checklists/aceptacion.md
-- [ ] T039 Después de publicar en Easypanel (pulsar Implementar tras el push a `main`), repetir en producción los pasos 1 a 8 y 14 de quickstart.md con los productos reales y registrarlos en specs/002-buscador-paginacion/checklists/aceptacion.md
+- [X] T038 Hacer la prueba con 10 personas nuevas de SC-001 (quickstart, paso 17) y registrar fecha, personas, cuántas encontraron el producto con el buscador sin ayuda y observaciones en specs/002-buscador-paginacion/checklists/aceptacion.md
+- [X] T039 Después de publicar en Easypanel (pulsar Implementar tras el push a `main`), repetir en producción los pasos 1 a 8 y 14 de quickstart.md con los productos reales y registrarlos en specs/002-buscador-paginacion/checklists/aceptacion.md
 
 ---
 

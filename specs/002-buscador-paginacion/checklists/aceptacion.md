@@ -67,3 +67,52 @@ Hecha por el propietario el 2026-11-05 en su celular, conectado por Wi-Fi a la a
 
 - En el paso 3, los datos de ejemplo no tienen una palabra que esté a la vez en nombres y en descripciones, así que el orden "primero el nombre" (FR-007, US1-4) se respalda con las pruebas automáticas (`busqueda-productos.test.ts` y `us8-buscador.spec.ts`).
 - Al terminar se apagó la app de prueba y se borró la carpeta `./datos/prueba-500`.
+
+## Prueba con 10 personas nuevas (T038)
+
+Hecha por el propietario. Paso 17 del quickstart: a cada persona, en su celular, se le pidió encontrar un producto de prueba.
+
+| Fecha | Personas | Encontraron el producto con el buscador sin ayuda | Meta | Cumple |
+|---|---|---|---|---|
+| 2026-11-05 | 10 | 10 de 10 | 9 de 10 | Sí |
+
+- **Observaciones**: ninguna reportada.
+- La prueba se hizo después de publicar en `main` (`68bffa8`), por decisión del propietario; tasks.md pedía terminar las tareas T035 a T038 antes del merge.
+
+## Producción (T039)
+
+Publicado el 2026-11-05: push de `68bffa8` a `main` y despliegue con Implementar en Easypanel. En `https://app.cristobalia.com/` se comprobó que `/api/catalogo` responde con `Cache-Control: no-store`, sin precio de compra, con 46 productos reales (20 en la primera parte, más «Ver más»), y que `/api/admin/productos` sin sesión responde 401.
+
+### SC-002 en producción
+
+Lighthouse 12.8.2, perfil móvil Fast 4G (9 Mbps, 60 ms de latencia y CPU 4 veces más lenta), cinco pasadas medidas desde el equipo del propietario.
+
+| Pasada | Puntaje | FCP | LCP | TBT |
+|---|---|---|---|---|
+| 1 | 96 | 0.63 s | 1.19 s | 210 ms |
+| 2 | 93 | 0.52 s | 1.09 s | 319 ms |
+| 3 | 95 | 0.42 s | 1.04 s | 257 ms |
+| 4 | 95 | 0.39 s | 1.01 s | 262 ms |
+| 5 | 94 | 0.42 s | 1.03 s | 283 ms |
+| **Mediana** | **95** | **0.42 s** | **1.04 s** | **262 ms** |
+
+- **La meta de LCP ≤ 1 s no se confirmó**: la mediana queda 0.04 s arriba. En la spec 001 se midió 0.9 s con la versión `affbf4f`.
+- El servidor genera la página en unos 0.11 s; desde este equipo, el primer byte llega en unos 0.45 s por la red. La foto principal pesa 30 KB.
+- En local, con la misma base y el mismo equipo, la versión nueva no fue más lenta que la anterior (T036).
+- **Decisión del propietario (2026-11-05)**: se acepta el LCP de 1.04 s como prácticamente en la meta. La diferencia con 1 s no se percibe, con 46 productos reales la primera vista sigue siendo rápida y no hay evidencia de que la spec 002 sea más lenta que la versión anterior. **Cumple, por decisión del propietario.**
+
+### Pasos 1 a 8 y 14 con los productos reales
+
+Hechos por el propietario el 2026-11-05 en `https://app.cristobalia.com/` y en su panel de administrador, con los 46 productos reales.
+
+| # | Paso del quickstart | Criterio | Cumple |
+|---|---|---|---|
+| 1 | La lista se reduce mientras se escribe, sin pulsar ningún botón | FR-001, FR-003, US1-1 | Sí |
+| 2 | La búsqueda no distingue mayúsculas ni acentos | FR-002, US1-2 | Sí |
+| 3 | Una palabra que solo está en la descripción encuentra el producto | FR-002, FR-007, US1-3, US1-4 | Sí |
+| 4 | Dos palabras en otro orden encuentran el producto | FR-002 | Sí |
+| 5 | La búsqueda se combina con la categoría elegida | FR-004, US1-5 | Sí |
+| 6 | Sin resultados, el mensaje enlaza a los artículos por encargo y muestra el teléfono | FR-005, US1-6 | Sí |
+| 7 | Al regresar con atrás se conservan la búsqueda, los resultados y el lugar | FR-008a, US1-10 | Sí |
+| 8 | Al recargar, el buscador queda vacío y se ve la lista completa | FR-008, US1-8 | Sí |
+| 14 | En el panel, los pasos 1, 5, 7 y 9 se comportan igual, con partes de 50 | FR-001, FR-010, US1-9, US2-5 | Sí |
