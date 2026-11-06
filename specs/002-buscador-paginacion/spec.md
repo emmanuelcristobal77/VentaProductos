@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-05
 
-**Status**: Draft
+**Status**: Approved
 
 **Input**: User description: "Buscador de productos por nombre y descripción, que filtra mientras se escribe, en el catálogo de cliente y en el panel de administrador; y paginación con un botón «Ver más», de 20 productos en el catálogo y 50 en el panel, para cuando la cantidad de productos crezca". Nace de la prueba de SC-009 de la spec 001, en la que 7 de 10 personas preguntaron por un buscador.
 

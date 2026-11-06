@@ -38,7 +38,7 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 
 **Purpose**: aprobación y herramientas de prueba
 
-- [ ] T001 Registrar la aprobación formal de la spec por su propietario: cambiar **Status** a Approved en specs/002-buscador-paginacion/spec.md y el estado a "Aprobada el <fecha>" en specs/MAPA.md. No continuar sin esa aprobación (Constitución, Principio I y Flujo de desarrollo, paso 2)
+- [X] T001 Registrar la aprobación formal de la spec por su propietario: cambiar **Status** a Approved en specs/002-buscador-paginacion/spec.md y el estado a "Aprobada el <fecha>" en specs/MAPA.md. No continuar sin esa aprobación (Constitución, Principio I y Flujo de desarrollo, paso 2)
 - [ ] T002 [P] Crear scripts/productos-ejemplo.ts. Recibe `--cantidad N` (500 por omisión) y se niega a correr si `DATOS_DIR` está vacío o no contiene `prueba`. Aplica migraciones y semilla, y crea N productos activos con nombre, descripción, categoría y subcategoría variados (incluidos nombres con acentos y "ñ") y una foto generada con `sharp` y guardada con `guardarFoto` de src/lib/fotos.ts. Las fechas de alta deben ser distintas (research 8)
 
 ---
