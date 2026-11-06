@@ -1,4 +1,7 @@
 import { execFileSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
+import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
 import { expect, type Page } from "@playwright/test";
 import sharp from "sharp";
 
@@ -65,9 +68,71 @@ export function sqlDePrueba(consulta: string) {
     process.execPath,
     [
       "-e",
-      `const D=require('better-sqlite3');const d=new D('datos/e2e/vende-productos.sqlite');d.exec(process.argv[1]);d.close()`,
-      consulta,
+      // La consulta va por la entrada estándar: en Windows, una línea de comandos larga falla.
+      `const D=require('better-sqlite3');const d=new D('datos/e2e/vende-productos.sqlite');d.exec(require('fs').readFileSync(0,'utf8'));d.close()`,
     ],
-    { stdio: "pipe" },
+    { input: consulta, stdio: "pipe" },
+  );
+}
+
+const FOTO_VALIDA = /^[0-9a-f-]{36}\.(jpg|png|webp)$/;
+
+/** Un archivo de foto ya guardado en la carpeta de pruebas; si no hay ninguno, lo crea. */
+async function fotoExistente() {
+  const carpeta = path.join("datos", "e2e", "fotos");
+  mkdirSync(carpeta, { recursive: true });
+  const existente = readdirSync(carpeta).find((archivo) => FOTO_VALIDA.test(archivo));
+  if (existente) return existente;
+  const archivo = `${randomUUID()}.png`;
+  writeFileSync(path.join(carpeta, archivo), (await fotoDePrueba()).buffer);
+  return archivo;
+}
+
+const textoSql = (valor: string) => `'${valor.replace(/'/g, "''")}'`;
+
+/** Crea una categoría solo para una prueba, para contar sus productos sin los de otras pruebas. */
+export function crearCategoriaDePrueba(nombre: string) {
+  const id = randomUUID();
+  sqlDePrueba(
+    `INSERT INTO categorias (id, nombre, nombre_norm, activo)
+     VALUES (${textoSql(id)}, ${textoSql(nombre)}, ${textoSql(nombre.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase())}, 1)`,
+  );
+  return id;
+}
+
+export interface ProductoDePrueba {
+  nombre: string;
+  descripcion?: string;
+  existencia?: number;
+  categoriaId?: string;
+}
+
+/**
+ * Inserta productos activos con foto y fechas de alta distintas, en el orden en que la lista
+ * los muestra: el primero es el más reciente.
+ */
+export async function insertarProductosDePrueba(lista: ProductoDePrueba[]) {
+  const archivo = await fotoExistente();
+  const base = Date.now();
+  const categoria = (id?: string) =>
+    id ? textoSql(id) : "(SELECT id FROM categorias WHERE nombre = 'Juguetes' AND activo = 1)";
+  const sentencias = lista.map((producto, i) => {
+    const id = randomUUID();
+    const fecha = textoSql(new Date(base - i * 1000).toISOString());
+    return `INSERT INTO productos (id, nombre, descripcion, categoria_id, existencia, precio_compra_centavos,
+              precio_venta_centavos, activo, creado_en, actualizado_en)
+            VALUES (${textoSql(id)}, ${textoSql(producto.nombre)}, ${textoSql(producto.descripcion ?? "Descripción de prueba")},
+              ${categoria(producto.categoriaId)}, ${producto.existencia ?? 5}, 50000, 99000, 1, ${fecha}, ${fecha});
+            INSERT INTO fotos (id, producto_id, archivo, orden, activo)
+            VALUES (${textoSql(randomUUID())}, ${textoSql(id)}, ${textoSql(archivo)}, 0, 1);`;
+  });
+  sqlDePrueba(`BEGIN; ${sentencias.join("\n")} COMMIT;`);
+  return lista.map((producto) => producto.nombre);
+}
+
+/** n productos activos con fechas de alta distintas; devuelve sus nombres del más reciente al más antiguo. */
+export function crearProductosDePrueba(n: number, prefijo: string, opciones: Omit<ProductoDePrueba, "nombre"> = {}) {
+  return insertarProductosDePrueba(
+    Array.from({ length: n }, (_, i) => ({ ...opciones, nombre: `${prefijo} ${String(i + 1).padStart(3, "0")}` })),
   );
 }

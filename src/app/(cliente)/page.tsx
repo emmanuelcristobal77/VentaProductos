@@ -1,12 +1,11 @@
-import { TarjetaProducto } from "@/components/cliente/tarjeta-producto";
+import { CatalogoBuscable } from "@/components/cliente/catalogo-buscable";
 import { FiltroCategorias } from "@/components/filtro-categorias";
+import { TAMANO_CATALOGO } from "@/consultas/busqueda";
 import { listarCatalogo } from "@/consultas/publicas";
+import { telefonoNegocio } from "@/lib/contacto";
 import { listarCategorias } from "@/servicios/categorias";
 
 export const dynamic = "force-dynamic";
-
-/** Tarjetas visibles sin desplazarse en un móvil: sus fotos se cargan primero. */
-const PRIMERA_VISTA = 4;
 
 export default async function PaginaCatalogo({
   searchParams,
@@ -14,7 +13,12 @@ export default async function PaginaCatalogo({
   searchParams: Promise<{ categoria?: string; subcategoria?: string }>;
 }) {
   const { categoria, subcategoria } = await searchParams;
-  const productos = listarCatalogo({ categoriaId: categoria, subcategoriaId: subcategoria });
+  // La primera parte se dibuja en el servidor; las búsquedas y «Ver más» van a /api/catalogo.
+  const inicial = listarCatalogo({
+    categoriaId: categoria,
+    subcategoriaId: subcategoria,
+    limite: TAMANO_CATALOGO,
+  });
 
   return (
     <div className="flex flex-col gap-6">
@@ -23,24 +27,19 @@ export default async function PaginaCatalogo({
         <p className="text-muted-foreground mt-1">Juguetes, ropa y otros artículos.</p>
       </div>
 
-      <FiltroCategorias
-        categorias={listarCategorias()}
-        rutaBase="/"
-        categoriaId={categoria}
-        subcategoriaId={subcategoria}
-      />
-
-      {productos.length === 0 ? (
-        <p className="text-muted-foreground bg-card rounded-xl border p-8 text-center">
-          No hay productos en esta categoría por ahora.
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-5 lg:grid-cols-4">
-          {productos.map((producto, indice) => (
-            <TarjetaProducto key={producto.id} producto={producto} prioritaria={indice < PRIMERA_VISTA} />
-          ))}
-        </div>
-      )}
+      <CatalogoBuscable
+        inicial={inicial}
+        filtro={{ categoria, subcategoria }}
+        tamano={TAMANO_CATALOGO}
+        telefono={telefonoNegocio()}
+      >
+        <FiltroCategorias
+          categorias={listarCategorias()}
+          rutaBase="/"
+          categoriaId={categoria}
+          subcategoriaId={subcategoria}
+        />
+      </CatalogoBuscable>
     </div>
   );
 }

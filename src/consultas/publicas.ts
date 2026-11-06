@@ -12,8 +12,8 @@ import { calcularTotal } from "@/dominio/dinero";
 import { normalizarNombre, normalizarTelefono } from "@/dominio/normalizacion";
 import { unidadesDisponibles } from "./disponibilidad";
 import { fotosPorArticulo, fotosPorProducto } from "./fotos";
+import { cerrarParte, prepararParte, TAMANO_CATALOGO, type ParametrosLista } from "./busqueda";
 import { pagadoCentavos } from "./saldos";
-import type { FiltroProductos } from "./admin";
 
 /*
  * Consultas de la sección de cliente. Las columnas se eligen una por una:
@@ -29,15 +29,8 @@ const seleccion = {
   disponible: unidadesDisponibles,
 };
 
-function consultar(condicion: SQL | undefined) {
-  const filas = obtenerBd()
-    .select(seleccion)
-    .from(productos)
-    .innerJoin(categorias, eq(productos.categoriaId, categorias.id))
-    .leftJoin(subcategorias, eq(productos.subcategoriaId, subcategorias.id))
-    .where(condicion)
-    .orderBy(desc(productos.creadoEn))
-    .all();
+function conFotos<F extends { id: string; disponible: number }>(filas: F[]) {
+  // Solo se piden las fotos de los productos que se entregan.
   const fotos = fotosPorProducto(filas.map((f) => f.id));
   return filas.map((fila) => ({
     ...fila,
@@ -46,14 +39,33 @@ function consultar(condicion: SQL | undefined) {
   }));
 }
 
-export function listarCatalogo({ categoriaId, subcategoriaId }: FiltroProductos) {
-  return consultar(
-    and(
-      eq(productos.activo, true),
-      categoriaId ? eq(productos.categoriaId, categoriaId) : undefined,
-      subcategoriaId ? eq(productos.subcategoriaId, subcategoriaId) : undefined,
-    ),
+function consultar(condicion: SQL | undefined) {
+  return conFotos(
+    obtenerBd()
+      .select(seleccion)
+      .from(productos)
+      .innerJoin(categorias, eq(productos.categoriaId, categorias.id))
+      .leftJoin(subcategorias, eq(productos.subcategoriaId, subcategorias.id))
+      .where(condicion)
+      .orderBy(desc(productos.creadoEn))
+      .all(),
   );
+}
+
+/** Una parte del catálogo con búsqueda y cursor (spec 002, contracts/rutas.md). */
+export function listarCatalogo(parametros: ParametrosLista) {
+  const parte = prepararParte(parametros, TAMANO_CATALOGO);
+  const filas = obtenerBd()
+    .select({ ...seleccion, ...parte.posicion })
+    .from(productos)
+    .innerJoin(categorias, eq(productos.categoriaId, categorias.id))
+    .leftJoin(subcategorias, eq(productos.subcategoriaId, subcategorias.id))
+    .where(parte.condicion)
+    .orderBy(...parte.orden)
+    .limit(parte.filasAPedir)
+    .all();
+  const { filas: entregadas, siguiente } = cerrarParte(filas, parte.limite);
+  return { productos: conFotos(entregadas), siguiente, total: parte.contar() };
 }
 
 export function obtenerProducto(id: string) {
@@ -76,7 +88,7 @@ export function listarArticulosEncargo() {
   return filas.map((fila) => ({ ...fila, fotos: fotos.get(fila.id) ?? [] }));
 }
 
-export type ProductoPublico = ReturnType<typeof listarCatalogo>[number];
+export type ProductoPublico = ReturnType<typeof listarCatalogo>["productos"][number];
 
 /** Apartados y encargos de quien coincide en nombre y teléfono; nunca ventas (FR-035). */
 export function consultarOperacionesCliente(nombre: string, telefono: string) {

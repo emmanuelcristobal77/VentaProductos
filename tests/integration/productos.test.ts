@@ -41,7 +41,7 @@ describe("productos", () => {
 
   it("FR-008: registra un producto con todos sus datos", () => {
     const { id } = crearProducto(datos());
-    expect(listarProductosAdmin({}).find((p) => p.id === id)).toMatchObject({
+    expect(listarProductosAdmin({}).productos.find((p) => p.id === id)).toMatchObject({
       nombre: "Carrito",
       existencia: 4,
       disponible: 4,
@@ -55,7 +55,7 @@ describe("productos", () => {
     const { id } = crearProducto(
       datos({ categoria: { nombre: "Papelería" }, subcategoria: { nombre: "Cuadernos" } }),
     );
-    expect(listarProductosAdmin({}).find((p) => p.id === id)).toMatchObject({
+    expect(listarProductosAdmin({}).productos.find((p) => p.id === id)).toMatchObject({
       categoria: "Papelería",
       subcategoria: "Cuadernos",
     });
@@ -122,7 +122,7 @@ describe("productos", () => {
     crearOperacionDirecta({ productoId: producto.id, cantidad: 1, estado: "entregado" });
     crearOperacionDirecta({ productoId: producto.id, cantidad: 1, estado: "cancelado", motivo: "x" });
     crearOperacionDirecta({ productoId: producto.id, cantidad: 3, tipo: "encargo" });
-    expect(listarProductosAdmin({}).find((p) => p.id === producto.id)?.disponible).toBe(2);
+    expect(listarProductosAdmin({}).productos.find((p) => p.id === producto.id)?.disponible).toBe(2);
   });
 
   it.each(["apartado", "encargo"] as const)("baja con %s vigente da TIENE_DEPENDENCIAS", (tipo) => {
@@ -145,7 +145,7 @@ describe("productos", () => {
     expect(obtenerBd().select().from(productos).where(eq(productos.id, producto.id)).get()).toMatchObject({
       activo: false,
     });
-    expect(listarProductosAdmin({}).some((p) => p.id === producto.id)).toBe(false);
+    expect(listarProductosAdmin({}).productos.some((p) => p.id === producto.id)).toBe(false);
   });
 
   it("FR-010: filtra por categoría y subcategoría", () => {
@@ -160,7 +160,7 @@ describe("productos", () => {
     const b = crearProductoDirecto({ categoriaId: categoriaPorNombre("Ropa").id });
 
     const ids = (filtro: Parameters<typeof listarProductosAdmin>[0]) =>
-      listarProductosAdmin(filtro).map((p) => p.id);
+      listarProductosAdmin(filtro).productos.map((p) => p.id);
     expect(ids({})).toEqual(expect.arrayContaining([a.id, b.id]));
     expect(ids({ categoriaId: juguetes.id })).toEqual([a.id]);
     expect(ids({ categoriaId: juguetes.id, subcategoriaId: niñas.id })).toEqual([a.id]);

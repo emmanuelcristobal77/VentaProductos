@@ -12,7 +12,8 @@ export type CodigoError =
   | "ESTADO_NO_PERMITE"
   | "TIENE_DEPENDENCIAS"
   | "EXISTENCIA_INSUFICIENTE"
-  | "FOTO_REQUERIDA";
+  | "FOTO_REQUERIDA"
+  | "CURSOR_INVALIDO";
 
 export const MENSAJES: Record<CodigoError, string> = {
   NO_AUTORIZADO: "Tu sesión terminó. Vuelve a iniciar sesión para continuar.",
@@ -27,6 +28,7 @@ export const MENSAJES: Record<CodigoError, string> = {
   TIENE_DEPENDENCIAS: "No se puede dar de baja porque tiene registros vigentes.",
   EXISTENCIA_INSUFICIENTE: "La existencia no puede ser menor a las unidades apartadas.",
   FOTO_REQUERIDA: "Agrega al menos una foto del producto.",
+  CURSOR_INVALIDO: "La lista cambió mientras la veías. Vuelve a cargarla desde el principio.",
 };
 
 export const CAMPOS = {

@@ -76,3 +76,15 @@ npm run test:e2e
 ```
 
 `verificar` revisa tipos, estilo y reglas de negocio sin servicios externos. `test:e2e` recorre la aplicación en un navegador con tamaño de móvil y de portátil. La comprobación manual está en [quickstart.md](specs/001-catalogo-ventas-apartados/quickstart.md).
+
+## Medir la velocidad con 500 productos
+
+Para comprobar SC-002 y SC-003 de la [spec 002](specs/002-buscador-paginacion/quickstart.md) se usa una base de prueba aparte, llena con productos de ejemplo:
+
+```powershell
+$env:DATOS_DIR = "./datos/prueba-500"; npx tsx scripts/productos-ejemplo.ts --cantidad 500
+```
+
+Después, arranque la app con esa misma `DATOS_DIR` y mida como indica el quickstart. Al terminar, borre `./datos/prueba-500`.
+
+> **Advertencia:** este script nunca se ejecuta contra la carpeta de datos de producción. Se niega a correr si `DATOS_DIR` está vacío o no contiene la palabra `prueba`, para no llenar el catálogo real de productos de ejemplo.

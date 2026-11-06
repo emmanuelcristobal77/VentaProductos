@@ -39,7 +39,7 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 **Purpose**: aprobación y herramientas de prueba
 
 - [X] T001 Registrar la aprobación formal de la spec por su propietario: cambiar **Status** a Approved en specs/002-buscador-paginacion/spec.md y el estado a "Aprobada el <fecha>" en specs/MAPA.md. No continuar sin esa aprobación (Constitución, Principio I y Flujo de desarrollo, paso 2)
-- [ ] T002 [P] Crear scripts/productos-ejemplo.ts. Recibe `--cantidad N` (500 por omisión) y se niega a correr si `DATOS_DIR` está vacío o no contiene `prueba`. Aplica migraciones y semilla, y crea N productos activos con nombre, descripción, categoría y subcategoría variados (incluidos nombres con acentos y "ñ") y una foto generada con `sharp` y guardada con `guardarFoto` de src/lib/fotos.ts. Las fechas de alta deben ser distintas (research 8)
+- [X] T002 [P] Crear scripts/productos-ejemplo.ts. Recibe `--cantidad N` (500 por omisión) y se niega a correr si `DATOS_DIR` está vacío o no contiene `prueba`. Aplica migraciones y semilla, y crea N productos activos con nombre, descripción, categoría y subcategoría variados (incluidos nombres con acentos y "ñ") y una foto generada con `sharp` y guardada con `guardarFoto` de src/lib/fotos.ts. Las fechas de alta deben ser distintas (research 8)
 
 ---
 
@@ -51,12 +51,12 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 
 ### Pruebas de la fase base
 
-- [ ] T003 [P] Escribir pruebas en tests/unit/busqueda.test.ts:
+- [X] T003 [P] Escribir pruebas en tests/unit/busqueda.test.ts:
   - `palabrasDeBusqueda` recorta a "hasta 100 caracteres", normaliza como `normalizarNombre`, divide por espacios, descarta vacías, conserva "como máximo 10" y devuelve `[]` para un texto de solo espacios (data-model, Búsqueda; casos límite "Espacios de más" y "Una sola letra").
   - `codificarCursor` y `decodificarCursor` hacen un viaje de ida y vuelta de `{ g: 0|1, c, i }`.
   - Un cursor ilegible o con `g` fuera de 0 y 1 lanza `ErrorNegocio("CURSOR_INVALIDO")`.
-- [ ] T004 [P] Escribir pruebas en tests/integration/normalizar-sqlite.test.ts: la función `normalizar()` de SQLite da lo mismo que `normalizarNombre` para "Ñandú", "  Muñeca  ", "ÁRBOL" y `null` (research 1)
-- [ ] T005 [P] Escribir pruebas de contrato de las rutas en tests/e2e/api-productos.spec.ts:
+- [X] T004 [P] Escribir pruebas en tests/integration/normalizar-sqlite.test.ts: la función `normalizar()` de SQLite da lo mismo que `normalizarNombre` para "Ñandú", "  Muñeca  ", "ÁRBOL" y `null` (research 1)
+- [X] T005 [P] Escribir pruebas de contrato de las rutas en tests/e2e/api-productos.spec.ts:
   - `/api/catalogo` no devuelve `precioCompraCentavos` ni `existencia` (FR-009).
   - `/api/admin/productos` sin sesión da 401.
   - Un cursor alterado da 400 con `CURSOR_INVALIDO`.
@@ -64,10 +64,10 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 
 ### Implementación base
 
-- [ ] T006 Agregar el código `CURSOR_INVALIDO` a `CodigoError` y su mensaje es-MX en src/lib/mensajes.ts
-- [ ] T007 Implementar `palabrasDeBusqueda(texto)` en src/dominio/normalizacion.ts según data-model.md: "Se recorta a 100 caracteres, se normaliza como `normalizarNombre` y se divide por espacios", "De 0 a 10" palabras
-- [ ] T008 Registrar en `abrirBase` de src/db/cliente.ts la función de SQLite `normalizar` con `{ deterministic: true }`. Llama a `normalizarNombre` y devuelve `null` para `null` (research 1)
-- [ ] T009 Crear src/consultas/busqueda.ts con:
+- [X] T006 Agregar el código `CURSOR_INVALIDO` a `CodigoError` y su mensaje es-MX en src/lib/mensajes.ts
+- [X] T007 Implementar `palabrasDeBusqueda(texto)` en src/dominio/normalizacion.ts según data-model.md: "Se recorta a 100 caracteres, se normaliza como `normalizarNombre` y se divide por espacios", "De 0 a 10" palabras
+- [X] T008 Registrar en `abrirBase` de src/db/cliente.ts la función de SQLite `normalizar` con `{ deterministic: true }`. Llama a `normalizarNombre` y devuelve `null` para `null` (research 1)
+- [X] T009 Crear src/consultas/busqueda.ts con:
   - Las constantes `TAMANO_CATALOGO = 20`, `TAMANO_PANEL = 50` y `LIMITE_MAXIMO = 200`.
   - `condicionPalabras(palabras)`: cada palabra con `instr(normalizar(nombre) || ' ' || normalizar(descripcion), ?) > 0`.
   - `expresionGrupo(palabras)`: 0 si todas las palabras están en `normalizar(nombre)` o si no hay palabras; 1 en otro caso.
@@ -75,30 +75,30 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
   - El orden `grupo ASC, creado_en DESC, id DESC`.
   - `codificarCursor` y `decodificarCursor`: base64url con validación Zod.
   - `limiteValido(limite, tamano)`: entre el tamaño de la parte y 200 (contracts/rutas.md).
-- [ ] T010 Cambiar `listarCatalogo({ categoriaId, subcategoriaId, texto, cursor, limite })` en src/consultas/publicas.ts para que use src/consultas/busqueda.ts y devuelva `{ productos, siguiente, total }`.
+- [X] T010 Cambiar `listarCatalogo({ categoriaId, subcategoriaId, texto, cursor, limite })` en src/consultas/publicas.ts para que use src/consultas/busqueda.ts y devuelva `{ productos, siguiente, total }`.
   - La selección de columnas no cambia.
   - Las fotos se piden solo para los productos de la parte y siguen como nombres de archivo, igual que hoy.
   - `ProductoPublico` pasa a ser `ReturnType<typeof listarCatalogo>["productos"][number]`.
   - `obtenerProducto` sigue igual.
-- [ ] T011 Cambiar `listarProductosAdmin({ categoriaId, subcategoriaId, texto, cursor, limite })` en src/consultas/admin.ts de la misma forma. `ProductoAdmin` se define con `obtenerProductoAdmin`, que sigue igual
-- [ ] T012 Ajustar a la nueva forma de respuesta (`.productos`) las llamadas de tests/integration/consultas-publicas.test.ts y tests/integration/productos.test.ts, sin cambiar ninguna aserción de la spec 001. Ejecutar `npm run test` y dejar esas pruebas en verde
-- [ ] T013 Ajustar src/app/(cliente)/page.tsx y src/app/admin/(panel)/page.tsx a la nueva forma de respuesta, pidiendo `limite: LIMITE_MAXIMO` para no ocultar productos mientras US2 no esté terminada
-- [ ] T014 [P] Crear `GET` en src/app/api/catalogo/route.ts según contracts/rutas.md:
+- [X] T011 Cambiar `listarProductosAdmin({ categoriaId, subcategoriaId, texto, cursor, limite })` en src/consultas/admin.ts de la misma forma. `ProductoAdmin` se define con `obtenerProductoAdmin`, que sigue igual
+- [X] T012 Ajustar a la nueva forma de respuesta (`.productos`) las llamadas de tests/integration/consultas-publicas.test.ts y tests/integration/productos.test.ts, sin cambiar ninguna aserción de la spec 001. Ejecutar `npm run test` y dejar esas pruebas en verde
+- [X] T013 Ajustar src/app/(cliente)/page.tsx y src/app/admin/(panel)/page.tsx a la nueva forma de respuesta, pidiendo `limite: LIMITE_MAXIMO` para no ocultar productos mientras US2 no esté terminada
+- [X] T014 [P] Crear `GET` en src/app/api/catalogo/route.ts según contracts/rutas.md:
   - Valida con Zod `texto` ("hasta 100 caracteres"), `categoria`, `subcategoria` ("solo junto con `categoria`"), `cursor` y `limite`.
   - Llama a `listarCatalogo` con `TAMANO_CATALOGO`.
   - Responde `Resultado<T>` con 400 para `CURSOR_INVALIDO` o `DATOS_INVALIDOS`, y siempre con `Cache-Control: no-store`.
-- [ ] T015 [P] Crear `GET` en src/app/api/admin/productos/route.ts con las mismas reglas. Llama primero a `exigirSesion()` y responde 401 con `NO_AUTORIZADO`, igual que src/app/api/fotos/route.ts; usa `listarProductosAdmin` con `TAMANO_PANEL`
-- [ ] T016 Crear src/lib/estado-listas.ts con:
+- [X] T015 [P] Crear `GET` en src/app/api/admin/productos/route.ts con las mismas reglas. Llama primero a `exigirSesion()` y responde 401 con `NO_AUTORIZADO`, igual que src/app/api/fotos/route.ts; usa `listarProductosAdmin` con `TAMANO_PANEL`
+- [X] T016 Crear src/lib/estado-listas.ts con:
   - Un `Map` a nivel de módulo por lista (`catalogo` y `panel`) con texto, filtro, productos, siguiente, total y desplazamiento (data-model, Estado de una lista).
   - Un escucha de `popstate` registrado al cargar el módulo que marca la siguiente lista que se monte como regreso con atrás o adelante.
   - `guardarEstado`, `tomarEstadoAlRegresar(lista, filtro)`, que devuelve el estado solo si fue un regreso y el filtro coincide, y `olvidar(lista)` (research 6).
-- [ ] T017 Crear el hook `usarListaPaginada({ lista, ruta, filtro, inicial })` en src/lib/usar-lista-paginada.ts:
+- [X] T017 Crear el hook `usarListaPaginada({ lista, ruta, filtro, inicial })` en src/lib/usar-lista-paginada.ts:
   - Se inicia de forma síncrona desde `tomarEstadoAlRegresar` o desde `inicial`.
   - Guarda el estado y el desplazamiento (con `scroll` limitado a uno cada 100 ms).
   - Al regresar, vuelve al desplazamiento guardado en `useLayoutEffect`.
   - Cuando cambia `inicial` porque el servidor volvió a dibujar la página tras una venta, un apartado, un encargo, una baja o una edición (`revalidatePath` de la spec 001), reemplaza los productos mostrados por `inicial`. Así la lista refleja esos cambios de inmediato y no se rompen US1-3 ni US1-4 de la spec 001.
   - Expone `productos`, `siguiente`, `total` y `estado` (`listo`, `buscando`, `cargandoMas` o `error`) (FR-008a).
-- [ ] T018 [P] Mover la tarjeta de producto del panel desde src/app/admin/(panel)/page.tsx a un componente de cliente en src/components/admin/tarjeta-producto-admin.tsx, que recibe `ProductoAdmin` y arma la URL como `/api/fotos/${archivo}`, igual que src/components/cliente/tarjeta-producto.tsx, porque src/lib/fotos.ts importa `sharp` y no puede llegar al navegador. No cambia lo que muestra ni sus acciones (research 7)
+- [X] T018 [P] Mover la tarjeta de producto del panel desde src/app/admin/(panel)/page.tsx a un componente de cliente en src/components/admin/tarjeta-producto-admin.tsx, que recibe `ProductoAdmin` y arma la URL como `/api/fotos/${archivo}`, igual que src/components/cliente/tarjeta-producto.tsx, porque src/lib/fotos.ts importa `sharp` y no puede llegar al navegador. No cambia lo que muestra ni sus acciones (research 7)
 
 **Checkpoint**: `npm run verificar` en verde; el catálogo y el panel se ven igual que antes
 
@@ -114,7 +114,7 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 
 > **NOTE: escribirlas primero y comprobar que fallan antes de implementar**
 
-- [ ] T019 [P] [US1] Escribir pruebas en tests/integration/busqueda-productos.test.ts:
+- [X] T019 [P] [US1] Escribir pruebas en tests/integration/busqueda-productos.test.ts:
   - **FR-002**:
     - "muneca" y "MUÑECA" encuentran "Muñeca de trapo".
     - Una palabra solo en la descripción encuentra el producto.
@@ -125,7 +125,7 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
   - **FR-007**: primero las coincidencias en el nombre y después las de la descripción, cada grupo con el más reciente primero; sin búsqueda, el orden de la spec 001.
   - **FR-009**: las claves de cada producto público no incluyen `precioCompraCentavos` ni `existencia`.
   - **FR-016**: `total` cuenta todas las coincidencias.
-- [ ] T020 [P] [US1] Escribir pruebas en tests/e2e/us8-buscador.spec.ts, en móvil y portátil:
+- [X] T020 [P] [US1] Escribir pruebas en tests/e2e/us8-buscador.spec.ts, en móvil y portátil:
   - **Escenarios US1-1 a US1-8** en el catálogo.
   - **US1-6 / FR-005**: el mensaje sin resultados enlaza a `/encargos` y muestra el teléfono como enlace `tel:`.
   - **US1-8 / FR-008**: al recargar, el campo queda vacío y la URL no cambia al escribir.
@@ -139,10 +139,10 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T021 [P] [US1] Crear src/components/buscador-productos.tsx:
+- [X] T021 [P] [US1] Crear src/components/buscador-productos.tsx:
   - Un `input type="search"` con la etiqueta visible "Buscar productos", el marcador "Escribe el nombre o una palabra", `enterKeyHint="search"` y `autoComplete="off"`, y altura táctil de 44 px o más.
   - Una región `aria-live="polite"` con "Buscando…" y "{N} productos encontrados" (FR-001, FR-016; research 9).
-- [ ] T022 [US1] Agregar la búsqueda al hook en src/lib/usar-lista-paginada.ts (research 5):
+- [X] T022 [US1] Agregar la búsqueda al hook en src/lib/usar-lista-paginada.ts (research 5):
   - Mantiene `texto` y `setTexto`; espera 250 ms desde la última tecla.
   - Cancela la petición anterior con `AbortController` y descarta respuestas que no correspondan al texto actual.
   - Mientras busca, conserva la lista anterior visible.
@@ -150,18 +150,18 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
   - Si cambia el filtro de la URL con texto escrito, conserva el texto y vuelve a pedir desde el principio (FR-004, FR-014).
   - Al cambiar el filtro, si el buscador quedó fuera de la vista, sube la página hasta él; mientras se escribe, no mueve la página (research 5, Desplazamiento).
   - Si cambia `inicial` con texto escrito (reacción de T017), conserva el texto y vuelve a pedir la búsqueda desde el principio, para que los resultados reflejen la venta, la baja o la edición.
-- [ ] T023 [US1] Crear src/components/cliente/catalogo-buscable.tsx, un componente de cliente:
+- [X] T023 [US1] Crear src/components/cliente/catalogo-buscable.tsx, un componente de cliente:
   - Recibe `inicial`, `filtro`, `telefono` (de `telefonoNegocio()`) y los filtros como `children`.
   - Muestra `BuscadorProductos` arriba de los filtros (FR-001) y las tarjetas con `TarjetaProducto`, con las 4 primeras como prioritarias.
   - Si hay texto y no hay coincidencias, muestra el mensaje de research 9 con el enlace a `/encargos` y el teléfono (FR-005).
   - Si no hay texto y no hay productos, muestra el mensaje actual "No hay productos en esta categoría por ahora.".
   - El campo de búsqueda se muestra siempre, también con el catálogo vacío (research 9, Catálogo vacío).
-- [ ] T024 [US1] Usar `CatalogoBuscable` en src/app/(cliente)/page.tsx, pasando `FiltroCategorias` como `children` y el filtro de `searchParams`
-- [ ] T025 [P] [US1] Crear src/components/admin/lista-productos-admin.tsx, un componente de cliente:
+- [X] T024 [US1] Usar `CatalogoBuscable` en src/app/(cliente)/page.tsx, pasando `FiltroCategorias` como `children` y el filtro de `searchParams`
+- [X] T025 [P] [US1] Crear src/components/admin/lista-productos-admin.tsx, un componente de cliente:
   - Usa el hook con `lista: "panel"` y `ruta: "/api/admin/productos"`.
   - Muestra `BuscadorProductos`, los filtros como `children` y `TarjetaProductoAdmin`.
   - Sin resultados, muestra "No hay productos que coincidan con «{texto}»."; sin texto, el mensaje actual "No hay productos en esta selección.".
-- [ ] T026 [US1] Usar `ListaProductosAdmin` en src/app/admin/(panel)/page.tsx, conservando el encabezado y el botón "Nuevo producto"
+- [X] T026 [US1] Usar `ListaProductosAdmin` en src/app/admin/(panel)/page.tsx, conservando el encabezado y el botón "Nuevo producto"
 
 **Checkpoint**: T019 y T020 en verde, junto con las pruebas e2e de la spec 001 (`us1` a `us7`); la búsqueda funciona en el catálogo y en el panel, al regresar con atrás se conserva, y una venta o una baja desde el panel se refleja de inmediato en la lista
 
@@ -175,7 +175,7 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T027 [P] [US2] Escribir pruebas en tests/integration/paginacion-productos.test.ts:
+- [X] T027 [P] [US2] Escribir pruebas en tests/integration/paginacion-productos.test.ts:
   - **Tamaños y fin de la lista**:
     - FR-010: partes de 20 en el catálogo y de 50 en el panel.
     - FR-011 y SC-004: recorrer todas las partes con 45 y con 120 productos da todos los ids, sin repetidos.
@@ -187,8 +187,8 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
   - **Límites y cursor**:
     - Contrato: `limite` fuera de 20 a 200, o de 50 a 200 en el panel, da `DATOS_INVALIDOS`.
     - Un cursor alterado da `CURSOR_INVALIDO`.
-- [ ] T028 [P] [US2] Agregar a tests/e2e/ayudantes.ts `crearProductosDePrueba(n, prefijo)`, que inserta con `sqlDePrueba` n productos activos con fechas de alta distintas y una foto que reutiliza un archivo existente
-- [ ] T029 [US2] Escribir pruebas en tests/e2e/us9-ver-mas.spec.ts, en móvil y portátil, usando T028:
+- [X] T028 [P] [US2] Agregar a tests/e2e/ayudantes.ts `crearProductosDePrueba(n, prefijo)`, que inserta con `sqlDePrueba` n productos activos con fechas de alta distintas y una foto que reutiliza un archivo existente
+- [X] T029 [US2] Escribir pruebas en tests/e2e/us9-ver-mas.spec.ts, en móvil y portátil, usando T028:
   - **Escenarios US2-1 a US2-9** en el catálogo.
   - **US2-5**: en `/admin`, partes de 50.
   - **US2-9 / FR-008a**: pulsar «Ver más» dos veces, abrir un producto y regresar con atrás conserva los productos y el desplazamiento.
@@ -201,16 +201,16 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T030 [P] [US2] Crear src/components/boton-ver-mas.tsx (FR-011, FR-012, FR-015):
+- [X] T030 [P] [US2] Crear src/components/boton-ver-mas.tsx (FR-011, FR-012, FR-015):
   - Un `button` real con el texto "Ver más", que se deshabilita y muestra "Cargando…" mientras carga, y no se dibuja si `siguiente` es `null`.
   - Si falla, un mensaje con `role="alert"`: "No se pudieron cargar más productos. Revisa tu conexión e inténtalo de nuevo.".
-- [ ] T031 [US2] Agregar `verMas()` al hook en src/lib/usar-lista-paginada.ts:
+- [X] T031 [US2] Agregar `verMas()` al hook en src/lib/usar-lista-paginada.ts:
   - Pide la parte siguiente con el cursor y la agrega al final, ignorando ids ya presentes.
   - Si falla, pasa a `error` sin perder los productos (FR-015).
   - Anuncia "Se agregaron {N} productos".
   - Amplía la reacción a `inicial` de T017 y T022: si ya había partes extra cargadas con «Ver más», en lugar de quedarse solo con la primera parte vuelve a pedir desde el principio con `limite` igual a los productos mostrados, hasta 200, para no perder el lugar (research 7).
-- [ ] T032 [US2] Mostrar `BotonVerMas` al final de las listas en src/components/cliente/catalogo-buscable.tsx y src/components/admin/lista-productos-admin.tsx
-- [ ] T033 [US2] Cambiar `limite: LIMITE_MAXIMO` (de T013) por `TAMANO_CATALOGO` en src/app/(cliente)/page.tsx y por `TAMANO_PANEL` en src/app/admin/(panel)/page.tsx (FR-010)
+- [X] T032 [US2] Mostrar `BotonVerMas` al final de las listas en src/components/cliente/catalogo-buscable.tsx y src/components/admin/lista-productos-admin.tsx
+- [X] T033 [US2] Cambiar `limite: LIMITE_MAXIMO` (de T013) por `TAMANO_CATALOGO` en src/app/(cliente)/page.tsx y por `TAMANO_PANEL` en src/app/admin/(panel)/page.tsx (FR-010)
 
 **Checkpoint**: T027 y T029 en verde; las dos historias funcionan juntas y por separado
 
@@ -220,8 +220,8 @@ Para no chocar con la spec 001, sus pruebas e2e se llaman `us8-buscador.spec.ts`
 
 **Purpose**: comprobación completa y aceptación
 
-- [ ] T034 [P] Agregar al README.md cómo usar scripts/productos-ejemplo.ts para medir velocidad, con la advertencia de que nunca se ejecuta contra la carpeta de datos de producción
-- [ ] T035 Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de la spec 001, y dejar todo en verde
+- [X] T034 [P] Agregar al README.md cómo usar scripts/productos-ejemplo.ts para medir velocidad, con la advertencia de que nunca se ejecuta contra la carpeta de datos de producción
+- [X] T035 Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de la spec 001, y dejar todo en verde
 - [ ] T036 Medir SC-002 y SC-003 con 500 productos de ejemplo según quickstart.md (Lighthouse 12.8.2, perfil Fast 4G, meta de LCP ≤ 1 s; resultados ≤ 1 s después de dejar de escribir), borrar `./datos/prueba-500` y registrar los resultados en specs/002-buscador-paginacion/checklists/aceptacion.md
 - [ ] T037 Ejecutar en un celular real los pasos 1 a 8 y 11 a 16 (los pasos 9 y 10 los cubre T036 con la base de 500) de specs/002-buscador-paginacion/quickstart.md, incluido SC-005 cronometrado, y registrar los resultados en specs/002-buscador-paginacion/checklists/aceptacion.md
 - [ ] T038 Hacer la prueba con 10 personas nuevas de SC-001 (quickstart, paso 17) y registrar fecha, personas, cuántas encontraron el producto con el buscador sin ayuda y observaciones en specs/002-buscador-paginacion/checklists/aceptacion.md

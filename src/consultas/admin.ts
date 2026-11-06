@@ -15,13 +15,9 @@ import { normalizarNombre, normalizarTelefono } from "@/dominio/normalizacion";
 import { CAMPOS } from "@/lib/mensajes";
 import { ErrorNegocio } from "@/lib/resultado";
 import { unidadesDisponibles } from "./disponibilidad";
+import { cerrarParte, prepararParte, TAMANO_PANEL, type ParametrosLista } from "./busqueda";
 import { fotosPorArticulo, fotosPorProducto } from "./fotos";
 import { pagadoCentavos } from "./saldos";
-
-export interface FiltroProductos {
-  categoriaId?: string;
-  subcategoriaId?: string;
-}
 
 const seleccion = {
   id: productos.id,
@@ -37,34 +33,45 @@ const seleccion = {
   precioVentaCentavos: productos.precioVentaCentavos,
 };
 
-function consultar(condicion: SQL | undefined) {
-  const filas = obtenerBd()
-    .select(seleccion)
-    .from(productos)
-    .innerJoin(categorias, eq(productos.categoriaId, categorias.id))
-    .leftJoin(subcategorias, eq(productos.subcategoriaId, subcategorias.id))
-    .where(condicion)
-    .orderBy(desc(productos.creadoEn))
-    .all();
+function conFotos<F extends { id: string }>(filas: F[]) {
   const fotos = fotosPorProducto(filas.map((f) => f.id));
   return filas.map((fila) => ({ ...fila, fotos: fotos.get(fila.id) ?? [] }));
 }
 
-export function listarProductosAdmin({ categoriaId, subcategoriaId }: FiltroProductos) {
-  return consultar(
-    and(
-      eq(productos.activo, true),
-      categoriaId ? eq(productos.categoriaId, categoriaId) : undefined,
-      subcategoriaId ? eq(productos.subcategoriaId, subcategoriaId) : undefined,
-    ),
+function consultar(condicion: SQL | undefined) {
+  return conFotos(
+    obtenerBd()
+      .select(seleccion)
+      .from(productos)
+      .innerJoin(categorias, eq(productos.categoriaId, categorias.id))
+      .leftJoin(subcategorias, eq(productos.subcategoriaId, subcategorias.id))
+      .where(condicion)
+      .orderBy(desc(productos.creadoEn))
+      .all(),
   );
+}
+
+/** Una parte de la lista del panel con búsqueda y cursor (spec 002, contracts/rutas.md). */
+export function listarProductosAdmin(parametros: ParametrosLista) {
+  const parte = prepararParte(parametros, TAMANO_PANEL);
+  const filas = obtenerBd()
+    .select({ ...seleccion, ...parte.posicion })
+    .from(productos)
+    .innerJoin(categorias, eq(productos.categoriaId, categorias.id))
+    .leftJoin(subcategorias, eq(productos.subcategoriaId, subcategorias.id))
+    .where(parte.condicion)
+    .orderBy(...parte.orden)
+    .limit(parte.filasAPedir)
+    .all();
+  const { filas: entregadas, siguiente } = cerrarParte(filas, parte.limite);
+  return { productos: conFotos(entregadas), siguiente, total: parte.contar() };
 }
 
 export function obtenerProductoAdmin(id: string) {
   return consultar(and(eq(productos.id, id), eq(productos.activo, true)))[0] ?? null;
 }
 
-export type ProductoAdmin = ReturnType<typeof listarProductosAdmin>[number];
+export type ProductoAdmin = NonNullable<ReturnType<typeof obtenerProductoAdmin>>;
 
 const seleccionOperacion = {
   ...getTableColumns(operaciones),

@@ -4,6 +4,7 @@ import Database from "better-sqlite3";
 import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
+import { normalizarNombre } from "@/dominio/normalizacion";
 import { directorioDatos } from "@/lib/entorno";
 import * as esquema from "./esquema";
 
@@ -20,6 +21,10 @@ export function abrirBase(ruta: string): Bd {
   sqlite.pragma("journal_mode = WAL");
   sqlite.pragma("foreign_keys = ON");
   sqlite.pragma("busy_timeout = 5000");
+  // La misma regla de normalizarNombre, para comparar sin mayúsculas ni acentos (spec 002, research 1).
+  sqlite.function("normalizar", { deterministic: true }, (texto: unknown) =>
+    texto === null ? null : normalizarNombre(String(texto)),
+  );
   return drizzle(sqlite, { schema: esquema });
 }
 
