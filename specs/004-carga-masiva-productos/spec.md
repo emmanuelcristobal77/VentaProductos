@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-07
 
-**Status**: Draft
+**Status**: Approved
 
 **Input**: User description: "Carga masiva de productos desde el panel de administración. El administrador sube un archivo comprimido (.zip) que contiene un archivo .txt con columnas definidas separadas por pipe «|», con la misma información del alta individual de un producto más una columna con el nombre del archivo de imagen; las imágenes vienen dentro del mismo comprimido. Al terminar, el sistema muestra cuántos productos nuevos se dieron de alta, los productos nuevos que quedaron sin foto para que se les suba nuevamente, y los productos que ya existían, para que el administrador elija cuáles se actualizan. Los registros de productos nuevos sin foto y de productos ya existentes se pueden descargar como reporte en un archivo .txt para validar la información."
 
