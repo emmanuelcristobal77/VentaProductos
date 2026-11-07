@@ -38,7 +38,7 @@ Si la carga se rechaza completa, el mensaje aparece debajo del campo, asociado c
    - importes con `formatearPrecio`, y las fotos nuevas como miniaturas con texto alternativo «Foto nueva N de Nombre»;
    - si la existencia del archivo es menor que las unidades apartadas del producto, la tarjeta lo advierte («Tiene N apartadas; no se podrá actualizar»), y la casilla se puede marcar de todos modos;
    - botones «Marcar todos», «Desmarcar todos» y «Actualizar marcados (N)».
-   - Al confirmar, sin importar cuántos haya marcados (aun cero), cada tarjeta muestra su resultado: «Actualizado», «No actualizado» o «No se pudo actualizar: motivo». Las casillas y el botón quedan deshabilitados, y un aviso dice «Se actualizaron N productos.».
+   - Al confirmar, sin importar cuántos haya marcados (aun cero), cada tarjeta muestra su resultado: «Actualizado», «No actualizado» o «No se pudo actualizar: motivo». Las casillas y el botón quedan deshabilitados, y un aviso dice «Se actualizaron N productos.» (con uno: «Se actualizó 1 producto.»; con cero: «No se actualizó ningún producto.»).
 7. Sección `h2` «Renglones rechazados»: número, nombre (si hay) y motivo.
 8. Sección `h2` «Avisos de fotos»: por producto, las fotos que faltaron (US2-4).
 9. Botones «Hacer otra carga» y «Ir a productos».
