@@ -184,9 +184,9 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 - [X] T033 Mostrarle al propietario el texto completo del aviso de src/lib/aviso-privacidad.ts y aplicar sus correcciones, idealmente tras la revisión de un abogado (supuesto «Texto del aviso» de la spec). Actualizar la fecha de última actualización al publicarlo. **Resultado (2026-11-06)**: el propietario aprobó el texto tal como está, de forma provisional, mientras sabe qué conviene cambiarle; si después hay correcciones (por ejemplo, del abogado), se aplican en src/lib/aviso-privacidad.ts y se actualiza la fecha, sin spec nueva
 - [X] T034 Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de las specs 001 y 002, y dejar todo en verde
 - [X] T035 Ensayar la migración `0001` sobre una copia del último respaldo de producción, restaurada en `C:\restauracion-prueba` como en la T094 de la spec 001, según la sección «Antes de publicar» de quickstart.md. Registrar el número de operaciones y pagos antes y después en specs/003-aviso-privacidad/checklists/aceptacion.md
-- [ ] T036 Ejecutar en un celular real los pasos 1 a 19 y 21 de specs/003-aviso-privacidad/quickstart.md, incluido SC-006 cronometrado, y registrar los resultados en specs/003-aviso-privacidad/checklists/aceptacion.md
-- [ ] T037 Hacer la prueba con 10 personas de SC-002 (quickstart, paso 20) y registrar fecha, personas, cuántas encontraron el responsable y el correo sin ayuda en menos de 1 minuto, y observaciones en specs/003-aviso-privacidad/checklists/aceptacion.md
-- [ ] T038 Después de publicar en Easypanel (pulsar Implementar tras el push a `main`), repetir en producción los pasos 1 a 6 y 18 de quickstart.md y registrarlos en specs/003-aviso-privacidad/checklists/aceptacion.md
+- [X] T036 Ejecutar en un celular real los pasos 1 a 19 y 21 de specs/003-aviso-privacidad/quickstart.md, incluido SC-006 cronometrado, y registrar los resultados en specs/003-aviso-privacidad/checklists/aceptacion.md
+- [X] T037 Hacer la prueba con 10 personas de SC-002 (quickstart, paso 20) y registrar fecha, personas, cuántas encontraron el responsable y el correo sin ayuda en menos de 1 minuto, y observaciones en specs/003-aviso-privacidad/checklists/aceptacion.md
+- [X] T038 Después de publicar en Easypanel (pulsar Implementar tras el push a `main`), repetir en producción los pasos 1 a 6 y 18 de quickstart.md y registrarlos en specs/003-aviso-privacidad/checklists/aceptacion.md
 
 ---
 
