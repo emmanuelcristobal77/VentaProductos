@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { listarEncargosPendientes } from "@/consultas/admin";
 import { formatearPrecio } from "@/dominio/dinero";
 import { ETIQUETA_ESTADO } from "@/dominio/estados";
+import { DATOS_BORRADOS } from "@/lib/mensajes";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,7 @@ export default function PaginaEncargos() {
                   <Badge variant="secondary">{ETIQUETA_ESTADO[encargo.estado]}</Badge>
                 </div>
                 <p className="text-muted-foreground text-sm">
-                  {encargo.clienteNombre} · {encargo.clienteTelefono}
+                  {encargo.datosBorradosEn ? DATOS_BORRADOS : `${encargo.clienteNombre} · ${encargo.clienteTelefono}`}
                 </p>
                 <p className="text-sm">Cantidad: {encargo.cantidad}</p>
                 <p className="text-sm">Pagado: {formatearPrecio(encargo.pagadoCentavos)}</p>

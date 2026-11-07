@@ -7,6 +7,7 @@ import { buscarOperaciones, type FiltroOperaciones } from "@/consultas/admin";
 import { formatearPrecio } from "@/dominio/dinero";
 import { ETIQUETA_ESTADO, ETIQUETA_TIPO } from "@/dominio/estados";
 import { formatearFecha } from "@/dominio/fechas";
+import { DATOS_BORRADOS } from "@/lib/mensajes";
 import { ejecutar } from "@/lib/resultado";
 
 export const dynamic = "force-dynamic";
@@ -70,11 +71,15 @@ export default async function PaginaOperaciones({
                   </h2>
                   <Badge variant="secondary">{ETIQUETA_ESTADO[operacion.estado]}</Badge>
                 </div>
-                {operacion.clienteNombre && (
-                  <p className="text-muted-foreground text-sm">
-                    {operacion.clienteNombre}
-                    {operacion.clienteTelefono && ` · ${operacion.clienteTelefono}`}
-                  </p>
+                {operacion.datosBorradosEn ? (
+                  <p className="text-muted-foreground text-sm">{DATOS_BORRADOS}</p>
+                ) : (
+                  operacion.clienteNombre && (
+                    <p className="text-muted-foreground text-sm">
+                      {operacion.clienteNombre}
+                      {operacion.clienteTelefono && ` · ${operacion.clienteTelefono}`}
+                    </p>
+                  )
                 )}
                 <p className="text-sm">{formatearFecha(operacion.creadoEn)}</p>
                 <p className="text-sm">

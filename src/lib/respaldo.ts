@@ -5,7 +5,7 @@ import { gzipSync } from "node:zlib";
 import type { Bd } from "@/db/cliente";
 import { directorioDatos } from "./entorno";
 
-const DIAS_CONSERVADOS = 14;
+export const DIAS_CONSERVADOS = 14;
 const MS_POR_DIA = 24 * 60 * 60 * 1000;
 const COPIA = /^base\/vende-productos-(\d{4}-\d{2}-\d{2})\.sqlite\.gz$/;
 

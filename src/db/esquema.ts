@@ -107,6 +107,9 @@ export const operaciones = sqliteTable(
     creadoEn: ahora("creado_en"),
     entregadoEn: text("entregado_en"),
     cerradoEn: text("cerrado_en"),
+    // Spec 003: 1 si se informó del aviso, 0 en una venta sin datos, nulo antes de la spec 003.
+    avisoInformado: integer("aviso_informado", { mode: "boolean" }),
+    datosBorradosEn: text("datos_borrados_en"),
   },
   (t) => [
     check("operaciones_tipo", sql`tipo IN ('venta', 'apartado', 'encargo')`),
@@ -126,7 +129,17 @@ export const operaciones = sqliteTable(
     ),
     check(
       "operaciones_cliente",
-      sql`tipo = 'venta' OR (cliente_nombre IS NOT NULL AND cliente_telefono IS NOT NULL)`,
+      sql`tipo = 'venta' OR datos_borrados_en IS NOT NULL
+        OR (cliente_nombre IS NOT NULL AND cliente_telefono IS NOT NULL)`,
+    ),
+    check(
+      "operaciones_datos_borrados",
+      sql`datos_borrados_en IS NULL
+        OR (cliente_nombre IS NULL AND cliente_nombre_norm IS NULL AND cliente_telefono IS NULL)`,
+    ),
+    check(
+      "operaciones_aviso",
+      sql`aviso_informado IS NOT 0 OR (cliente_nombre IS NULL AND cliente_telefono IS NULL)`,
     ),
     check("operaciones_motivo", sql`estado NOT IN ('anulada', 'cancelado') OR motivo IS NOT NULL`),
     index("operaciones_telefono_idx").on(t.clienteTelefono),

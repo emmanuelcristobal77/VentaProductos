@@ -33,6 +33,7 @@ function datos(origen: DatosEncargo["origen"], cambios: Partial<DatosEncargo> = 
     clienteNombre: "Ana López",
     clienteTelefono: "5512345678",
     pagoInicialCentavos: 5000,
+    avisoInformado: true,
     ...cambios,
   };
 }
@@ -50,7 +51,7 @@ describe("encargos", () => {
 
   it("FR-017: se permite después de agotar el producto con otra operación", () => {
     const producto = crearProductoDirecto({ existencia: 1 });
-    registrarVenta({ productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
+    registrarVenta({ avisoInformado: true, productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
     const { id } = registrarEncargo(datos({ productoId: producto.id }));
     expect(operacion(id)).toMatchObject({ tipo: "encargo", estado: "pendiente", productoId: producto.id });
   });
@@ -165,7 +166,7 @@ describe("encargos", () => {
     cancelarOperacion(cancelado.id, "Motivo");
     const pagado = registrarEncargo(datos({ articuloEncargoId: id }, { pagoInicialCentavos: 30000 }));
     const producto = crearProductoDirecto();
-    registrarVenta({ productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
+    registrarVenta({ avisoInformado: true, productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
 
     expect(listarEncargosPendientes().map((e) => e.id)).toEqual([pagado.id]);
   });

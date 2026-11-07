@@ -17,6 +17,8 @@ test("FR-039: las pantallas públicas usan los formatos de precio, fecha y hora"
   const hoja = page.getByRole("dialog");
   await hoja.getByLabel("Nombre del cliente").fill(cliente);
   await hoja.getByLabel("Teléfono").fill("5577778888");
+  // Spec 003, FR-008: la casilla del aviso de privacidad es obligatoria.
+  await hoja.getByRole("checkbox", { name: "Se informó al cliente del aviso de privacidad" }).check();
   await hoja.getByLabel("Pago inicial").fill("100");
   await hoja.getByRole("button", { name: "Registrar apartado" }).click();
   await expect(page.getByRole("heading", { name: /Apartado/ })).toBeVisible();
@@ -31,7 +33,7 @@ test("FR-039: las pantallas públicas usan los formatos de precio, fecha y hora"
 
   await publica.getByRole("article").filter({ hasText: nombre }).getByRole("link").click();
   await expect(publica.getByRole("heading", { name: nombre })).toBeVisible();
-  expect(await textoPrincipal()).toContain("$1,250.50 MXN");
+  await expect(publica.locator("main")).toContainText("$1,250.50 MXN");
 
   await publica.goto("/encargos");
   expect(preciosMalFormados(await textoPrincipal())).toEqual([]);

@@ -14,7 +14,7 @@ vi.mock("next/headers", () => ({
 }));
 
 function apartado(productoId: string, cliente = { clienteNombre: "Ana López", clienteTelefono: "5512345678" }) {
-  return registrarApartado({
+  return registrarApartado({ avisoInformado: true,
     productoId,
     cantidad: 1,
     precioUnitarioCentavos: 50000,
@@ -42,7 +42,7 @@ describe("consulta del cliente", () => {
     const { id } = apartado(producto.id);
     registrarPago(id, 15000);
     const agotado = crearProductoDirecto({ nombre: "Tren", existencia: 0 });
-    registrarEncargo({
+    registrarEncargo({ avisoInformado: true,
       origen: { productoId: agotado.id },
       cantidad: 2,
       precioUnitarioCentavos: 1000,
@@ -106,7 +106,7 @@ describe("consulta del cliente", () => {
 
   it("FR-035: no incluye ventas", () => {
     const producto = crearProductoDirecto();
-    registrarVenta({
+    registrarVenta({ avisoInformado: true,
       productoId: producto.id,
       cantidad: 1,
       precioUnitarioCentavos: 100,

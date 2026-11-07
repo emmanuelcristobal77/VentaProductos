@@ -21,7 +21,7 @@ const pagosDe = (id: string) =>
 /** Un apartado de una unidad: su total es el precio. */
 function apartado(totalCentavos: number, pagoInicialCentavos: number) {
   const producto = crearProductoDirecto({ existencia: 50 });
-  return registrarApartado({
+  return registrarApartado({ avisoInformado: true,
     productoId: producto.id,
     cantidad: 1,
     precioUnitarioCentavos: totalCentavos,
@@ -106,13 +106,13 @@ describe("pagos", () => {
 
   it("FR-034: el pago automático de una venta no se anula por separado", () => {
     const producto = crearProductoDirecto();
-    const { id } = registrarVenta({ productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
+    const { id } = registrarVenta({ avisoInformado: true, productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
     expect(() => anularPago(pagosDe(id)[0].id)).toThrow(codigo("ESTADO_NO_PERMITE"));
   });
 
   it("FR-028: una venta no admite pagos", () => {
     const producto = crearProductoDirecto();
-    const { id } = registrarVenta({ productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
+    const { id } = registrarVenta({ avisoInformado: true, productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
     expect(() => registrarPago(id, 1)).toThrow(codigo("ESTADO_NO_PERMITE"));
   });
 
@@ -142,7 +142,7 @@ describe("pagos", () => {
 
   it("FR-043: el total usa la cantidad, no solo el precio", () => {
     const producto = crearProductoDirecto({ existencia: 5 });
-    const { id } = registrarApartado({
+    const { id } = registrarApartado({ avisoInformado: true,
       productoId: producto.id,
       cantidad: 3,
       precioUnitarioCentavos: 10000,
@@ -180,7 +180,7 @@ describe("pagos", () => {
     expect(() => corregirOperacion(cancelada.id, correccion(20000))).toThrow(codigo("ESTADO_NO_PERMITE"));
 
     const producto = crearProductoDirecto();
-    const venta = registrarVenta({ productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
+    const venta = registrarVenta({ avisoInformado: true, productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
     expect(() => corregirOperacion(venta.id, correccion(100))).toThrow(codigo("ESTADO_NO_PERMITE"));
   });
 

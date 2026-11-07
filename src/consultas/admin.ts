@@ -176,3 +176,38 @@ export function listarArticulosAdmin() {
 }
 
 export type ArticuloAdmin = ReturnType<typeof listarArticulosAdmin>[number];
+
+/** Datos de contacto con los que se identifica a un cliente al borrar sus datos (spec 003). */
+export type ClienteDeOperacion = { clienteNombreNorm: string | null; clienteTelefono: string | null };
+
+/**
+ * Operaciones del mismo cliente que aún conservan sus datos: el mismo nombre normalizado y el mismo
+ * teléfono, comparados con IS para que también coincidan los nulos (spec 003, data-model,
+ * «Alcance del borrado»). La usan la cuenta de la confirmación y el borrado, para que nunca difieran.
+ */
+export function condicionMismoCliente({ clienteNombreNorm, clienteTelefono }: ClienteDeOperacion): SQL {
+  return sql`${operaciones.datosBorradosEn} IS NULL
+    AND ${operaciones.clienteNombreNorm} IS ${clienteNombreNorm}
+    AND ${operaciones.clienteTelefono} IS ${clienteTelefono}`;
+}
+
+/** Cuántas operaciones alcanzaría el borrado desde esta; 0 si no tiene datos o ya están borrados (FR-014). */
+export function contarOperacionesDelCliente(id: string): number {
+  const bd = obtenerBd();
+  const origen = bd
+    .select({
+      clienteNombreNorm: operaciones.clienteNombreNorm,
+      clienteTelefono: operaciones.clienteTelefono,
+      datosBorradosEn: operaciones.datosBorradosEn,
+    })
+    .from(operaciones)
+    .where(eq(operaciones.id, id))
+    .get();
+  if (!origen || origen.datosBorradosEn || (!origen.clienteNombreNorm && !origen.clienteTelefono)) return 0;
+
+  return bd
+    .select({ total: sql<number>`count(*)` })
+    .from(operaciones)
+    .where(condicionMismoCliente(origen))
+    .get()!.total;
+}

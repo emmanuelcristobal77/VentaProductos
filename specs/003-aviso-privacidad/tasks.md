@@ -42,7 +42,7 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 **Purpose**: aprobación y lectura previa
 
 - [X] T001 Registrar la aprobación formal de la spec por su propietario: **Status** Approved en specs/003-aviso-privacidad/spec.md y "Aprobada el 2026-11-06" en specs/MAPA.md (Constitución, Principio I). Hecho en el commit 8a13e0d
-- [ ] T002 Leer en node_modules/next/dist/docs/ las guías de páginas estáticas del App Router, de `metadata` por página y de `Link` con `target`, como pide AGENTS.md, y anotar en specs/003-aviso-privacidad/research.md, sección 10, cualquier diferencia con lo planeado (research 10)
+- [X] T002 Leer en node_modules/next/dist/docs/ las guías de páginas estáticas del App Router, de `metadata` por página y de `Link` con `target`, como pide AGENTS.md, y anotar en specs/003-aviso-privacidad/research.md, sección 10, cualquier diferencia con lo planeado (research 10)
 
 ---
 
@@ -54,21 +54,21 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 
 ### Pruebas de la fase base
 
-- [ ] T003 Escribir pruebas en tests/integration/migracion-0001.test.ts (research 4):
+- [X] T003 Escribir pruebas en tests/integration/migracion-0001.test.ts (research 4):
   - Copiar a una carpeta temporal solo `0000_adorable_orphan.sql` y su `meta/_journal.json` recortado a esa entrada; aplicar con `migrate`, sembrar e insertar un apartado con dos pagos, un encargo con un pago y una venta sin cliente.
   - Aplicar después la carpeta completa de src/db/migraciones y comprobar que el número de operaciones y de pagos no cambió, que todas las columnas anteriores conservan su valor, que `aviso_informado` y `datos_borrados_en` quedaron en `NULL` y que `PRAGMA foreign_key_check` no devuelve filas.
   - Comprobar que la base rechaza: un apartado con `datos_borrados_en` y `cliente_nombre` no nulo (`operaciones_datos_borrados`); un apartado con `cliente_telefono` y `aviso_informado = 0` (`operaciones_aviso`); y que acepta un apartado con `datos_borrados_en` y nombre y teléfono nulos (`operaciones_cliente`).
 
 ### Implementación base
 
-- [ ] T004 Agregar a `operaciones` en src/db/esquema.ts, según data-model.md:
+- [X] T004 Agregar a `operaciones` en src/db/esquema.ts, según data-model.md:
   - `avisoInformado: integer("aviso_informado", { mode: "boolean" })`, nulo permitido: "`1`: se informó al cliente del aviso al registrar. `0`: venta sin datos del cliente. Nulo: operación registrada antes de la spec 003".
   - `datosBorradosEn: text("datos_borrados_en")`, nulo permitido: "Fecha y hora en que se borraron los datos del cliente a petición suya. Nulo mientras no se borren".
   - Cambiar `operaciones_cliente` a `tipo = 'venta' OR datos_borrados_en IS NOT NULL OR (cliente_nombre IS NOT NULL AND cliente_telefono IS NOT NULL)`.
   - Agregar `operaciones_datos_borrados`: `datos_borrados_en IS NULL OR (cliente_nombre IS NULL AND cliente_nombre_norm IS NULL AND cliente_telefono IS NULL)`.
   - Agregar `operaciones_aviso`: `aviso_informado IS NOT 0 OR (cliente_nombre IS NULL AND cliente_telefono IS NULL)`.
-- [ ] T005 Generar la migración con `npm run db:generar` en src/db/migraciones/0001_*.sql. Revisar el SQL línea por línea: debe reconstruir `operaciones` copiando todas sus columnas e índices. Agregar a mano `PRAGMA defer_foreign_keys = ON;--> statement-breakpoint` como primera sentencia, con un comentario SQL que explique por qué (research 4). Hacer pasar T003
-- [ ] T006 Ejecutar `npm run verificar` y confirmar que las pruebas de las specs 001 y 002 siguen en verde con el esquema nuevo, antes de cambiar ningún servicio
+- [X] T005 Generar la migración con `npm run db:generar` en src/db/migraciones/0001_*.sql. Revisar el SQL línea por línea: debe reconstruir `operaciones` copiando todas sus columnas e índices. **Hecho con un cambio** (research 4): `defer_foreign_keys` no funcionó, así que `aplicarMigraciones` de src/db/cliente.ts apaga las llaves foráneas antes del migrador y revisa `foreign_key_check` al terminar. Se quitaron del `INSERT … SELECT` generado las dos columnas nuevas, que la tabla anterior no tiene. Hacer pasar T003
+- [X] T006 Ejecutar `npm run verificar` y confirmar que las pruebas de las specs 001 y 002 siguen en verde con el esquema nuevo, antes de cambiar ningún servicio
 
 **Checkpoint**: la base tiene los datos nuevos y nada de lo existente cambió de comportamiento
 
@@ -82,8 +82,8 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 
 ### Tests for User Story 1
 
-- [ ] T007 [P] [US1] Escribir pruebas en tests/unit/aviso-privacidad.test.ts (FR-004, SC-005): el módulo de src/lib/aviso-privacidad.ts exporta el responsable "Emmanuel Cristóbal Trejo", el domicilio "Andador Poleo No. 20, Col. La Magdalena Chichicaspa, Huixquilucan, Estado de México", el correo "emmanuelcristobal@yahoo.com.mx", una fecha de última actualización válida y las 8 secciones en el orden de contracts/interfaz.md, cada una con título y texto no vacíos. La sección "Cuánto tiempo los guardamos" menciona los 14 días de los respaldos y no promete un plazo de borrado automático
-- [ ] T008 [P] [US1] Escribir pruebas e2e en tests/e2e/us10-aviso-privacidad.spec.ts, en móvil y portátil:
+- [X] T007 [P] [US1] Escribir pruebas en tests/unit/aviso-privacidad.test.ts (FR-004, SC-005): el módulo de src/lib/aviso-privacidad.ts exporta el responsable "Emmanuel Cristóbal Trejo", el domicilio "Andador Poleo No. 20, Col. La Magdalena Chichicaspa, Huixquilucan, Estado de México", el correo "emmanuelcristobal@yahoo.com.mx", una fecha de última actualización válida y las 8 secciones en el orden de contracts/interfaz.md, cada una con título y texto no vacíos. La sección "Cuánto tiempo los guardamos" menciona los 14 días de los respaldos y no promete un plazo de borrado automático
+- [X] T008 [P] [US1] Escribir pruebas e2e en tests/e2e/us10-aviso-privacidad.spec.ts, en móvil y portátil:
   - US1-1 y SC-001: desde `/`, un producto, `/encargos` y `/mis-apartados`, el enlace «Aviso de privacidad» del pie abre `/aviso-de-privacidad`; la navegación superior e inferior no lo tienen (FR-002).
   - US1-2: en `/mis-apartados` hay un enlace al aviso junto al formulario (FR-003).
   - US1-3 y US1-5: sin sesión, la página muestra un `h2` por sección y la fecha «Última actualización: …» con el mes escrito (FR-001, FR-004).
@@ -93,11 +93,11 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Crear src/lib/aviso-privacidad.ts con el responsable, el domicilio, el correo, la fecha de última actualización como texto ISO y las 8 secciones de contracts/interfaz.md, cada una con `titulo` y sus párrafos, redactadas con los elementos de FR-004 y la clarificación de conservación de la spec; la de conservación incluye el plazo de 14 días de `DIAS_CONSERVADOS` de src/lib/respaldo.ts (research 1 y 8). El texto queda pendiente de la aprobación del propietario (T033). Hacer pasar T007
-- [ ] T010 [US1] Crear src/app/(cliente)/aviso-de-privacidad/page.tsx: componente de servidor estático, `metadata` con el título «Aviso de privacidad | Productos Eli's», un `h1`, la fecha con `formatearFecha`, un `h2` por sección, el correo como enlace `mailto:` y el teléfono de `telefonoNegocio()` como enlace `tel:` (FR-001, FR-004–FR-006). Texto legible en móvil, con el ancho máximo de lectura que ya usa la sección
-- [ ] T011 [P] [US1] Agregar en el pie de src/app/(cliente)/layout.tsx, debajo del teléfono, un `Link` «Aviso de privacidad» a `/aviso-de-privacidad`, con buen contraste y un área táctil de al menos 44 px de alto (FR-002)
-- [ ] T012 [P] [US1] Agregar en src/components/cliente/consulta-apartados.tsx, junto al formulario, la línea «Consulta cómo usamos tus datos en nuestro aviso de privacidad.», con «aviso de privacidad» como enlace a `/aviso-de-privacidad` (FR-003)
-- [ ] T013 [US1] Hacer pasar T008 y ejecutar `npm run verificar`
+- [X] T009 [US1] Crear src/lib/aviso-privacidad.ts con el responsable, el domicilio, el correo, la fecha de última actualización como texto ISO y las 8 secciones de contracts/interfaz.md, cada una con `titulo` y sus párrafos, redactadas con los elementos de FR-004 y la clarificación de conservación de la spec; la de conservación incluye el plazo de 14 días de `DIAS_CONSERVADOS` de src/lib/respaldo.ts (research 1 y 8). El texto queda pendiente de la aprobación del propietario (T033). Hacer pasar T007
+- [X] T010 [US1] Crear src/app/(cliente)/aviso-de-privacidad/page.tsx: componente de servidor estático, `metadata` con el título «Aviso de privacidad | Productos Eli's», un `h1`, la fecha con `formatearFecha`, un `h2` por sección, el correo como enlace `mailto:` y el teléfono de `telefonoNegocio()` como enlace `tel:` (FR-001, FR-004–FR-006). Texto legible en móvil, con el ancho máximo de lectura que ya usa la sección
+- [X] T011 [P] [US1] Agregar en el pie de src/app/(cliente)/layout.tsx, debajo del teléfono, un `Link` «Aviso de privacidad» a `/aviso-de-privacidad`, con buen contraste y un área táctil de al menos 44 px de alto (FR-002)
+- [X] T012 [P] [US1] Agregar en src/components/cliente/consulta-apartados.tsx, junto al formulario, la línea «Consulta cómo usamos tus datos en nuestro aviso de privacidad.», con «aviso de privacidad» como enlace a `/aviso-de-privacidad` (FR-003)
+- [X] T013 [US1] Hacer pasar T008 y ejecutar `npm run verificar`
 
 **Checkpoint**: el aviso está publicado y se llega a él desde toda la sección de cliente. Se puede publicar solo, porque no depende de la migración
 
@@ -111,12 +111,12 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 
 ### Tests for User Story 2
 
-- [ ] T014 [P] [US2] Escribir pruebas en tests/integration/constancia-aviso.test.ts:
+- [X] T014 [P] [US2] Escribir pruebas en tests/integration/constancia-aviso.test.ts:
   - FR-008: `registrarApartado` y `registrarEncargo` con `avisoInformado: false` lanzan `DATOS_INVALIDOS` con `campos.avisoInformado` igual a `CAMPOS.avisoInformado`; con `true` guardan `aviso_informado = 1`.
   - FR-009: `registrarVenta` con nombre, o solo con teléfono, y `avisoInformado: false` lanza el mismo error; sin nombre ni teléfono (o con solo espacios, caso límite "Solo espacios") y casilla sin marcar se guarda con `aviso_informado = 0`; sin datos y casilla marcada también guarda `0` (data-model, Reglas de validación).
   - FR-012: `corregirOperacion` no cambia `aviso_informado`.
   - FR-012: `consultarOperacionesCliente` no devuelve `avisoInformado` ni `datosBorradosEn`.
-- [ ] T015 [P] [US2] Escribir pruebas e2e en tests/e2e/us11-constancia-aviso.spec.ts, en móvil y portátil:
+- [X] T015 [P] [US2] Escribir pruebas e2e en tests/e2e/us11-constancia-aviso.spec.ts, en móvil y portátil:
   - US2-1 y US2-8: las hojas de apartar, vender y encargar muestran la casilla sin marcar y un enlace al aviso con `target="_blank"` (FR-007).
   - US2-2 y US2-4: guardar sin la casilla muestra «Informa al cliente del aviso de privacidad y marca la casilla.» junto a ella, asociado con `aria-describedby`, y conserva lo capturado.
   - US2-3 y US2-6: con la casilla, el detalle muestra «Se informó al cliente del aviso de privacidad» con fecha y hora (FR-011).
@@ -126,14 +126,14 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] Agregar `avisoInformado: "Informa al cliente del aviso de privacidad y marca la casilla."` a `CAMPOS` en src/lib/mensajes.ts
-- [ ] T017 [US2] En src/servicios/operaciones.ts: agregar `avisoInformado: boolean` a `DatosVenta` y `DatosPedido`; en `validarPedido`, si es falso, agregar `errores.avisoInformado` y guardar `avisoInformado: true`; en `registrarVenta`, exigirlo solo si hay nombre o teléfono tras recortar, y guardar `avisoInformado: Boolean(nombre || telefono)` (FR-008–FR-010; data-model, Reglas de validación). `corregirOperacion` no lo toca
-- [ ] T018 [US2] En src/acciones/operaciones.ts, leer `avisoInformado` como `formulario.get("avisoInformado") === "on"` en `registrarVenta`, `registrarApartado` y `registrarEncargo` (contracts/interfaz.md, Acciones que cambian)
-- [ ] T019 [US2] Agregar `avisoInformado: true` a los datos de entrada de las pruebas que registran apartados, encargos o ventas con cliente, sin cambiar sus aserciones: tests/integration/arnes.ts, apartados.test.ts, encargos.test.ts, ventas.test.ts, pagos.test.ts, consulta-cliente.test.ts, busqueda.test.ts, productos.test.ts, respaldo.test.ts, tests/concurrency/trabajador.ts y ultima-unidad.test.ts. En tests/e2e/us3-venta.spec.ts, us4-apartado.spec.ts, us5-encargo.spec.ts, us6-consulta.spec.ts, us7-busqueda.spec.ts y accesibilidad-admin.spec.ts, marcar la casilla antes de guardar donde se capturan datos del cliente. Hacer pasar T014
-- [ ] T020 [US2] Agregar `CasillaAviso` en src/components/admin/hoja-formulario.tsx: `<input type="checkbox" name="avisoInformado">` nativo con `<Label>` «Se informó al cliente del aviso de privacidad», el error de `ErroresCampo` asociado con `aria-describedby` y un enlace «Ver aviso de privacidad (se abre en otra pestaña)» con `target="_blank"` y `rel="noopener"` (FR-007; research 2 y 3)
-- [ ] T021 [US2] Agregar `<CasillaAviso />` después de los campos del cliente en src/components/admin/hoja-venta.tsx, hoja-apartado.tsx y hoja-encargo.tsx
-- [ ] T022 [US2] En src/app/admin/(panel)/operaciones/[id]/page.tsx, mostrar la constancia según research 7: con `avisoInformado` verdadero, «Se informó al cliente del aviso de privacidad» con `formatearFecha` y `formatearHora` de `creadoEn`; con `false`, nada; con nulo, «Sin constancia del aviso: se registró antes de que existiera» (FR-011)
-- [ ] T023 [US2] Hacer pasar T015 y ejecutar `npm run verificar` y `npm run test:e2e`
+- [X] T016 [US2] Agregar `avisoInformado: "Informa al cliente del aviso de privacidad y marca la casilla."` a `CAMPOS` en src/lib/mensajes.ts
+- [X] T017 [US2] En src/servicios/operaciones.ts: agregar `avisoInformado: boolean` a `DatosVenta` y `DatosPedido`; en `validarPedido`, si es falso, agregar `errores.avisoInformado` y guardar `avisoInformado: true`; en `registrarVenta`, exigirlo solo si hay nombre o teléfono tras recortar, y guardar `avisoInformado: Boolean(nombre || telefono)` (FR-008–FR-010; data-model, Reglas de validación). `corregirOperacion` no lo toca
+- [X] T018 [US2] En src/acciones/operaciones.ts, leer `avisoInformado` como `formulario.get("avisoInformado") === "on"` en `registrarVenta`, `registrarApartado` y `registrarEncargo` (contracts/interfaz.md, Acciones que cambian)
+- [X] T019 [US2] Agregar `avisoInformado: true` a los datos de entrada de las pruebas que registran apartados, encargos o ventas con cliente, sin cambiar sus aserciones: tests/integration/arnes.ts, apartados.test.ts, encargos.test.ts, ventas.test.ts, pagos.test.ts, consulta-cliente.test.ts, busqueda.test.ts, productos.test.ts, respaldo.test.ts, tests/concurrency/trabajador.ts y ultima-unidad.test.ts. En tests/e2e/us3-venta.spec.ts, us4-apartado.spec.ts, us5-encargo.spec.ts, us6-consulta.spec.ts, us7-busqueda.spec.ts y accesibilidad-admin.spec.ts, marcar la casilla antes de guardar donde se capturan datos del cliente. Hacer pasar T014
+- [X] T020 [US2] Agregar `CasillaAviso` en src/components/admin/hoja-formulario.tsx: `<input type="checkbox" name="avisoInformado">` nativo con `<Label>` «Se informó al cliente del aviso de privacidad», el error de `ErroresCampo` asociado con `aria-describedby` y un enlace «Ver aviso de privacidad (se abre en otra pestaña)» con `target="_blank"` y `rel="noopener"` (FR-007; research 2 y 3)
+- [X] T021 [US2] Agregar `<CasillaAviso />` después de los campos del cliente en src/components/admin/hoja-venta.tsx, hoja-apartado.tsx y hoja-encargo.tsx
+- [X] T022 [US2] En src/app/admin/(panel)/operaciones/[id]/page.tsx, mostrar la constancia según research 7: con `avisoInformado` verdadero, «Se informó al cliente del aviso de privacidad» con `formatearFecha` y `formatearHora` de `creadoEn`; con `false`, nada; con nulo, «Sin constancia del aviso: se registró antes de que existiera» (FR-011)
+- [X] T023 [US2] Hacer pasar T015 y ejecutar `npm run verificar` y `npm run test:e2e`
 
 **Checkpoint**: ninguna operación con datos del cliente se guarda sin la constancia, y el detalle la muestra
 
@@ -147,14 +147,14 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 
 ### Tests for User Story 3
 
-- [ ] T024 [P] [US3] Escribir pruebas en tests/integration/borrado-datos.test.ts:
+- [X] T024 [P] [US3] Escribir pruebas en tests/integration/borrado-datos.test.ts:
   - FR-013 a FR-015 y SC-006: con dos apartados y una venta del mismo cliente, más una operación de otro cliente con el mismo nombre y otro teléfono, `contarOperacionesDelCliente` da 3 y `borrarDatosCliente` devuelve `{ borradas: 3 }`, deja en `NULL` `cliente_nombre`, `cliente_nombre_norm` y `cliente_telefono`, y guarda `datos_borrados_en`; la operación del otro cliente no cambia.
   - Mismo nombre escrito con otras mayúsculas o acentos ("José" y "JOSE") cuenta como el mismo cliente (FR-037 de la spec 001). Una venta con solo teléfono alcanza a las ventas con ese teléfono y sin nombre (data-model, Alcance del borrado).
   - FR-016: precio, cantidad, estado, pagos, saldo y `aviso_informado` iguales al centavo antes y después.
   - FR-017: `buscarOperaciones` por nombre o por teléfono anteriores y `consultarOperacionesCliente` no las devuelven; `registrarPago`, `marcarEntregada`, `cancelarOperacion` y `anularVenta` siguen funcionando en ellas.
   - FR-018: `borrarDatosCliente` en una operación ya borrada o en una venta sin datos lanza `ESTADO_NO_PERMITE`; `corregirOperacion` en una operación borrada lanza `ESTADO_NO_PERMITE`.
   - Caso límite "Operaciones anuladas o canceladas": se pueden borrar y conservan su constancia.
-- [ ] T025 [P] [US3] Escribir pruebas e2e en tests/e2e/us12-borrar-datos.spec.ts, en móvil y portátil:
+- [X] T025 [P] [US3] Escribir pruebas e2e en tests/e2e/us12-borrar-datos.spec.ts, en móvil y portátil:
   - US3-1: «Borrar datos del cliente» abre una confirmación que dice que se borrarán los datos de 3 operaciones y que no se puede deshacer.
   - US3-3: «Volver» no cambia nada.
   - US3-2 y US3-4: al confirmar, aparece «Datos del cliente borrados en 3 operaciones.» y el detalle muestra «Datos borrados a petición del cliente» con fecha y hora, con el mismo saldo.
@@ -165,13 +165,13 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 
 ### Implementation for User Story 3
 
-- [ ] T026 [US3] Agregar `contarOperacionesDelCliente(id)` en src/consultas/admin.ts, con la regla de data-model.md: "operaciones donde datos_borrados_en IS NULL y cliente_nombre_norm IS o.cliente_nombre_norm y cliente_telefono IS o.cliente_telefono". Devuelve 0 si la operación no tiene nombre ni teléfono o ya está borrada
-- [ ] T027 [US3] Agregar `borrarDatosCliente(id)` en src/servicios/operaciones.ts, dentro de `conTransaccion`: rechazar con `ESTADO_NO_PERMITE` si la operación no existe, no tiene nombre ni teléfono o tiene `datosBorradosEn`; con la misma regla de T026, poner en nulo `clienteNombre`, `clienteNombreNorm` y `clienteTelefono`, guardar `datosBorradosEn` con la hora actual en ISO y devolver `{ borradas }` (FR-015, FR-016). En `corregirOperacion`, rechazar con `ESTADO_NO_PERMITE` si `datosBorradosEn` tiene valor (FR-018)
-- [ ] T028 [US3] Agregar la acción `borrarDatosCliente(id)` en src/acciones/operaciones.ts con `exigirSesion()`, `ejecutar` y `refrescar()`, que devuelve `Resultado<{ borradas: number }>` (contracts/interfaz.md). Hacer pasar T024
-- [ ] T029 [US3] Crear src/components/admin/dialogo-borrar-datos.tsx: botón «Borrar datos del cliente» con estilo destructivo, diálogo con el texto «Se borrarán el nombre y el teléfono de N operaciones. Los importes y pagos se conservan. Esta acción no se puede deshacer.», botones «Volver» y «Confirmar», y aviso de éxito «Datos del cliente borrados en N operaciones.» con la cuenta real que devuelve la acción (research 9). Seguir el patrón de `DialogoMotivo` en src/components/admin/acciones-operacion.tsx, sin campo de motivo
-- [ ] T030 [US3] En src/app/admin/(panel)/operaciones/[id]/page.tsx: si `datosBorradosEn` tiene valor, mostrar en «Cliente» el texto «Datos borrados a petición del cliente» y en «Datos borrados» la fecha y hora; si no, y hay nombre o teléfono, mostrar `DialogoBorrarDatos` con la cuenta de `contarOperacionesDelCliente`. Ocultar `HojaCorreccion` cuando `datosBorradosEn` tiene valor (FR-013, FR-015, FR-018; research 6)
-- [ ] T031 [P] [US3] Mostrar «Datos borrados a petición del cliente» en lugar del nombre y el teléfono cuando `datosBorradosEn` tiene valor en src/app/admin/(panel)/operaciones/page.tsx y src/app/admin/(panel)/encargos/page.tsx (research 6)
-- [ ] T032 [US3] Hacer pasar T025 y ejecutar `npm run verificar` y `npm run test:e2e`
+- [X] T026 [US3] Agregar `contarOperacionesDelCliente(id)` en src/consultas/admin.ts (hecho junto con `condicionMismoCliente`, que comparte con T027 la regla de alcance, según el hallazgo D1 del análisis), con la regla de data-model.md: "operaciones donde datos_borrados_en IS NULL y cliente_nombre_norm IS o.cliente_nombre_norm y cliente_telefono IS o.cliente_telefono". Devuelve 0 si la operación no tiene nombre ni teléfono o ya está borrada
+- [X] T027 [US3] Agregar `borrarDatosCliente(id)` en src/servicios/operaciones.ts, dentro de `conTransaccion`: rechazar con `ESTADO_NO_PERMITE` si la operación no existe, no tiene nombre ni teléfono o tiene `datosBorradosEn`; con la misma regla de T026, poner en nulo `clienteNombre`, `clienteNombreNorm` y `clienteTelefono`, guardar `datosBorradosEn` con la hora actual en ISO y devolver `{ borradas }` (FR-015, FR-016). En `corregirOperacion`, rechazar con `ESTADO_NO_PERMITE` si `datosBorradosEn` tiene valor (FR-018)
+- [X] T028 [US3] Agregar la acción `borrarDatosCliente(id)` en src/acciones/operaciones.ts con `exigirSesion()`, `ejecutar` y `refrescar()`, que devuelve `Resultado<{ borradas: number }>` (contracts/interfaz.md). Hacer pasar T024
+- [X] T029 [US3] Crear src/components/admin/dialogo-borrar-datos.tsx: botón «Borrar datos del cliente» con estilo destructivo, diálogo con el texto «Se borrarán el nombre y el teléfono de N operaciones. Los importes y pagos se conservan. Esta acción no se puede deshacer.», botones «Volver» y «Confirmar», y aviso de éxito «Datos del cliente borrados en N operaciones.» con la cuenta real que devuelve la acción (research 9). Seguir el patrón de `DialogoMotivo` en src/components/admin/acciones-operacion.tsx, sin campo de motivo
+- [X] T030 [US3] En src/app/admin/(panel)/operaciones/[id]/page.tsx: si `datosBorradosEn` tiene valor, mostrar en «Cliente» el texto «Datos borrados a petición del cliente» y en «Datos borrados» la fecha y hora; si no, y hay nombre o teléfono, mostrar `DialogoBorrarDatos` con la cuenta de `contarOperacionesDelCliente`. Ocultar `HojaCorreccion` cuando `datosBorradosEn` tiene valor (FR-013, FR-015, FR-018; research 6)
+- [X] T031 [P] [US3] Mostrar «Datos borrados a petición del cliente» en lugar del nombre y el teléfono cuando `datosBorradosEn` tiene valor en src/app/admin/(panel)/operaciones/page.tsx y src/app/admin/(panel)/encargos/page.tsx (research 6)
+- [X] T032 [US3] Hacer pasar T025 y ejecutar `npm run verificar` y `npm run test:e2e`
 
 **Checkpoint**: el negocio puede cumplir una solicitud de cancelación sin perder sus cuentas
 
@@ -181,9 +181,9 @@ Para no chocar con las specs 001 y 002, sus pruebas e2e se llaman `us10-aviso-pr
 
 **Purpose**: aprobación del texto, ensayo de la migración y aceptación
 
-- [ ] T033 Mostrarle al propietario el texto completo del aviso de src/lib/aviso-privacidad.ts y aplicar sus correcciones, idealmente tras la revisión de un abogado (supuesto «Texto del aviso» de la spec). Actualizar la fecha de última actualización al publicarlo
-- [ ] T034 Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de las specs 001 y 002, y dejar todo en verde
-- [ ] T035 Ensayar la migración `0001` sobre una copia del último respaldo de producción, restaurada en `C:\restauracion-prueba` como en la T094 de la spec 001, según la sección «Antes de publicar» de quickstart.md. Registrar el número de operaciones y pagos antes y después en specs/003-aviso-privacidad/checklists/aceptacion.md
+- [X] T033 Mostrarle al propietario el texto completo del aviso de src/lib/aviso-privacidad.ts y aplicar sus correcciones, idealmente tras la revisión de un abogado (supuesto «Texto del aviso» de la spec). Actualizar la fecha de última actualización al publicarlo. **Resultado (2026-11-06)**: el propietario aprobó el texto tal como está, de forma provisional, mientras sabe qué conviene cambiarle; si después hay correcciones (por ejemplo, del abogado), se aplican en src/lib/aviso-privacidad.ts y se actualiza la fecha, sin spec nueva
+- [X] T034 Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de las specs 001 y 002, y dejar todo en verde
+- [X] T035 Ensayar la migración `0001` sobre una copia del último respaldo de producción, restaurada en `C:\restauracion-prueba` como en la T094 de la spec 001, según la sección «Antes de publicar» de quickstart.md. Registrar el número de operaciones y pagos antes y después en specs/003-aviso-privacidad/checklists/aceptacion.md
 - [ ] T036 Ejecutar en un celular real los pasos 1 a 19 y 21 de specs/003-aviso-privacidad/quickstart.md, incluido SC-006 cronometrado, y registrar los resultados en specs/003-aviso-privacidad/checklists/aceptacion.md
 - [ ] T037 Hacer la prueba con 10 personas de SC-002 (quickstart, paso 20) y registrar fecha, personas, cuántas encontraron el responsable y el correo sin ayuda en menos de 1 minuto, y observaciones en specs/003-aviso-privacidad/checklists/aceptacion.md
 - [ ] T038 Después de publicar en Easypanel (pulsar Implementar tras el push a `main`), repetir en producción los pasos 1 a 6 y 18 de quickstart.md y registrarlos en specs/003-aviso-privacidad/checklists/aceptacion.md

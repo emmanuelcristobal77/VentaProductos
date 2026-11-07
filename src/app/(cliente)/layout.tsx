@@ -26,6 +26,12 @@ export default function LayoutCliente({ children }: { children: React.ReactNode 
             <Phone aria-hidden className="size-4" />
             {telefono.texto}
           </a>
+          <Link
+            href="/aviso-de-privacidad"
+            className="text-foreground mt-2 inline-flex min-h-11 items-center self-start underline underline-offset-4"
+          >
+            Aviso de privacidad
+          </Link>
         </div>
       </footer>
 

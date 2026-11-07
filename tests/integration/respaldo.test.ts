@@ -27,7 +27,7 @@ describe("respaldos", () => {
 
   it("T094: la copia restaurada coincide con productos, operaciones y saldos", async () => {
     const producto = crearProductoDirecto({ nombre: "Muñeca" });
-    registrarApartado({
+    registrarApartado({ avisoInformado: true,
       productoId: producto.id,
       cantidad: 2,
       precioUnitarioCentavos: 12345,

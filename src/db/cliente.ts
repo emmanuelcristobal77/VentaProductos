@@ -41,8 +41,23 @@ export function establecerBd(bd: Bd | undefined) {
   global_.bdVendeProductos = bd;
 }
 
-export function aplicarMigraciones(bd: Bd) {
-  migrate(bd, { migrationsFolder: path.join(process.cwd(), "src/db/migraciones") });
+/**
+ * Las migraciones que reconstruyen una tabla (spec 003, research 4) necesitan las llaves foráneas
+ * apagadas, y el migrador corre dentro de BEGIN/COMMIT, donde ese PRAGMA no tiene efecto. Por eso se
+ * apagan antes y, al terminar, se exige que `foreign_key_check` no encuentre ninguna fila huérfana.
+ */
+export function aplicarMigraciones(bd: Bd, carpeta = path.join(process.cwd(), "src/db/migraciones")) {
+  const sqlite = bd.$client;
+  sqlite.pragma("foreign_keys = OFF");
+  try {
+    migrate(bd, { migrationsFolder: carpeta });
+    const huerfanas = sqlite.pragma("foreign_key_check") as unknown[];
+    if (huerfanas.length > 0) {
+      throw new Error(`Las migraciones dejaron ${huerfanas.length} filas sin su registro relacionado.`);
+    }
+  } finally {
+    sqlite.pragma("foreign_keys = ON");
+  }
 }
 
 /** Abre una transacción BEGIN IMMEDIATE: las escrituras se atienden una tras otra. */

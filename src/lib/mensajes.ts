@@ -42,8 +42,12 @@ export const CAMPOS = {
   clienteNombre: "Escribe el nombre del cliente.",
   clienteTelefono: "Escribe un teléfono de 10 dígitos.",
   motivo: "Escribe el motivo.",
+  avisoInformado: "Informa al cliente del aviso de privacidad y marca la casilla.",
   rangoFechas: "Revisa las fechas: el inicio no puede ser posterior al final.",
 };
+
+/** Texto que reemplaza en pantalla al nombre y teléfono borrados a petición del cliente (spec 003, research 6). */
+export const DATOS_BORRADOS = "Datos borrados a petición del cliente";
 
 export const SIN_INFORMACION = "No encontramos información con esos datos.";
 

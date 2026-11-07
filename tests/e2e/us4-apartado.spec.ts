@@ -9,6 +9,8 @@ async function apartar(pagina: Page, nombre: string, cantidad: string, precio: s
   await hoja.getByLabel("Precio acordado").fill(precio);
   await hoja.getByLabel("Nombre del cliente").fill("Ana López");
   await hoja.getByLabel("Teléfono").fill("55 1234 5678");
+  // Spec 003, FR-008: la casilla del aviso de privacidad es obligatoria.
+  await hoja.getByRole("checkbox", { name: "Se informó al cliente del aviso de privacidad" }).check();
   await hoja.getByLabel("Pago inicial").fill(inicial);
   await hoja.getByRole("button", { name: "Registrar apartado" }).click();
   await expect(pagina.getByRole("heading", { name: /Apartado/ })).toBeVisible();

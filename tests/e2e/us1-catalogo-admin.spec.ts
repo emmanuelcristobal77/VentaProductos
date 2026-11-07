@@ -59,6 +59,8 @@ test.describe("US1: administrar el catálogo", () => {
 
     await page.getByRole("button", { name: `Dar de baja ${nombre}` }).click();
     await page.getByRole("button", { name: "Confirmar baja" }).click();
+    // Con el diálogo abierto la lista queda oculta para la accesibilidad; se espera a que la baja termine.
+    await expect(page.getByText("Producto dado de baja.")).toBeVisible();
     await expect(page.getByRole("listitem").filter({ hasText: nombre })).toHaveCount(0);
 
     await page.goto("/");

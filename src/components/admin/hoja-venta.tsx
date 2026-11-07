@@ -2,7 +2,7 @@
 
 import { registrarVenta } from "@/acciones/operaciones";
 import { precioParaCaptura } from "@/dominio/dinero";
-import { Campo, HojaFormulario } from "./hoja-formulario";
+import { CasillaAviso, Campo, HojaFormulario } from "./hoja-formulario";
 
 export function HojaVenta({
   producto,
@@ -32,6 +32,7 @@ export function HojaVenta({
       />
       <Campo nombre="clienteNombre" etiqueta="Nombre del comprador (opcional)" />
       <Campo nombre="clienteTelefono" etiqueta="Teléfono (opcional)" inputMode="tel" />
+      <CasillaAviso />
     </HojaFormulario>
   );
 }

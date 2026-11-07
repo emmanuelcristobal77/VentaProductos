@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { consultarMisApartados } from "@/acciones/consulta-cliente";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -85,6 +86,13 @@ export function ConsultaApartados() {
         <Button type="submit" disabled={enviando} className="h-11">
           {enviando ? "Consultando…" : "Consultar"}
         </Button>
+        <p className="text-muted-foreground text-sm">
+          Consulta cómo usamos tus datos en nuestro{" "}
+          <Link href="/aviso-de-privacidad" className="text-foreground underline underline-offset-4">
+            aviso de privacidad
+          </Link>
+          .
+        </p>
       </form>
 
       {resultado?.ok &&

@@ -7,6 +7,8 @@ async function apartar(pagina: Page, nombre: string, cliente: string, telefono: 
   const hoja = pagina.getByRole("dialog");
   await hoja.getByLabel("Nombre del cliente").fill(cliente);
   await hoja.getByLabel("Teléfono").fill(telefono);
+  // Spec 003, FR-008: la casilla del aviso de privacidad es obligatoria.
+  await hoja.getByRole("checkbox", { name: "Se informó al cliente del aviso de privacidad" }).check();
   await hoja.getByLabel("Pago inicial").fill("100.00");
   await hoja.getByRole("button", { name: "Registrar apartado" }).click();
   await expect(pagina.getByRole("heading", { name: /Apartado/ })).toBeVisible();
@@ -69,6 +71,6 @@ test.describe("US7: buscar operaciones", () => {
     await page.goto("/admin/operaciones");
     await page.getByLabel("Teléfono").fill("123");
     await page.getByRole("button", { name: "Buscar" }).click();
-    await expect(page.getByRole("alert")).toContainText("10 dígitos");
+    await expect(page.getByRole("alert").filter({ hasText: "10 dígitos" })).toBeVisible();
   });
 });

@@ -40,6 +40,8 @@ test.describe("Principio VII: accesibilidad de la administración", () => {
 
     await hoja.getByLabel("Nombre del cliente").fill("Ana López");
     await hoja.getByLabel("Teléfono").fill("5512345678");
+    // Spec 003, FR-008: la casilla del aviso de privacidad es obligatoria.
+    await hoja.getByRole("checkbox", { name: "Se informó al cliente del aviso de privacidad" }).check();
     await hoja.getByLabel("Pago inicial").fill("100.00");
     await hoja.getByRole("button", { name: "Registrar apartado" }).click();
     await expect(page.getByRole("heading", { name: /Apartado/ })).toBeVisible();

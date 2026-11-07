@@ -5,6 +5,8 @@ async function llenarCliente(pagina: Page) {
   const hoja = pagina.getByRole("dialog");
   await hoja.getByLabel("Nombre del cliente").fill("Ana López");
   await hoja.getByLabel("Teléfono").fill("5512345678");
+  // Spec 003, FR-008: la casilla del aviso de privacidad es obligatoria.
+  await hoja.getByRole("checkbox", { name: "Se informó al cliente del aviso de privacidad" }).check();
 }
 
 /** Crea un producto y lo agota con una venta. */

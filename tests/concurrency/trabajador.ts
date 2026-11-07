@@ -7,7 +7,7 @@ const [productoId, salida] = process.argv.slice(2);
 while (Date.now() < Number(salida));
 
 try {
-  registrarVenta({ productoId, cantidad: 1, precioUnitarioCentavos: 10000 });
+  registrarVenta({ avisoInformado: true, productoId, cantidad: 1, precioUnitarioCentavos: 10000 });
   console.log("completada");
 } catch (error) {
   if (!(error instanceof ErrorNegocio)) throw error;

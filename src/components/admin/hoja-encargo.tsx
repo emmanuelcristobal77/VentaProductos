@@ -2,7 +2,7 @@
 
 import { registrarEncargo } from "@/acciones/operaciones";
 import { precioParaCaptura } from "@/dominio/dinero";
-import { Campo, HojaFormulario } from "./hoja-formulario";
+import { CasillaAviso, Campo, HojaFormulario } from "./hoja-formulario";
 
 type Origen =
   | { campo: "productoId" | "articuloEncargoId"; id: string; nombre: string; precioCentavos: number }
@@ -44,6 +44,7 @@ export function HojaEncargo({ origen }: { origen: Origen }) {
       />
       <Campo nombre="clienteNombre" etiqueta="Nombre del cliente" />
       <Campo nombre="clienteTelefono" etiqueta="Teléfono" inputMode="tel" />
+      <CasillaAviso />
       <Campo nombre="pagoInicial" etiqueta="Anticipo" inputMode="decimal" />
     </HojaFormulario>
   );

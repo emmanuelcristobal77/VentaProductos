@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +38,43 @@ export function Campo({
         aria-describedby={error ? `${id}-error` : undefined}
         {...props}
       />
+      {error && (
+        <p id={`${id}-error`} className="text-destructive text-sm">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Casilla «Se informó al cliente del aviso de privacidad» (spec 003, FR-007). Es nativa para que se
+ * envíe en el FormData; el enlace abre otra pestaña para no perder lo capturado (research 2 y 3).
+ */
+export function CasillaAviso() {
+  const error = useContext(ErroresCampo)?.avisoInformado;
+  const id = "campo-avisoInformado";
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-3">
+        <input
+          id={id}
+          type="checkbox"
+          name="avisoInformado"
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? `${id}-error` : undefined}
+          className="accent-primary size-5 shrink-0"
+        />
+        <Label htmlFor={id}>Se informó al cliente del aviso de privacidad</Label>
+      </div>
+      <Link
+        href="/aviso-de-privacidad"
+        target="_blank"
+        rel="noopener"
+        className="text-foreground inline-flex min-h-11 items-center self-start text-sm underline underline-offset-4"
+      >
+        Ver aviso de privacidad (se abre en otra pestaña)
+      </Link>
       {error && (
         <p id={`${id}-error`} className="text-destructive text-sm">
           {error}

@@ -21,7 +21,7 @@ const existencia = (id: string) =>
 const disponible = (id: string) => obtenerProducto(id)?.disponible;
 
 function apartado(productoId: string, cambios: Partial<DatosPedido> = {}) {
-  return registrarApartado({
+  return registrarApartado({ avisoInformado: true,
     productoId,
     cantidad: 2,
     precioUnitarioCentavos: 25000,
@@ -158,7 +158,7 @@ describe("apartados", () => {
 
   it("FR-042: cancelar no aplica a ventas", () => {
     const producto = crearProductoDirecto();
-    const { id } = registrarVenta({ productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
+    const { id } = registrarVenta({ avisoInformado: true, productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
     expect(() => cancelarOperacion(id, "Motivo")).toThrow(codigo("ESTADO_NO_PERMITE"));
   });
 });

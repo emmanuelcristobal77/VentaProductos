@@ -37,7 +37,9 @@ La tecnología es la misma de la spec 001 ([research de la 001](../001-catalogo-
   - `aviso_informado` (entero booleano, nulo para las operaciones anteriores);
   - `datos_borrados_en` (texto ISO, nulo mientras no se borren).
 
-  Cambiar una restricción `CHECK` en SQLite obliga a reconstruir la tabla. Drizzle Kit genera esa reconstrucción: copia a `__new_operaciones`, borra la tabla anterior y renombra. El migrador de Drizzle corre todo dentro de una transacción, y ahí `PRAGMA foreign_keys=OFF` no tiene efecto; con las llaves foráneas activas, el `DROP TABLE` fallaría por las filas de `pagos`. Por eso se agrega a mano `PRAGMA defer_foreign_keys = ON;` al principio de la migración generada. Eso pospone la revisión de las llaves hasta el `COMMIT`, cuando `operaciones` ya existe otra vez con los mismos `id`.
+  Cambiar una restricción `CHECK` en SQLite obliga a reconstruir la tabla. Drizzle Kit genera esa reconstrucción: copia a `__new_operaciones`, borra la tabla anterior y renombra. El migrador de Drizzle corre todo dentro de una transacción, y ahí `PRAGMA foreign_keys=OFF` no tiene efecto; con las llaves foráneas activas, el `DROP TABLE` fallaría por las filas de `pagos`. Por eso `aplicarMigraciones` de `src/db/cliente.ts` apaga las llaves foráneas **antes** de llamar al migrador, las vuelve a encender al terminar y lanza un error si `PRAGMA foreign_key_check` encuentra filas huérfanas.
+
+  **Corrección durante la implementación (T005)**: el plan original proponía `PRAGMA defer_foreign_keys = ON` dentro de la migración. La prueba de T003 mostró que no funciona: el `DROP TABLE` cuenta los pagos como huérfanos y esa cuenta no baja al renombrar la tabla nueva, así que el `COMMIT` falla. Además, Drizzle Kit generó un `INSERT … SELECT` que copiaba `aviso_informado` y `datos_borrados_en` desde la tabla anterior, que no las tiene; se quitaron a mano de la migración.
 - **Rationale**: la restricción `operaciones_cliente` de la spec 001 exige nombre y teléfono en todo apartado y encargo. Sin cambiarla, un borrado tendría que dejar textos falsos en el nombre y el teléfono, y la búsqueda por teléfono los encontraría. Con la restricción nueva, el borrado deja las columnas en nulo y la base misma impide que se mezclen datos y borrado.
 - **Alternatives considered**:
   - Solo `ALTER TABLE … ADD COLUMN`, sin cambiar restricciones, y guardar «Datos borrados…» como nombre y un teléfono ficticio: rompe la búsqueda, porque todos los borrados compartirían el mismo teléfono.
@@ -92,4 +94,10 @@ La tecnología es la misma de la spec 001 ([research de la 001](../001-catalogo-
 
 ## 10. Guías de Next.js revisadas
 
-Antes de implementar se revisan en `node_modules/next/dist/docs/` las guías de páginas estáticas del App Router y de `Link` con `target`, como pide `AGENTS.md`. No se usan APIs nuevas: la página del aviso es un componente de servidor sin datos dinámicos y las acciones siguen el patrón de `src/acciones/operaciones.ts`.
+Antes de implementar se revisan en `node_modules/next/dist/docs/` las guías de páginas estáticas del App Router y de `Link` con `target`, como pide `AGENTS.md`. No se usan APIs nuevas: la página del aviso es un componente de servidor sin datos de la base y las acciones siguen el patrón de `src/acciones/operaciones.ts`.
+
+Resultado de la lectura (T002, 2026-11-06):
+
+- `Link` pasa `target="_blank"` y `rel` al `<a>` que dibuja (`03-api-reference/02-components/link.md`), así que el enlace de la casilla puede ser un `Link`.
+- El título se declara con `export const metadata = { title: "Aviso de privacidad" }`. El layout raíz ya tiene la plantilla `"%s | Productos Eli's"`, así que el título final es «Aviso de privacidad | Productos Eli's», como pide el contrato.
+- **Diferencia con lo planeado**: la página no puede ser estática al construir. El layout de `(cliente)` lee `TELEFONO_NEGOCIO`, que solo existe al ejecutar y no al construir la imagen. Por eso las demás páginas de cliente declaran `export const dynamic = "force-dynamic"`, y la del aviso hace lo mismo. Sigue sin leer la base, así que su costo es mínimo. El proyecto no usa `cacheComponents` (spec 002, research 6), así que `ensureStatic` no aplica.

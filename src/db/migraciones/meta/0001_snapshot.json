@@ -1,0 +1,782 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "7e6010bd-7d4c-40f9-a50a-a4d3533087b5",
+  "prevId": "9a15c63e-8012-4ea1-8fc3-dc82a7c51c7c",
+  "tables": {
+    "articulos_encargo": {
+      "name": "articulos_encargo",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "precio_centavos": {
+          "name": "precio_centavos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "articulos_precio": {
+          "name": "articulos_precio",
+          "value": "precio_centavos > 0"
+        }
+      }
+    },
+    "categorias": {
+      "name": "categorias",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nombre_norm": {
+          "name": "nombre_norm",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        }
+      },
+      "indexes": {
+        "categorias_nombre_activo": {
+          "name": "categorias_nombre_activo",
+          "columns": [
+            "nombre_norm"
+          ],
+          "isUnique": true,
+          "where": "activo = 1"
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "categorias_no_todos": {
+          "name": "categorias_no_todos",
+          "value": "nombre_norm <> 'todos'"
+        }
+      }
+    },
+    "fotos": {
+      "name": "fotos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "producto_id": {
+          "name": "producto_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "articulo_encargo_id": {
+          "name": "articulo_encargo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "archivo": {
+          "name": "archivo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "orden": {
+          "name": "orden",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        }
+      },
+      "indexes": {
+        "fotos_producto": {
+          "name": "fotos_producto",
+          "columns": [
+            "producto_id"
+          ],
+          "isUnique": false
+        },
+        "fotos_articulo": {
+          "name": "fotos_articulo",
+          "columns": [
+            "articulo_encargo_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fotos_producto_id_productos_id_fk": {
+          "name": "fotos_producto_id_productos_id_fk",
+          "tableFrom": "fotos",
+          "tableTo": "productos",
+          "columnsFrom": [
+            "producto_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "fotos_articulo_encargo_id_articulos_encargo_id_fk": {
+          "name": "fotos_articulo_encargo_id_articulos_encargo_id_fk",
+          "tableFrom": "fotos",
+          "tableTo": "articulos_encargo",
+          "columnsFrom": [
+            "articulo_encargo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "fotos_propietario": {
+          "name": "fotos_propietario",
+          "value": "(producto_id IS NULL) <> (articulo_encargo_id IS NULL)"
+        }
+      }
+    },
+    "limite_intentos": {
+      "name": "limite_intentos",
+      "columns": {
+        "clave": {
+          "name": "clave",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "intentos": {
+          "name": "intentos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ventana_inicia": {
+          "name": "ventana_inicia",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "operaciones": {
+      "name": "operaciones",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "estado": {
+          "name": "estado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "producto_id": {
+          "name": "producto_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "articulo_encargo_id": {
+          "name": "articulo_encargo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cantidad": {
+          "name": "cantidad",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "precio_unitario_centavos": {
+          "name": "precio_unitario_centavos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "cliente_nombre": {
+          "name": "cliente_nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cliente_nombre_norm": {
+          "name": "cliente_nombre_norm",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cliente_telefono": {
+          "name": "cliente_telefono",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "motivo": {
+          "name": "motivo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "entregado_en": {
+          "name": "entregado_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "cerrado_en": {
+          "name": "cerrado_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "aviso_informado": {
+          "name": "aviso_informado",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "datos_borrados_en": {
+          "name": "datos_borrados_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "operaciones_telefono_idx": {
+          "name": "operaciones_telefono_idx",
+          "columns": [
+            "cliente_telefono"
+          ],
+          "isUnique": false
+        },
+        "operaciones_nombre_idx": {
+          "name": "operaciones_nombre_idx",
+          "columns": [
+            "cliente_nombre_norm"
+          ],
+          "isUnique": false
+        },
+        "operaciones_tipo_estado_idx": {
+          "name": "operaciones_tipo_estado_idx",
+          "columns": [
+            "tipo",
+            "estado"
+          ],
+          "isUnique": false
+        },
+        "operaciones_producto_idx": {
+          "name": "operaciones_producto_idx",
+          "columns": [
+            "producto_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "operaciones_producto_id_productos_id_fk": {
+          "name": "operaciones_producto_id_productos_id_fk",
+          "tableFrom": "operaciones",
+          "tableTo": "productos",
+          "columnsFrom": [
+            "producto_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "operaciones_articulo_encargo_id_articulos_encargo_id_fk": {
+          "name": "operaciones_articulo_encargo_id_articulos_encargo_id_fk",
+          "tableFrom": "operaciones",
+          "tableTo": "articulos_encargo",
+          "columnsFrom": [
+            "articulo_encargo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "operaciones_tipo": {
+          "name": "operaciones_tipo",
+          "value": "tipo IN ('venta', 'apartado', 'encargo')"
+        },
+        "operaciones_estado": {
+          "name": "operaciones_estado",
+          "value": "(tipo = 'venta' AND estado IN ('pagada', 'entregada', 'anulada'))\n        OR (tipo <> 'venta' AND estado IN ('pendiente', 'pagado', 'entregado', 'cancelado'))"
+        },
+        "operaciones_articulo": {
+          "name": "operaciones_articulo",
+          "value": "(producto_id IS NULL) <> (articulo_encargo_id IS NULL)"
+        },
+        "operaciones_articulo_solo_encargo": {
+          "name": "operaciones_articulo_solo_encargo",
+          "value": "articulo_encargo_id IS NULL OR tipo = 'encargo'"
+        },
+        "operaciones_cantidad": {
+          "name": "operaciones_cantidad",
+          "value": "cantidad > 0"
+        },
+        "operaciones_precio": {
+          "name": "operaciones_precio",
+          "value": "precio_unitario_centavos > 0"
+        },
+        "operaciones_telefono": {
+          "name": "operaciones_telefono",
+          "value": "cliente_telefono IS NULL\n        OR (length(cliente_telefono) = 10 AND cliente_telefono NOT GLOB '*[^0-9]*')"
+        },
+        "operaciones_cliente": {
+          "name": "operaciones_cliente",
+          "value": "tipo = 'venta' OR datos_borrados_en IS NOT NULL\n        OR (cliente_nombre IS NOT NULL AND cliente_telefono IS NOT NULL)"
+        },
+        "operaciones_datos_borrados": {
+          "name": "operaciones_datos_borrados",
+          "value": "datos_borrados_en IS NULL\n        OR (cliente_nombre IS NULL AND cliente_nombre_norm IS NULL AND cliente_telefono IS NULL)"
+        },
+        "operaciones_aviso": {
+          "name": "operaciones_aviso",
+          "value": "aviso_informado IS NOT 0 OR (cliente_nombre IS NULL AND cliente_telefono IS NULL)"
+        },
+        "operaciones_motivo": {
+          "name": "operaciones_motivo",
+          "value": "estado NOT IN ('anulada', 'cancelado') OR motivo IS NOT NULL"
+        }
+      }
+    },
+    "pagos": {
+      "name": "pagos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "operacion_id": {
+          "name": "operacion_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "importe_centavos": {
+          "name": "importe_centavos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fecha": {
+          "name": "fecha",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "anulado_en": {
+          "name": "anulado_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "pagos_fecha_idx": {
+          "name": "pagos_fecha_idx",
+          "columns": [
+            "fecha"
+          ],
+          "isUnique": false
+        },
+        "pagos_operacion_idx": {
+          "name": "pagos_operacion_idx",
+          "columns": [
+            "operacion_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "pagos_operacion_id_operaciones_id_fk": {
+          "name": "pagos_operacion_id_operaciones_id_fk",
+          "tableFrom": "pagos",
+          "tableTo": "operaciones",
+          "columnsFrom": [
+            "operacion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "pagos_importe": {
+          "name": "pagos_importe",
+          "value": "importe_centavos > 0"
+        }
+      }
+    },
+    "productos": {
+      "name": "productos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "categoria_id": {
+          "name": "categoria_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "subcategoria_id": {
+          "name": "subcategoria_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "existencia": {
+          "name": "existencia",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "precio_compra_centavos": {
+          "name": "precio_compra_centavos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "precio_venta_centavos": {
+          "name": "precio_venta_centavos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "productos_categoria": {
+          "name": "productos_categoria",
+          "columns": [
+            "categoria_id",
+            "subcategoria_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "productos_categoria_id_categorias_id_fk": {
+          "name": "productos_categoria_id_categorias_id_fk",
+          "tableFrom": "productos",
+          "tableTo": "categorias",
+          "columnsFrom": [
+            "categoria_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "productos_subcategoria_id_subcategorias_id_fk": {
+          "name": "productos_subcategoria_id_subcategorias_id_fk",
+          "tableFrom": "productos",
+          "tableTo": "subcategorias",
+          "columnsFrom": [
+            "subcategoria_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "productos_existencia": {
+          "name": "productos_existencia",
+          "value": "existencia >= 0"
+        },
+        "productos_precio_compra": {
+          "name": "productos_precio_compra",
+          "value": "precio_compra_centavos > 0"
+        },
+        "productos_precio_venta": {
+          "name": "productos_precio_venta",
+          "value": "precio_venta_centavos > 0"
+        }
+      }
+    },
+    "subcategorias": {
+      "name": "subcategorias",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "categoria_id": {
+          "name": "categoria_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nombre_norm": {
+          "name": "nombre_norm",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "activo": {
+          "name": "activo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        }
+      },
+      "indexes": {
+        "subcategorias_nombre_activo": {
+          "name": "subcategorias_nombre_activo",
+          "columns": [
+            "categoria_id",
+            "nombre_norm"
+          ],
+          "isUnique": true,
+          "where": "activo = 1"
+        }
+      },
+      "foreignKeys": {
+        "subcategorias_categoria_id_categorias_id_fk": {
+          "name": "subcategorias_categoria_id_categorias_id_fk",
+          "tableFrom": "subcategorias",
+          "tableTo": "categorias",
+          "columnsFrom": [
+            "categoria_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "subcategorias_no_todos": {
+          "name": "subcategorias_no_todos",
+          "value": "nombre_norm <> 'todos'"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

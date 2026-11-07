@@ -16,7 +16,7 @@ const existencia = (id: string) =>
   obtenerBd().select().from(productos).where(eq(productos.id, id)).get()!.existencia;
 
 function venta(productoId: string, cambios: Partial<Parameters<typeof registrarVenta>[0]> = {}) {
-  return registrarVenta({ productoId, cantidad: 1, precioUnitarioCentavos: 110000, ...cambios });
+  return registrarVenta({ avisoInformado: true, productoId, cantidad: 1, precioUnitarioCentavos: 110000, ...cambios });
 }
 
 describe("ventas", () => {

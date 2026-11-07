@@ -2,7 +2,7 @@
 
 import { registrarApartado } from "@/acciones/operaciones";
 import { precioParaCaptura } from "@/dominio/dinero";
-import { Campo, HojaFormulario } from "./hoja-formulario";
+import { CasillaAviso, Campo, HojaFormulario } from "./hoja-formulario";
 
 export function HojaApartado({
   producto,
@@ -31,6 +31,7 @@ export function HojaApartado({
       />
       <Campo nombre="clienteNombre" etiqueta="Nombre del cliente" />
       <Campo nombre="clienteTelefono" etiqueta="Teléfono" inputMode="tel" />
+      <CasillaAviso />
       <Campo nombre="pagoInicial" etiqueta="Pago inicial" inputMode="decimal" />
     </HojaFormulario>
   );

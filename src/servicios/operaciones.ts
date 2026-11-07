@@ -5,6 +5,7 @@ import { calcularTotal } from "@/dominio/dinero";
 import { calcularEstado, puedeTransicionar } from "@/dominio/estados";
 import { normalizarNombre, normalizarTelefono } from "@/dominio/normalizacion";
 import { unidadesDisponibles } from "@/consultas/disponibilidad";
+import { condicionMismoCliente } from "@/consultas/admin";
 import { pagadoCentavos } from "@/consultas/saldos";
 import {
   CAMPOS,
@@ -19,6 +20,8 @@ export interface DatosVenta {
   precioUnitarioCentavos: number;
   clienteNombre?: string;
   clienteTelefono?: string;
+  /** Casilla «Se informó al cliente del aviso de privacidad» (spec 003, FR-009). */
+  avisoInformado: boolean;
 }
 
 export interface DatosPedido {
@@ -28,6 +31,8 @@ export interface DatosPedido {
   clienteNombre: string;
   clienteTelefono: string;
   pagoInicialCentavos: number;
+  /** Casilla «Se informó al cliente del aviso de privacidad» (spec 003, FR-008). */
+  avisoInformado: boolean;
 }
 
 export type OrigenEncargo =
@@ -111,6 +116,9 @@ export function registrarVenta(datos: DatosVenta) {
   const telefonoCapturado = datos.clienteTelefono?.trim() || null;
   const telefono = telefonoCapturado && normalizarTelefono(telefonoCapturado);
   if (telefonoCapturado && !telefono) errores.clienteTelefono = CAMPOS.clienteTelefono;
+  // Spec 003, FR-009: la casilla solo se exige si se capturaron datos del comprador.
+  const conDatos = Boolean(nombre || telefonoCapturado);
+  if (conDatos && !datos.avisoInformado) errores.avisoInformado = CAMPOS.avisoInformado;
   if (Object.keys(errores).length > 0) throw invalido(errores);
 
   return conTransaccion((tx) => {
@@ -128,6 +136,7 @@ export function registrarVenta(datos: DatosVenta) {
         clienteNombre: nombre,
         clienteNombreNorm: nombre && normalizarNombre(nombre),
         clienteTelefono: telefono,
+        avisoInformado: conDatos,
       })
       .returning({ id: operaciones.id })
       .get();
@@ -152,6 +161,7 @@ function validarPedido(datos: CamposPedido, mensajePago: string, adicionales: Re
     ...erroresCliente,
   };
   if (!esPositivo(datos.pagoInicialCentavos)) errores.pagoInicial = mensajePago;
+  if (!datos.avisoInformado) errores.avisoInformado = CAMPOS.avisoInformado; // Spec 003, FR-008.
   if (Object.keys(errores).length > 0) throw invalido(errores);
 
   const total = calcularTotal(datos.precioUnitarioCentavos, datos.cantidad);
@@ -165,6 +175,7 @@ function validarPedido(datos: CamposPedido, mensajePago: string, adicionales: Re
     precioUnitarioCentavos: datos.precioUnitarioCentavos,
     ...cliente,
     clienteTelefono: cliente.clienteTelefono!,
+    avisoInformado: true,
   };
 }
 
@@ -309,6 +320,8 @@ export function corregirOperacion(id: string, datos: DatosCorreccion) {
     if (operacion.estado !== "pendiente" && operacion.estado !== "pagado") {
       throw new ErrorNegocio("ESTADO_NO_PERMITE");
     }
+    // Spec 003, FR-018: una operación con los datos borrados no vuelve a recibirlos.
+    if (operacion.datosBorradosEn) throw new ErrorNegocio("ESTADO_NO_PERMITE");
 
     const total = calcularTotal(datos.precioUnitarioCentavos, operacion.cantidad);
     if (total < operacion.pagado) throw new ErrorNegocio("PRECIO_MENOR_A_PAGADO");
@@ -321,5 +334,39 @@ export function corregirOperacion(id: string, datos: DatosCorreccion) {
       })
       .where(eq(operaciones.id, id))
       .run();
+  });
+}
+
+/**
+ * Borra, a petición del cliente, su nombre y teléfono de todas sus operaciones (spec 003, FR-015).
+ * Solo cambian los datos de contacto y la fecha del borrado; importes, pagos y estados quedan igual
+ * (FR-016). Es la excepción acotada a FR-038 de la spec 001.
+ */
+export function borrarDatosCliente(id: string): { borradas: number } {
+  return conTransaccion((tx) => {
+    const origen = tx
+      .select({
+        clienteNombreNorm: operaciones.clienteNombreNorm,
+        clienteTelefono: operaciones.clienteTelefono,
+        datosBorradosEn: operaciones.datosBorradosEn,
+      })
+      .from(operaciones)
+      .where(eq(operaciones.id, id))
+      .get();
+    if (!origen || origen.datosBorradosEn || (!origen.clienteNombreNorm && !origen.clienteTelefono)) {
+      throw new ErrorNegocio("ESTADO_NO_PERMITE");
+    }
+
+    const borradas = tx
+      .update(operaciones)
+      .set({
+        clienteNombre: null,
+        clienteNombreNorm: null,
+        clienteTelefono: null,
+        datosBorradosEn: new Date().toISOString(),
+      })
+      .where(condicionMismoCliente(origen))
+      .run().changes;
+    return { borradas };
   });
 }

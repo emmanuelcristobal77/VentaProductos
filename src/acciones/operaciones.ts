@@ -7,6 +7,7 @@ import { ejecutar, ErrorNegocio, type Resultado } from "@/lib/resultado";
 import { exigirSesion } from "@/lib/sesion";
 import {
   anularVenta as anular,
+  borrarDatosCliente as borrarDatos,
   cancelarOperacion as cancelar,
   corregirOperacion as corregir,
   marcarEntregada as entregar,
@@ -33,6 +34,9 @@ function leerPrecio(formulario: FormData): number {
   return centavos;
 }
 
+/** La casilla «Se informó al cliente del aviso de privacidad» llega como "on" si está marcada (spec 003). */
+const casillaAviso = (formulario: FormData) => formulario.get("avisoInformado") === "on";
+
 function refrescar() {
   revalidatePath("/", "layout");
 }
@@ -46,6 +50,7 @@ export async function registrarVenta(_anterior: Registro | null, formulario: For
       precioUnitarioCentavos: leerPrecio(formulario),
       clienteNombre: texto(formulario, "clienteNombre"),
       clienteTelefono: texto(formulario, "clienteTelefono"),
+      avisoInformado: casillaAviso(formulario),
     });
     refrescar();
     return venta;
@@ -61,6 +66,7 @@ export async function registrarApartado(_anterior: Registro | null, formulario: 
       precioUnitarioCentavos: parsearPrecio(texto(formulario, "precio")) ?? 0,
       clienteNombre: texto(formulario, "clienteNombre"),
       clienteTelefono: texto(formulario, "clienteTelefono"),
+      avisoInformado: casillaAviso(formulario),
       pagoInicialCentavos: parsearPrecio(texto(formulario, "pagoInicial")) ?? 0,
     });
     refrescar();
@@ -90,6 +96,7 @@ export async function registrarEncargo(_anterior: Registro | null, formulario: F
       precioUnitarioCentavos: parsearPrecio(texto(formulario, "precio")) ?? 0,
       clienteNombre: texto(formulario, "clienteNombre"),
       clienteTelefono: texto(formulario, "clienteTelefono"),
+      avisoInformado: casillaAviso(formulario),
       pagoInicialCentavos: parsearPrecio(texto(formulario, "pagoInicial")) ?? 0,
     });
     refrescar();
@@ -156,5 +163,15 @@ export async function anularPago(pagoId: string): Promise<Resultado<null>> {
     anularPagoRegistrado(pagoId);
     refrescar();
     return null;
+  });
+}
+
+/** Spec 003, FR-015: borra el nombre y el teléfono del cliente en todas sus operaciones. */
+export async function borrarDatosCliente(id: string): Promise<Resultado<{ borradas: number }>> {
+  return ejecutar(async () => {
+    await exigirSesion();
+    const resultado = borrarDatos(id);
+    refrescar();
+    return resultado;
   });
 }

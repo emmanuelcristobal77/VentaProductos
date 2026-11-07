@@ -22,7 +22,7 @@ function fecharPagos(operacionId: string, fecha: string) {
 }
 
 function apartado(productoId: string, clienteNombre: string, clienteTelefono: string, fecha: string) {
-  const { id } = registrarApartado({
+  const { id } = registrarApartado({ avisoInformado: true,
     productoId,
     cantidad: 1,
     precioUnitarioCentavos: 10000,
@@ -120,7 +120,7 @@ describe("búsqueda de operaciones", () => {
 
   it("US7-4: encuentra por fecha una venta sin comprador", () => {
     const producto = crearProductoDirecto();
-    const { id } = registrarVenta({ productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
+    const { id } = registrarVenta({ avisoInformado: true, productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
     fecharPagos(id, "2026-10-15T18:00:00.000Z");
     expect(ids({ desde: "2026-10-15", hasta: "2026-10-15" })).toEqual([id]);
     expect(ids({ nombre: "ana" })).toEqual([]);
@@ -128,7 +128,7 @@ describe("búsqueda de operaciones", () => {
 
   it("FR-042: una venta anulada sigue apareciendo por fecha", () => {
     const producto = crearProductoDirecto();
-    const { id } = registrarVenta({ productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
+    const { id } = registrarVenta({ avisoInformado: true, productoId: producto.id, cantidad: 1, precioUnitarioCentavos: 100 });
     fecharPagos(id, "2026-10-15T18:00:00.000Z");
     anularVenta(id, "Error");
     expect(buscarOperaciones({ desde: "2026-10-15", hasta: "2026-10-15" })).toEqual([
@@ -141,7 +141,7 @@ describe("búsqueda de operaciones", () => {
     const cancelada = apartado(producto.id, "Ana", "5512345678", "2026-10-15T18:00:00.000Z");
     cancelarOperacion(cancelada, "Motivo");
     const vigente = apartado(producto.id, "Ana", "5512345678", "2026-10-16T18:00:00.000Z");
-    const articulo = registrarEncargo({
+    const articulo = registrarEncargo({ avisoInformado: true,
       origen: { articuloNuevo: { nombre: "Tren", descripcion: "Eléctrico" } },
       cantidad: 1,
       precioUnitarioCentavos: 100,
