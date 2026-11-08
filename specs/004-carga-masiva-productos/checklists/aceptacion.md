@@ -22,6 +22,23 @@
 | Columna `nombre_original` | No | Sí, en nulo en todas |
 | `PRAGMA foreign_key_check` | — | 0 filas |
 
+### Repetición con el respaldo del día (antes de publicar)
+
+- **Fecha**: 2026-11-07, 10:10 p. m., hora del centro de México.
+- **Base**: `vende-productos-2026-11-08.sqlite.gz` (fecha UTC), generado a mano con `node respaldar.cjs` en la consola de Easypanel y descargado de Supabase. Se descomprimió en `C:\restauracion-prueba\ensayo-0002-hoy`.
+
+| Dato | Antes | Después |
+|---|---|---|
+| `PRAGMA integrity_check` | ok | ok |
+| Migraciones aplicadas | 2 | 3 |
+| Productos (total / activos) | 48 / 46 | 48 / 46 |
+| Fotos (total / activas) | 57 / 56 | 57 / 56 |
+| Categorías | 3 | 3 |
+| Operaciones / pagos | 11 / 11 | 11 / 11 |
+| Columna `nombre_original` | No | Sí, en nulo en todas |
+| Índice `fotos_nombre_original` | No | Sí |
+| `PRAGMA foreign_key_check` | — | 0 filas |
+
 ## T046: cargas A, B, C y D hechas por el propietario
 
 - **Fecha**: 2026-11-07, en local (`npm run dev`), desde la laptop.
