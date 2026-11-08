@@ -15,6 +15,13 @@
       "when": 1793992524465,
       "tag": "0001_cooing_jean_grey",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794075955458,
+      "tag": "0002_pretty_changeling",
+      "breakpoints": true
     }
   ]
 }

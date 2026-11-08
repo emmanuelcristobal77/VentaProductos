@@ -10,6 +10,21 @@ export function parsearPrecio(texto: string): number | null {
   return Number.isSafeInteger(centavos) && centavos > 0 ? centavos : null;
 }
 
+const FORMATO_ARCHIVO = /^\d+(?:\.\d{1,2})?$/;
+
+/**
+ * Importe del archivo de carga masiva (spec 004, research 5): sin símbolo ni comas de miles,
+ * porque en el archivo la coma separa las fotos. Devuelve centavos enteros o null.
+ */
+export function parsearImporteArchivo(texto: string): number | null {
+  const limpio = texto.trim();
+  if (!FORMATO_ARCHIVO.test(limpio)) return null;
+
+  const [entero, decimales = ""] = limpio.split(".");
+  const centavos = Number(entero) * 100 + Number(decimales.padEnd(2, "0"));
+  return Number.isSafeInteger(centavos) && centavos > 0 ? centavos : null;
+}
+
 export function formatearPrecio(centavos: number): string {
   const resto = centavos % 100;
   const entero = (centavos - resto) / 100;

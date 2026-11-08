@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { altaProducto, entrar, nombreUnico } from "./ayudantes";
+import { altaProducto, entrar, insertarProductosDePrueba, nombreUnico } from "./ayudantes";
+import { comprimido, renglon, subirCarga } from "./ayudantes-carga";
 
 async function revisar(pagina: Page) {
   const { violations } = await new AxeBuilder({ page: pagina }).analyze();
@@ -59,5 +60,41 @@ test.describe("Principio VII: accesibilidad de la administración", () => {
         );
       expect(sinEtiqueta).toEqual([]);
     }
+  });
+
+  test("SC-008 de la spec 004: la carga masiva y su resumen sin faltas ni desplazamiento lateral", async ({ page }) => {
+    const sinDesplazamiento = async () => {
+      const { ancho, ventana } = await page.evaluate(() => ({
+        ancho: document.documentElement.scrollWidth,
+        ventana: window.innerWidth,
+      }));
+      expect(ancho).toBeLessThanOrEqual(ventana);
+    };
+
+    await entrar(page);
+    await page.goto("/admin/productos/carga-masiva");
+    await revisar(page);
+    await sinDesplazamiento();
+
+    const base = nombreUnico("Ancho");
+    const [existente] = await insertarProductosDePrueba([{ nombre: `${base} existente con un nombre bastante largo` }]);
+    await subirCarga(
+      page,
+      comprimido([
+        renglon(`${base} nuevo`, { fotos: "roja.jpg,falta.jpg" }),
+        renglon(`${base} sin foto`, { fotos: "" }),
+        renglon(existente, {
+          descripcion: "Una descripción mucho más larga que la anterior para ver que no se desborda en el celular",
+          precio_venta: "123456.78",
+          fotos: "azul.png",
+        }),
+        renglon(`${base} rechazado`, { existencia: "-1" }),
+      ]),
+    );
+    for (const seccion of ["Productos nuevos sin foto", "Productos que ya existen", "Renglones rechazados", "Avisos de fotos"]) {
+      await expect(page.getByRole("region", { name: seccion })).toBeVisible();
+    }
+    await revisar(page);
+    await sinDesplazamiento();
   });
 });

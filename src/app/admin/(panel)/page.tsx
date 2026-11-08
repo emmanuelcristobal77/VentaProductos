@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { ListaProductosAdmin } from "@/components/admin/lista-productos-admin";
 import { FiltroCategorias } from "@/components/filtro-categorias";
 import { Button } from "@/components/ui/button";
@@ -26,12 +26,20 @@ export default async function PaginaProductos({
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold tracking-tight">Productos</h1>
-        <Button asChild className="h-11">
-          <Link href="/admin/productos/nuevo">
-            <Plus aria-hidden />
-            Nuevo producto
-          </Link>
-        </Button>
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button asChild variant="outline" className="h-11">
+            <Link href="/admin/productos/carga-masiva">
+              <Upload aria-hidden />
+              Carga masiva
+            </Link>
+          </Button>
+          <Button asChild className="h-11">
+            <Link href="/admin/productos/nuevo">
+              <Plus aria-hidden />
+              Nuevo producto
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <ListaProductosAdmin inicial={inicial} filtro={{ categoria, subcategoria }} tamano={TAMANO_PANEL}>

@@ -80,8 +80,14 @@ export const fotos = sqliteTable(
     archivo: text("archivo").notNull(),
     orden: integer("orden").notNull(),
     activo: activo(),
+    // Spec 004: nombre del archivo como venía en el comprimido, sin carpeta, en NFC y minúsculas.
+    // Nulo en las fotos del alta individual y en las anteriores a esta spec.
+    nombreOriginal: text("nombre_original"),
   },
   (t) => [
+    uniqueIndex("fotos_nombre_original")
+      .on(t.productoId, t.nombreOriginal)
+      .where(sql`nombre_original IS NOT NULL`),
     check("fotos_propietario", sql`(producto_id IS NULL) <> (articulo_encargo_id IS NULL)`),
     index("fotos_producto").on(t.productoId),
     index("fotos_articulo").on(t.articuloEncargoId),

@@ -54,6 +54,7 @@ No se registra nada y se muestra el mensaje:
 |---|---|
 | No es un .zip o está dañado | «El archivo no es un comprimido .zip válido.» |
 | Pasa de 50 MB | «El comprimido pasa de 50 MB. Divide los productos en varias cargas.» |
+| Trae 2,000 entradas o más | «El comprimido trae demasiados archivos. Divide los productos en varias cargas.» |
 | No trae `.txt` | «El comprimido no trae el archivo de productos (.txt).» |
 | Trae más de un `.txt` | «El comprimido trae más de un archivo .txt; deja solo el de productos.» |
 | El `.txt` pasa de 2 MB | «El archivo de productos es demasiado grande. Divide los productos en varias cargas.» |

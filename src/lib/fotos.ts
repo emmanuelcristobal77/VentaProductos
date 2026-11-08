@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { directorioDatos } from "./entorno";
@@ -42,4 +42,17 @@ export async function leerFoto(archivo: string) {
   }
 }
 
-export const urlFoto = (archivo: string) => `/api/fotos/${archivo}`;
+export const esNombreDeFoto = (archivo: string) => NOMBRE_VALIDO.test(archivo);
+
+/** La foto existe en la carpeta y su nombre es un UUID válido (spec 004, research 7). */
+export async function existeFoto(archivo: string): Promise<boolean> {
+  if (!esNombreDeFoto(archivo)) return false;
+  try {
+    await access(path.join(carpeta(), archivo));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export const urlFoto =(archivo: string) => `/api/fotos/${archivo}`;

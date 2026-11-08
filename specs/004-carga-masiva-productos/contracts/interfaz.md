@@ -114,6 +114,7 @@ confirmarActualizaciones(marcados: {
   - «La existencia no puede ser menor a las unidades apartadas.» (`EXISTENCIA_INSUFICIENTE`)
   - «El producto ya no está activo.»
   - «El nombre ya no corresponde a un solo producto.»
+  - «Las fotos nuevas ya no están disponibles; vuelve a subir el comprimido.», si un archivo de foto no cumple el patrón o no existe;
   - el motivo de validación del renglón, si alguien lo alteró;
   - «"Todos" está reservado para el filtro; elige otro nombre.»
 - Las fotos que ya tienen ese `nombre_original` en el producto se omiten sin error.

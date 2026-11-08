@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calcularTotal, formatearPrecio, parsearPrecio } from "@/dominio/dinero";
+import { calcularTotal, formatearPrecio, parsearPrecio, parsearImporteArchivo } from "@/dominio/dinero";
 
 describe("parsearPrecio (Principio II)", () => {
   it.each([
@@ -37,4 +37,23 @@ describe("calcularTotal (FR-020)", () => {
     expect(calcularTotal(1999, 3)).toBe(5997);
     expect(calcularTotal(10, 3)).toBe(30);
   });
+});
+
+describe("parsearImporteArchivo (spec 004, caso límite «Importes»)", () => {
+  it.each([
+    ["1250", 125000],
+    ["1250.5", 125050],
+    ["1250.00", 125000],
+    ["0.01", 1],
+    [" 80 ", 8000],
+  ])("acepta %j como %i centavos", (texto, centavos) => {
+    expect(parsearImporteArchivo(texto)).toBe(centavos);
+  });
+
+  it.each(["0", "0.00", "-5", "1,250.00", "$1250", "12.345", "12a", "", " ", "1e3", "12."])(
+    "rechaza %j",
+    (texto) => {
+      expect(parsearImporteArchivo(texto)).toBeNull();
+    },
+  );
 });

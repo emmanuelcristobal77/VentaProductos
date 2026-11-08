@@ -152,3 +152,11 @@ La tecnología base es la de la spec 001 ([research de la 001](../001-catalogo-v
 ## 12. Textos nuevos (es-MX)
 
 Los textos de la pantalla, los motivos y los encabezados del reporte están en [contracts/archivo-carga.md](contracts/archivo-carga.md) y [contracts/interfaz.md](contracts/interfaz.md). Se escriben en un solo módulo, `src/dominio/carga-masiva.ts`, para que las pruebas comparen contra la misma fuente.
+
+## 13. Notas de implementación
+
+- **T002 (guías de Next.js 16.4)**: la guía de Route Handlers confirma que el cuerpo se lee con los métodos estándar de `Request` (`request.body` es un `ReadableStream`) y que no hay `bodyParser` ni límite de tamaño propio. La de `proxy` confirma que `proxyClientMaxBodySize` solo aplica a las rutas que cubre el `matcher`; el de `src/proxy.ts` cubre solo `/admin`, así que `/api/admin/cargas` no pasa por ahí. `revalidatePath` se puede llamar desde un Route Handler y marca la ruta para revalidarse en la siguiente visita. Nada cambia respecto a lo planeado.
+- **Banderas UTF-8 del comprimido**: `fflate` entrega los nombres sin la bandera UTF-8 como latin-1, pero no informa si la entrada la traía. Un nombre con la bandera y solo caracteres hasta U+00FF (por ejemplo «muñeca.jpg») sería indistinguible. Por eso `comprimido.ts` recorre el directorio central para leer la bandera de cada entrada, en el mismo orden en que `fflate` llama a `filter`. Si el recorrido no cuadra (por ejemplo, con Zip64), se usan los nombres de `fflate` tal cual.
+- **Descompresión por foto**: cada foto se descomprime cuando el renglón la pide y se escribe en disco de inmediato. Así la memoria nunca guarda más de una foto a la vez, aunque el comprimido declare muchas fotos grandes.
+- **Textos de la pantalla**: los mensajes, motivos y textos del reporte viven en `src/dominio/carga-masiva.ts`, que es lo que comparan las pruebas. Las etiquetas de botones y encabezados están en los componentes, igual que en el resto del panel.
+- **Dos mensajes que el contrato no tenía**: «El comprimido trae demasiados archivos. Divide los productos en varias cargas.» (límite de 2,000 entradas de research 2) y «Las fotos nuevas ya no están disponibles; vuelve a subir el comprimido.» (confirmación con un archivo de foto inexistente). Se agregaron a los contratos.

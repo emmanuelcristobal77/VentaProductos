@@ -20,7 +20,11 @@ export interface DatosProducto {
 
 function columnas(tx: Conexion, datos: DatosProducto) {
   if (datos.fotos.length === 0) throw new ErrorNegocio("FOTO_REQUERIDA");
+  return columnasSinFotos(tx, datos);
+}
 
+/** Columnas del producto con su categoría y subcategoría resueltas; la usa también la carga masiva. */
+export function columnasSinFotos(tx: Conexion, datos: Omit<DatosProducto, "fotos">) {
   const categoria = resolverCategoria(tx, datos.categoria);
   const subcategoria = resolverSubcategoria(tx, categoria.id, datos.subcategoria);
   return {
@@ -34,14 +38,15 @@ function columnas(tx: Conexion, datos: DatosProducto) {
   };
 }
 
-export function crearProducto(datos: DatosProducto) {
+/** `nombresOriginales` (archivo → nombre en el comprimido) solo llega desde la carga masiva (spec 004). */
+export function crearProducto(datos: DatosProducto, nombresOriginales?: Map<string, string>) {
   return conTransaccion((tx) => {
     const producto = tx
       .insert(productos)
       .values(columnas(tx, datos))
       .returning({ id: productos.id })
       .get();
-    sincronizarFotos(tx, "productoId", producto.id, datos.fotos);
+    sincronizarFotos(tx, "productoId", producto.id, datos.fotos, nombresOriginales);
     return producto;
   });
 }
