@@ -54,4 +54,4 @@
 ## Pendientes del propietario
 
 - T047 (SC-007 y SC-001): **diferida por decisión del propietario (2026-11-07)**. Por ahora solo el propietario hace las cargas, así que no hay a quién probar sin ayuda. Se hace cuando otra persona vaya a usar la función. Mientras tanto, SC-007 y SC-001 quedan sin comprobar.
-- T048: pasos 2, 5, 14, 16 y 20 en producción después de publicar. El paso 24 queda diferido hasta la primera carga grande (decisión del propietario, 2026-11-07).
+- T048: **publicada el 2026-11-07** desde `main` (ac35dbe), con Implementar en Easypanel. Revisión sin sesión desde la laptop: `/admin/productos/carga-masiva` redirige a «Entrar» (307), `POST /api/admin/cargas` responde 401 `NO_AUTORIZADO`, lo que confirma que la ruta nueva está publicada, y el catálogo responde 200. **Los pasos 2, 5, 14, 16 y 20 en producción quedan para la primera carga real de productos nuevos** (decisión del propietario, 2026-11-07); se registran aquí cuando se haga. El paso 24 sigue diferido hasta la primera carga grande.
