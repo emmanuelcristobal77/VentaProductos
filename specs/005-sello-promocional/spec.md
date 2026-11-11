@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-11
 
-**Status**: Draft
+**Status**: Approved
 
 **Input**: User description: "Sello promocional personalizable en el catálogo público. El administrador puede activar o desactivar desde el panel de administración un sello o aviso visual de promoción, hecho con texto (sin imagen), que se muestra en el catálogo a los clientes. El texto del sello es personalizable para reutilizarlo en distintas temporadas: por ejemplo «Buen Fin · Descuentos» ahora y después «Venta navideña». El sello es solo visual: no cambia los precios del catálogo ni de las operaciones; los descuentos se siguen aplicando al registrar la venta, como hoy. Cuando está desactivado, el catálogo se ve igual que ahora."
 
