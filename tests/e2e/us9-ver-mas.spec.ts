@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { crearCategoriaDePrueba, crearProductosDePrueba, entrar } from "./ayudantes";
+import { crearCategoriaDePrueba, crearProductosDePrueba, entrar, posicionQuieta } from "./ayudantes";
 
 const ERROR_CARGA = "No se pudieron cargar más productos. Revisa tu conexión e inténtalo de nuevo.";
 
@@ -111,8 +111,7 @@ test.describe("US2 (spec 002): ver los productos por partes con «Ver más»", (
     const elegida = tarjetas(page).nth(41);
     await elegida.scrollIntoViewIfNeeded();
     await page.mouse.wheel(0, 50);
-    await expect.poll(() => desplazamiento(page)).toBeGreaterThan(0);
-    const antes = await desplazamiento(page);
+    const antes = await posicionQuieta(page);
 
     await elegida.getByRole("link").click();
     await expect(page.getByRole("heading", { name: nombres[41] })).toBeVisible();
@@ -135,8 +134,7 @@ test.describe("US2 (spec 002): ver los productos por partes con «Ver más»", (
 
     const elegida = filasPanel(page).nth(52);
     await elegida.scrollIntoViewIfNeeded();
-    await expect.poll(() => desplazamiento(page)).toBeGreaterThan(0);
-    const antes = await desplazamiento(page);
+    const antes = await posicionQuieta(page);
 
     await elegida.getByRole("link", { name: `Editar ${nombres[52]}` }).click();
     await expect(page.getByRole("heading", { name: "Editar producto" })).toBeVisible();

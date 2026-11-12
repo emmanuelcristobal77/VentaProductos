@@ -5,6 +5,7 @@ import {
   crearProductosDePrueba,
   entrar,
   insertarProductosDePrueba,
+  posicionQuieta,
 } from "./ayudantes";
 
 /** Una marca única por prueba, para buscar solo los productos que esa prueba crea. */
@@ -135,8 +136,7 @@ test.describe("US1 (spec 002): buscar un producto escribiendo", () => {
     const elegida = tarjetas(page).nth(9);
     await elegida.scrollIntoViewIfNeeded();
     await page.mouse.wheel(0, 50);
-    await expect.poll(() => desplazamiento(page)).toBeGreaterThan(0);
-    const antes = await desplazamiento(page);
+    const antes = await posicionQuieta(page);
 
     await elegida.getByRole("link").click();
     await expect(page.getByRole("heading", { name: nombres[9] })).toBeVisible();
@@ -158,8 +158,7 @@ test.describe("US1 (spec 002): buscar un producto escribiendo", () => {
     const elegida = filasPanel(page).nth(9);
     await elegida.scrollIntoViewIfNeeded();
     await page.mouse.wheel(0, 50);
-    await expect.poll(() => desplazamiento(page)).toBeGreaterThan(0);
-    const antes = await desplazamiento(page);
+    const antes = await posicionQuieta(page);
 
     await elegida.getByRole("link", { name: `Editar ${nombres[9]}` }).click();
     await expect(page.getByRole("heading", { name: "Editar producto" })).toBeVisible();

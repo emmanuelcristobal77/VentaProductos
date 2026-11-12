@@ -154,3 +154,21 @@ export function fijarSello(texto: string, color: "rojo" | "verde" | "dorado" | "
 export function desactivarSello() {
   sqlDePrueba("UPDATE sello_promocional SET activo = 0");
 }
+
+/**
+ * Espera a que la página deje de desplazarse y devuelve su posición. La rueda del ratón desplaza de
+ * forma suave: leer la posición en cuanto empieza a moverse da un valor que todavía va a cambiar.
+ */
+export async function posicionQuieta(pagina: Page) {
+  const leer = () => pagina.evaluate(() => window.scrollY);
+  let actual = await leer();
+  await expect
+    .poll(async () => {
+      const anterior = actual;
+      await pagina.waitForTimeout(150);
+      actual = await leer();
+      return actual > 0 && actual === anterior;
+    })
+    .toBe(true);
+  return actual;
+}
