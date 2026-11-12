@@ -136,3 +136,21 @@ export function crearProductosDePrueba(n: number, prefijo: string, opciones: Omi
     Array.from({ length: n }, (_, i) => ({ ...opciones, nombre: `${prefijo} ${String(i + 1).padStart(3, "0")}` })),
   );
 }
+
+/**
+ * Spec 005: deja el sello promocional como se pide, directo en la base de pruebas. Las páginas de
+ * cliente lo leen en cada petición, así que el cambio se ve al cargar la siguiente.
+ */
+export function fijarSello(texto: string, color: "rojo" | "verde" | "dorado" | "azul", activo: boolean) {
+  sqlDePrueba(
+    `INSERT INTO sello_promocional (id, texto, color, activo, actualizado_en)
+     VALUES (1, ${textoSql(texto)}, ${textoSql(color)}, ${activo ? 1 : 0}, ${textoSql(new Date().toISOString())})
+     ON CONFLICT(id) DO UPDATE SET texto = excluded.texto, color = excluded.color,
+       activo = excluded.activo, actualizado_en = excluded.actualizado_en`,
+  );
+}
+
+/** Deja el sello desactivado, para que las pruebas de las specs 001 a 004 vean la página como antes. */
+export function desactivarSello() {
+  sqlDePrueba("UPDATE sello_promocional SET activo = 0");
+}

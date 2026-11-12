@@ -1,4 +1,4 @@
-import { ClipboardList, LayoutGrid, Package, PackagePlus, Search } from "lucide-react";
+import { ClipboardList, LayoutGrid, Megaphone, Package, PackagePlus, Search } from "lucide-react";
 import { EnlaceNavegacion } from "@/components/enlace-navegacion";
 
 const ENLACES = [
@@ -29,10 +29,24 @@ const ENLACES = [
   },
 ];
 
+/**
+ * Spec 005, research 7: «Promoción» va solo en la navegación superior. En el celular va como botón
+ * en el encabezado, porque en la barra inferior no caben 6 etiquetas.
+ */
+const ENLACES_SUPERIORES = [
+  ...ENLACES,
+  {
+    href: "/admin/promocion",
+    etiqueta: "Promoción",
+    icono: <Megaphone aria-hidden className="size-5" />,
+    exacto: false,
+  },
+];
+
 export function NavegacionAdminSuperior() {
   return (
     <nav aria-label="Administración" className="hidden gap-1 md:flex">
-      {ENLACES.map((enlace) => (
+      {ENLACES_SUPERIORES.map((enlace) => (
         <EnlaceNavegacion key={enlace.href} {...enlace} />
       ))}
     </nav>

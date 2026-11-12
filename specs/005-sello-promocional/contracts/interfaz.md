@@ -7,10 +7,12 @@
 Se dibuja en todas las páginas de `src/app/(cliente)/`, justo debajo del encabezado, solo si `activo = true` (FR-009).
 
 ```html
-<div data-sello-promocional data-color="rojo" style="background:#B42318;color:#FFFFFF">
+<aside aria-label="Promoción" data-sello-promocional data-color="rojo" style="background:#B42318;color:#FFFFFF">
   <p>Buen Fin · Pregunta por tu descuento</p>
-</div>
+</aside>
 ```
+
+- Es un `<aside>` con nombre y no un `<div>`, porque queda entre `<header>` y `<main>` y axe exige que todo el contenido esté dentro de un landmark (regla `region`). En la vista previa del panel, que ya está dentro de `<main>`, se dibuja como `<div>` (research 9).
 
 - Ocupa todo el ancho y **no queda fija**: se desplaza con la página.
 - No es un enlace ni un botón, no se puede cerrar y no se puede enfocar.

@@ -95,7 +95,7 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 ### Tests for User Story 1
 
-- [ ] T009 [US1] Escribir tests/e2e/us16-sello-promocional.spec.ts (debe fallar), con `test.afterAll` que deja el sello desactivado:
+- [X] T009 [US1] Escribir tests/e2e/us16-sello-promocional.spec.ts (debe fallar), con `test.afterAll` que deja el sello desactivado:
   - US1-1 y «Primera vez»: sin guardar nada, el catálogo no tiene `[data-sello-promocional]`;
   - FR-001: en móvil, el botón «Promoción» del encabezado es visible y su caja no se encima con la marca «Productos Eli's» ni con «Salir» (comparar `boundingBox()`); en portátil, el enlace «Promoción» está en la navegación «Administración» y queda con `aria-current="page"` en /admin/promocion;
   - FR-001, «Sin sesión»: sin sesión, /admin/promocion manda a /admin/entrar;
@@ -111,25 +111,25 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
   - «Desactivar sin texto»: con la casilla desmarcada y el texto vacío, guardar no da error;
   - US1-6, FR-013, SC-003: con el sello activo, el precio de un producto en el catálogo y el precio propuesto al registrar una venta, un apartado y un encargo son los mismos que con el sello desactivado;
   - FR-014, SC-005: con el sello activo en cada uno de los 4 colores, axe no encuentra faltas en el catálogo
-- [ ] T010 [P] [US1] Agregar /admin/promocion a la lista de rutas de tests/e2e/accesibilidad-admin.spec.ts y comprobar axe sin faltas en móvil y portátil (Principio VII)
+- [X] T010 [P] [US1] Agregar /admin/promocion a la lista de rutas de tests/e2e/accesibilidad-admin.spec.ts y comprobar axe sin faltas en móvil y portátil (Principio VII)
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Crear src/components/sello-promocional.tsx, un componente que sirve en el servidor y en el cliente (sin `"use client"` ni hooks), que recibe `{ texto, color }` y dibuja según contracts/interfaz.md: `<div data-sello-promocional data-color={color}>` a todo lo ancho, con el `fondo` y el `texto` de `COLORES` como estilos en línea, y un `<p>` centrado con `break-words`, de al menos 14 px (`text-sm`) y `font-medium`. Sin enlace, sin botón, sin `role` y sin `dangerouslySetInnerHTML`. Si recibe `vacio`, muestra el texto de ejemplo «Escribe el texto del sello» con el color `textoEjemplo` de `COLORES`, sin opacidad, solo para la vista previa
-- [ ] T012 [US1] En src/app/(cliente)/layout.tsx, agregar `export const dynamic = "force-dynamic"`, leer `obtenerSello()` y, si `activo`, dibujar `<SelloPromocional>` justo después de `</header>` y antes de `<main>`, fuera del encabezado fijo. Con el sello desactivado el HTML queda igual que antes (FR-009, FR-010, research 5)
+- [X] T011 [P] [US1] Crear src/components/sello-promocional.tsx, un componente que sirve en el servidor y en el cliente (sin `"use client"` ni hooks), que recibe `{ texto, color }` y dibuja según contracts/interfaz.md: `<div data-sello-promocional data-color={color}>` a todo lo ancho, con el `fondo` y el `texto` de `COLORES` como estilos en línea, y un `<p>` centrado con `break-words`, de al menos 14 px (`text-sm`) y `font-medium`. Sin enlace, sin botón, sin `role` y sin `dangerouslySetInnerHTML`. Si recibe `vacio`, muestra el texto de ejemplo «Escribe el texto del sello» con el color `textoEjemplo` de `COLORES`, sin opacidad, solo para la vista previa
+- [X] T012 [US1] En src/app/(cliente)/layout.tsx, agregar `export const dynamic = "force-dynamic"`, leer `obtenerSello()` y, si `activo`, dibujar `<SelloPromocional>` justo después de `</header>` y antes de `<main>`, fuera del encabezado fijo. Con el sello desactivado el HTML queda igual que antes (FR-009, FR-010, research 5)
 - [X] T013 [P] [US1] Crear src/acciones/promocion.ts con `"use server"` y `guardarPromocion(_anterior, formulario)`, que hace `exigirSesion()`, lee `texto`, `color` y `activo` (`"on"` cuando la casilla está marcada), llama a `guardarSello` dentro de `ejecutar()`, llama a `revalidatePath("/", "layout")` y devuelve `Resultado<{ activo: boolean; texto: string; color: ClaveColor }>` con lo que quedó guardado (contracts/interfaz.md)
-- [ ] T014 [US1] Crear src/components/admin/formulario-promocion.tsx con `"use client"` y `useActionState(guardarPromocion)`, que recibe el sello guardado y dibuja, con los textos de `src/dominio/promocion.ts`:
+- [X] T014 [US1] Crear src/components/admin/formulario-promocion.tsx con `"use client"` y `useActionState(guardarPromocion)`, que recibe el sello guardado y dibuja, con los textos de `src/dominio/promocion.ts`:
   - el campo de una línea «Texto del sello» (`name="texto"`, sin `maxLength`, research 2), con el error de `campos.texto` junto al campo y `aria-describedby`;
   - el grupo de radios nativos «Color» (`<fieldset>` con `<legend>`), con las 4 opciones de `COLORES`, cada una con su nombre escrito y una muestra `aria-hidden`, y el error de `campos.color` junto al grupo;
   - la casilla nativa «Mostrar el sello en la página» (`name="activo"`);
   - el botón «Guardar»;
   - el mensaje de resultado en `aria-live="polite"`: «Listo. El sello se muestra en la página.» o «Listo. El sello está desactivado.»
-- [ ] T015 [US1] Crear src/app/admin/(panel)/promocion/page.tsx con `export const dynamic = "force-dynamic"`, `metadata = { title: "Promoción" }`, el encabezado `<h1>` «Promoción» y `<FormularioPromocion sello={obtenerSello()} />`
-- [ ] T016 [US1] Agregar «Promoción» a la navegación del panel (FR-001, research 7):
+- [X] T015 [US1] Crear src/app/admin/(panel)/promocion/page.tsx con `export const dynamic = "force-dynamic"`, `metadata = { title: "Promoción" }`, el encabezado `<h1>` «Promoción» y `<FormularioPromocion sello={obtenerSello()} />`
+- [X] T016 [US1] Agregar «Promoción» a la navegación del panel (FR-001, research 7):
   - en src/components/admin/navegacion.tsx, agregar `{ href: "/admin/promocion", etiqueta: "Promoción", icono: <Megaphone />, exacto: false }` **solo** a la navegación superior; `NavegacionAdminInferior` sigue con sus 5 enlaces;
   - en src/app/admin/(panel)/layout.tsx, agregar antes de «Salir» un botón `ghost` `size="sm"` con `asChild`, enlace a /admin/promocion, icono `Megaphone` y texto «Promoción», visible solo debajo de `md` (`md:hidden`);
   - en el mismo archivo, mostrar el subtítulo «Administración» solo desde `sm` (`hidden sm:inline`)
-- [ ] T017 [US1] Correr `npx playwright test tests/e2e/us16-sello-promocional.spec.ts tests/e2e/accesibilidad-admin.spec.ts` y dejar T009 y T010 en verde. Si alguna prueba anterior buscaba el subtítulo «Administración» en móvil, ajustarla sin cambiar lo que comprueba
+- [X] T017 [US1] Correr `npx playwright test tests/e2e/us16-sello-promocional.spec.ts tests/e2e/accesibilidad-admin.spec.ts` y dejar T009 y T010 en verde. Si alguna prueba anterior buscaba el subtítulo «Administración» en móvil, ajustarla sin cambiar lo que comprueba
 
 **Checkpoint**: US1 funciona sola (pasos 1 a 10 y 14 a 17 de quickstart.md). No se publica hasta terminar US2
 
@@ -143,7 +143,7 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 ### Tests for User Story 2
 
-- [ ] T018 [US2] Escribir tests/e2e/us17-cambiar-sello.spec.ts (debe fallar), con `test.afterAll` que deja el sello desactivado:
+- [X] T018 [US2] Escribir tests/e2e/us17-cambiar-sello.spec.ts (debe fallar), con `test.afterAll` que deja el sello desactivado:
   - US2-1, FR-010: con el sello activo en Rojo, cambiar a «Venta navideña 🎄» en Verde, guardar, recargar el catálogo y ver la franja con `data-color="verde"` y el texto nuevo, sin el anterior;
   - US2-2, FR-006: al escribir y al cambiar de color, la vista previa «Así se verá» cambia antes de guardar; sin texto muestra «Escribe el texto del sello»;
   - «Dos vendedores editando a la vez»: guardar «  Hola  » activo y ver «Hola» en el campo después de guardar, sin espacios; luego guardar otro texto desde una segunda pestaña, recargar la primera y ver lo último guardado;
@@ -152,12 +152,12 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] En src/components/admin/formulario-promocion.tsx, agregar el estado local del texto y del color y, con él:
+- [X] T019 [US2] En src/components/admin/formulario-promocion.tsx, agregar el estado local del texto y del color y, con él:
   - el contador debajo del campo, con `textoContador(contarCaracteres(normalizarTexto(texto)))`, en `aria-live="polite"` y con el color de error cuando pasa de 40;
   - `disabled` en «Guardar» mientras el texto pasa de 40;
   - la vista previa «Así se verá» con `<SelloPromocional>` y el texto y el color actuales, aunque la casilla esté desmarcada, o con `vacio` si no hay texto (FR-006);
   - al guardar con éxito, el estado local toma el texto y el color que quedaron guardados, ya normalizados, para que el panel muestre siempre lo guardado («Dos vendedores editando a la vez»). La acción los devuelve en `Resultado<{ activo, texto, color }>`
-- [ ] T020 [US2] Correr `npx playwright test tests/e2e/us17-cambiar-sello.spec.ts` y dejar T018 en verde
+- [X] T020 [US2] Correr `npx playwright test tests/e2e/us17-cambiar-sello.spec.ts` y dejar T018 en verde
 
 **Checkpoint**: US1 y US2 funcionan juntas; los pasos 11 a 13 de quickstart.md pasan
 

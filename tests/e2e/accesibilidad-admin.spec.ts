@@ -49,9 +49,17 @@ test.describe("Principio VII: accesibilidad de la administración", () => {
     await revisar(page);
   });
 
+  // Spec 005, T010: va aparte para no pasar el tiempo límite de la prueba anterior en móvil.
+  test("la sección «Promoción» no tiene faltas de axe", async ({ page }) => {
+    await entrar(page);
+    await page.goto("/admin/promocion");
+    await expect(page.getByRole("heading", { name: "Promoción", level: 1 })).toBeVisible();
+    await revisar(page);
+  });
+
   test("todos los campos de los formularios tienen etiqueta", async ({ page }) => {
     await entrar(page);
-    for (const ruta of ["/admin/productos/nuevo", "/admin/operaciones", "/admin/articulos-encargo"]) {
+    for (const ruta of ["/admin/productos/nuevo", "/admin/operaciones", "/admin/articulos-encargo", "/admin/promocion"]) {
       await page.goto(ruta);
       const sinEtiqueta = await page
         .locator("input:not([type=hidden]):not([type=file]), textarea, select")

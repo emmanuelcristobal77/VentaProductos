@@ -1,10 +1,16 @@
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { NavegacionInferior, NavegacionSuperior } from "@/components/cliente/navegacion";
+import { SelloPromocional } from "@/components/sello-promocional";
 import { telefonoNegocio } from "@/lib/contacto";
+import { obtenerSello } from "@/servicios/promocion";
+
+// Spec 005, research 5: el sello se lee en cada petición para que el cambio se vea al recargar.
+export const dynamic = "force-dynamic";
 
 export default function LayoutCliente({ children }: { children: React.ReactNode }) {
   const telefono = telefonoNegocio();
+  const sello = obtenerSello();
 
   return (
     <div className="flex min-h-dvh flex-col pb-20 md:pb-0">
@@ -16,6 +22,7 @@ export default function LayoutCliente({ children }: { children: React.ReactNode 
           <NavegacionSuperior />
         </div>
       </header>
+      {sello.activo && <SelloPromocional texto={sello.texto} color={sello.color} />}
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 md:py-10">{children}</main>
 

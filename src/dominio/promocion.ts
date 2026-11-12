@@ -65,9 +65,7 @@ const segmentador = new Intl.Segmenter("es-MX", { granularity: "grapheme" });
 
 /** Cuenta los caracteres que ve una persona: «ñ», «á» o un emoji cuentan como 1. */
 export function contarCaracteres(texto: string): number {
-  let total = 0;
-  for (const _ of segmentador.segment(texto)) total++;
-  return total;
+  return Array.from(segmentador.segment(texto)).length;
 }
 
 const bytes = (texto: string) => new TextEncoder().encode(texto).length;
