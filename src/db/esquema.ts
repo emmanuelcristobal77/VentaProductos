@@ -176,3 +176,21 @@ export const limiteIntentos = sqliteTable("limite_intentos", {
   intentos: integer("intentos").notNull(),
   ventanaInicia: text("ventana_inicia").notNull(),
 });
+
+/** Spec 005: una sola fila (id = 1) con el sello promocional de todo el negocio (data-model.md). */
+export const selloPromocional = sqliteTable(
+  "sello_promocional",
+  {
+    id: integer("id").primaryKey(),
+    texto: text("texto").notNull(),
+    color: text("color", { enum: ["rojo", "verde", "dorado", "azul"] }).notNull(),
+    activo: integer("activo", { mode: "boolean" }).notNull(),
+    actualizadoEn: text("actualizado_en").notNull(),
+  },
+  () => [
+    check("sello_una_fila", sql`id = 1`),
+    check("sello_color", sql`color IN ('rojo', 'verde', 'dorado', 'azul')`),
+    check("sello_activo_con_texto", sql`activo = 0 OR length(trim(texto)) > 0`),
+    check("sello_bytes", sql`length(CAST(texto AS BLOB)) <= 400`),
+  ],
+);

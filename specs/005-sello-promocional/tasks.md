@@ -39,7 +39,7 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 **Purpose**: lectura previa que pide AGENTS.md
 
-- [ ] T001 Leer en node_modules/next/dist/docs/01-app/01-getting-started/07-mutating-data.md y 09-revalidating.md, y en 01-app/02-guides/caching-without-cache-components.md, lo que aplica a una acción de servidor con `useActionState`, a `revalidatePath("/", "layout")` y a `export const dynamic = "force-dynamic"` en un layout. Anotar cualquier diferencia con el plan en specs/005-sello-promocional/research.md, en una sección nueva «9. Notas de implementación»
+- [X] T001 Leer en node_modules/next/dist/docs/01-app/01-getting-started/07-mutating-data.md y 09-revalidating.md, y en 01-app/02-guides/caching-without-cache-components.md, lo que aplica a una acción de servidor con `useActionState`, a `revalidatePath("/", "layout")` y a `export const dynamic = "force-dynamic"` en un layout. Anotar cualquier diferencia con el plan en specs/005-sello-promocional/research.md, en una sección nueva «9. Notas de implementación»
 
 ---
 
@@ -51,15 +51,15 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 ### Pruebas de la fase base
 
-- [ ] T002 [P] Escribir tests/unit/promocion.test.ts contra `src/dominio/promocion.ts` (aún no existe; debe fallar):
+- [X] T002 [P] Escribir tests/unit/promocion.test.ts contra `src/dominio/promocion.ts` (aún no existe; debe fallar):
   - `COLORES` trae exactamente las claves `rojo`, `verde`, `dorado` y `azul`, en ese orden, con los nombres «Rojo», «Verde», «Dorado» y «Azul» (FR-005);
   - el contraste WCAG de cada par fondo/texto y fondo/texto de ejemplo es de al menos 4.5 : 1, calculado en la prueba con la fórmula de luminancia relativa (FR-014, research 3);
   - `normalizarTexto` aplica NFC y quita los espacios del principio y del final;
   - `contarCaracteres` cuenta grafemas con `Intl.Segmenter`: «Ñandú» = 5, «Venta navideña 🎄» = 16, una «á» escrita como «a» más acento combinante = 1 (research 2);
   - `validarSello` rechaza activar con texto vacío o con solo espacios y devuelve el mensaje «Escribe el texto del sello para mostrarlo.» (FR-003); permite desactivar con texto vacío («Desactivar sin texto»); rechaza 41 caracteres con «El texto puede tener hasta 40 caracteres.» y acepta exactamente 40 (FR-004); acepta 40 «👍🏽» (320 bytes) y rechaza con el mismo mensaje un texto de hasta 40 caracteres visibles que pasa de 400 bytes (data-model.md); rechaza un color fuera de la lista con «Elige uno de los colores de la lista.» en `campos.color`;
   - `textoContador` devuelve «Te quedan 40 caracteres», «Te queda 1 carácter», «Te quedan 0 caracteres», «Te pasaste por 1 carácter» y «Te pasaste por 3 caracteres» (contracts/interfaz.md)
-- [ ] T003 [P] Escribir tests/integration/migracion-0003.test.ts siguiendo el patrón de tests/integration/migracion-0002.test.ts: aplicar las migraciones hasta la `0002`, insertar un producto, una foto y una operación con pago, aplicar todas, y comprobar que existe la tabla `sello_promocional` vacía y que el producto, la foto, la operación y el pago no cambiaron. Comprobar también los `CHECK`: `id = 2` se rechaza, `color = 'morado'` se rechaza y `activo = 1` con `texto = '  '` se rechaza (data-model.md)
-- [ ] T004 [P] Escribir tests/integration/promocion.test.ts con `usarBaseTemporal()` contra `src/servicios/promocion.ts` (aún no existe):
+- [X] T003 [P] Escribir tests/integration/migracion-0003.test.ts siguiendo el patrón de tests/integration/migracion-0002.test.ts: aplicar las migraciones hasta la `0002`, insertar un producto, una foto y una operación con pago, aplicar todas, y comprobar que existe la tabla `sello_promocional` vacía y que el producto, la foto, la operación y el pago no cambiaron. Comprobar también los `CHECK`: `id = 2` se rechaza, `color = 'morado'` se rechaza y `activo = 1` con `texto = '  '` se rechaza (data-model.md)
+- [X] T004 [P] Escribir tests/integration/promocion.test.ts con `usarBaseTemporal()` contra `src/servicios/promocion.ts` (aún no existe):
   - «Primera vez»: `obtenerSello()` sin fila devuelve `{ texto: "", color: "rojo", activo: false }`;
   - FR-002: `guardarSello({ texto: "Buen Fin · Pregunta por tu descuento", color: "rojo", activo: true })` guarda y `obtenerSello()` lo devuelve; un segundo guardado reemplaza la misma fila y la tabla sigue con una sola fila;
   - FR-007: desactivar conserva el texto y el color;
@@ -71,9 +71,9 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 ### Implementación base
 
-- [ ] T005 Agregar `selloPromocional` a src/db/esquema.ts, según data-model.md: `id` integer llave primaria con `CHECK (id = 1)`; `texto` text no nulo; `color` text no nulo con `CHECK (color IN ('rojo', 'verde', 'dorado', 'azul'))`; `activo` integer `mode: "boolean"` no nulo; `actualizado_en` text no nulo con la fecha ISO; `CHECK (activo = 0 OR length(trim(texto)) > 0)` y `CHECK (length(CAST(texto AS BLOB)) <= 400)`
-- [ ] T006 Generar la migración con `npm run db:generar`, revisar que src/db/migraciones/0003_*.sql solo haga `CREATE TABLE sello_promocional` sin `INSERT` ni cambios a otras tablas, y que se agreguen el snapshot y la entrada del diario en src/db/migraciones/meta/. Dejar T003 en verde
-- [ ] T007 [P] Crear src/dominio/promocion.ts, sin base ni disco, con:
+- [X] T005 Agregar `selloPromocional` a src/db/esquema.ts, según data-model.md: `id` integer llave primaria con `CHECK (id = 1)`; `texto` text no nulo; `color` text no nulo con `CHECK (color IN ('rojo', 'verde', 'dorado', 'azul'))`; `activo` integer `mode: "boolean"` no nulo; `actualizado_en` text no nulo con la fecha ISO; `CHECK (activo = 0 OR length(trim(texto)) > 0)` y `CHECK (length(CAST(texto AS BLOB)) <= 400)`
+- [X] T006 Generar la migración con `npm run db:generar`, revisar que src/db/migraciones/0003_*.sql solo haga `CREATE TABLE sello_promocional` sin `INSERT` ni cambios a otras tablas, y que se agreguen el snapshot y la entrada del diario en src/db/migraciones/meta/. Dejar T003 en verde
+- [X] T007 [P] Crear src/dominio/promocion.ts, sin base ni disco, con:
   - `COLORES`: lista ordenada de `{ clave, nombre, fondo, texto, textoEjemplo }`, con Rojo `#B42318`/`#FFFFFF`/`#FDE2DF`, Verde `#1F6F43`/`#FFFFFF`/`#D3F0DF`, Dorado `#F2C14E`/`#3B2A12`/`#5C4318` y Azul `#1E4FA3`/`#FFFFFF`/`#DCE6F9` (research 3), y el tipo `ClaveColor`;
   - `MAXIMO_CARACTERES = 40`, `MAXIMO_BYTES = 400`, `normalizarTexto`, `contarCaracteres` y `textoContador`;
   - `validarSello({ texto, color, activo })`, que devuelve los errores por campo; el texto se rechaza si pasa de 40 caracteres visibles o de 400 bytes en UTF-8, con el mismo mensaje;
@@ -81,7 +81,7 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
   - `SELLO_INICIAL = { texto: "", color: "rojo", activo: false }`.
 
   Dejar T002 en verde
-- [ ] T008 Crear src/servicios/promocion.ts con `obtenerSello(conexion = obtenerBd())`, que lee la fila `id = 1` o devuelve `SELLO_INICIAL`, y `guardarSello(datos, conexion = obtenerBd())`, que normaliza el texto con `normalizarTexto`, valida con `validarSello` (si falla, lanza `ErrorNegocio("DATOS_INVALIDOS", …, campos)`) y hace un *upsert* de `id = 1` con `actualizado_en` en ISO UTC. Dejar T004 en verde
+- [X] T008 Crear src/servicios/promocion.ts con `obtenerSello(conexion = obtenerBd())`, que lee la fila `id = 1` o devuelve `SELLO_INICIAL`, y `guardarSello(datos, conexion = obtenerBd())`, que normaliza el texto con `normalizarTexto`, valida con `validarSello` (si falla, lanza `ErrorNegocio("DATOS_INVALIDOS", …, campos)`) y hace un *upsert* de `id = 1` con `actualizado_en` en ISO UTC. Dejar T004 en verde
 
 **Checkpoint**: `npm run verificar` en verde; la tabla, las reglas y el servicio funcionan sin interfaz
 
@@ -117,7 +117,7 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 - [ ] T011 [P] [US1] Crear src/components/sello-promocional.tsx, un componente que sirve en el servidor y en el cliente (sin `"use client"` ni hooks), que recibe `{ texto, color }` y dibuja según contracts/interfaz.md: `<div data-sello-promocional data-color={color}>` a todo lo ancho, con el `fondo` y el `texto` de `COLORES` como estilos en línea, y un `<p>` centrado con `break-words`, de al menos 14 px (`text-sm`) y `font-medium`. Sin enlace, sin botón, sin `role` y sin `dangerouslySetInnerHTML`. Si recibe `vacio`, muestra el texto de ejemplo «Escribe el texto del sello» con el color `textoEjemplo` de `COLORES`, sin opacidad, solo para la vista previa
 - [ ] T012 [US1] En src/app/(cliente)/layout.tsx, agregar `export const dynamic = "force-dynamic"`, leer `obtenerSello()` y, si `activo`, dibujar `<SelloPromocional>` justo después de `</header>` y antes de `<main>`, fuera del encabezado fijo. Con el sello desactivado el HTML queda igual que antes (FR-009, FR-010, research 5)
-- [ ] T013 [P] [US1] Crear src/acciones/promocion.ts con `"use server"` y `guardarPromocion(_anterior, formulario)`, que hace `exigirSesion()`, lee `texto`, `color` y `activo` (`"on"` cuando la casilla está marcada), llama a `guardarSello` dentro de `ejecutar()`, llama a `revalidatePath("/", "layout")` y devuelve `Resultado<{ activo: boolean; texto: string; color: ClaveColor }>` con lo que quedó guardado (contracts/interfaz.md)
+- [X] T013 [P] [US1] Crear src/acciones/promocion.ts con `"use server"` y `guardarPromocion(_anterior, formulario)`, que hace `exigirSesion()`, lee `texto`, `color` y `activo` (`"on"` cuando la casilla está marcada), llama a `guardarSello` dentro de `ejecutar()`, llama a `revalidatePath("/", "layout")` y devuelve `Resultado<{ activo: boolean; texto: string; color: ClaveColor }>` con lo que quedó guardado (contracts/interfaz.md)
 - [ ] T014 [US1] Crear src/components/admin/formulario-promocion.tsx con `"use client"` y `useActionState(guardarPromocion)`, que recibe el sello guardado y dibuja, con los textos de `src/dominio/promocion.ts`:
   - el campo de una línea «Texto del sello» (`name="texto"`, sin `maxLength`, research 2), con el error de `campos.texto` junto al campo y `aria-describedby`;
   - el grupo de radios nativos «Color» (`<fieldset>` con `<legend>`), con las 4 opciones de `COLORES`, cada una con su nombre escrito y una muestra `aria-hidden`, y el error de `campos.color` junto al grupo;

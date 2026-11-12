@@ -82,3 +82,11 @@ La spec no deja preguntas abiertas. Este documento registra las decisiones técn
   - **Integración** (`tests/integration/promocion.test.ts`, `migracion-0003.test.ts`): estado de primera vez, activar, desactivar conservando el texto y el color, desactivar con el texto vacío, rechazo sin sesión, y que los precios del catálogo no cambian (FR-002, FR-003, FR-007, FR-013). La migración crea la tabla sin tocar las demás.
   - **e2e con axe en móvil y portátil** (`us16-sello-promocional.spec.ts`, `us17-cambiar-sello.spec.ts`): las historias 1 y 2, la franja en el catálogo, una página de producto, «Mis apartados» y el aviso de privacidad, el texto con caracteres especiales, la vista previa, el contador, cada uno de los 4 colores revisado con axe, y que el encabezado del panel no se encime a 390 px.
 - **Rationale**: Principio V. La numeración e2e sigue a la de la spec 004 (`us13` a `us15`).
+
+## 9. Notas de implementación
+
+Lectura de las guías de Next.js 16.4 instaladas (`node_modules/next/dist/docs/`), hecha el 2026-11-11 antes de escribir código (AGENTS.md):
+
+- **`useActionState`** (`01-getting-started/07-mutating-data.md`): devuelve `[estado, accion, pendiente]` y recibe la acción de servidor con la firma `(estadoAnterior, formData)`. Es el patrón que ya usan categorías y productos; no hay diferencia con el plan.
+- **`revalidatePath("/", "layout")`** (`03-api-reference/04-functions/revalidatePath.md`, sección «Revalidating all data»): vacía la caché del cliente e invalida todo lo que esté en caché para la siguiente visita. Coincide con el plan.
+- **`export const dynamic = "force-dynamic"` en un layout** (`02-guides/caching-without-cache-components.md`): la opción se puede declarar en `layout.tsx`, `page.tsx` o `route.ts` y obliga a dibujar en cada petición. El proyecto no usa `cacheComponents`, así que la opción sigue vigente. Sin diferencias con el plan.
