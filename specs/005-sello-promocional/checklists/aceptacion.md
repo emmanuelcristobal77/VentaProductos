@@ -84,4 +84,8 @@
 
 ## T026: publicación y revisión en producción
 
-Pendiente. T021, T022 y T024 ya están; falta que el propietario haga el push a `main` y pulse Implementar en Easypanel.
+- **Publicación**: el 2026-11-12, desde `main` (b4668c9, que incluye también 8138db5 de la spec 004), con Implementar en Easypanel. El respaldo del día ya estaba hecho (`vende-productos-2026-11-12.sqlite.gz`) y la migración `0003` se había ensayado con él (T022).
+- **Pasos del quickstart en producción**, hechos por el propietario: **2, 3, 4, 5 a 7, 9 y 15, correctos**. El paso 9 se hizo en su celular, en modo claro y oscuro, y el 15 confirmó que los precios no cambian con el sello activo (FR-013).
+- **Revisión sin sesión desde la laptop**: con el sello activo, el catálogo (`/`), `/mis-apartados` y `/aviso-de-privacidad` muestran la franja con `data-color="rojo"`.
+- **Sello que quedó activo**: «Buen fin, pregunta por el descuento.» en Rojo. El propietario eligió este texto en lugar de «Buen Fin · Pregunta por tu descuento», que proponía la tarea; es su decisión de contenido y no cambia ningún comportamiento.
+- **Cumple.**
