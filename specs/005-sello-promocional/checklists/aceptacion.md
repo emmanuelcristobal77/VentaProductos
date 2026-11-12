@@ -80,7 +80,9 @@
 
 - **Fecha**: 2026-11-12.
 - **Resultado**: el propietario informó el **paso 19 como correcto**: al menos 9 de 10 personas leyeron el sello completo sin zoom y siguieron encontrando el nombre, el precio y la disponibilidad.
-- **Falta registrar**: cuántas personas lo leyeron completo y las observaciones, que pide la tarea.
+- **Cuántas**: al menos 9 de 10. El propietario confirmó que se cumplió el criterio, pero no precisó si fueron 9 o 10.
+- **Observaciones**: ninguna.
+- **Cumple** (SC-004).
 
 ## T026: publicación y revisión en producción
 
