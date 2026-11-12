@@ -37,7 +37,22 @@
 
 ### Repetición con el respaldo del día (antes de publicar)
 
-Pendiente: generar el respaldo con `node respaldar.cjs` en la consola de Easypanel, descargarlo de Supabase y repetir el ensayo.
+- **Fecha**: 2026-11-12, en la laptop de desarrollo.
+- **Base**: `vende-productos-2026-11-12.sqlite.gz` (fecha UTC), generado por el propietario en Easypanel y descargado de Supabase. Se descomprimió en `C:\restauracion-prueba\ensayo-0003-hoy`.
+- **Comando**: `DATOS_DIR=C:/restauracion-prueba/ensayo-0003-hoy npx tsx scripts/migrar.ts`.
+
+| Dato | Antes | Después |
+|---|---|---|
+| `PRAGMA integrity_check` | ok | ok |
+| Migraciones aplicadas | 3 | 4 |
+| Productos (total / activos) | 62 / 60 | 62 / 60 |
+| Fotos (total / activas) | 75 / 74 | 75 / 74 |
+| Categorías | 3 | 3 |
+| Operaciones / pagos | 12 / 13 | 12 / 13 |
+| Tabla `sello_promocional` | No existe | Existe, vacía |
+| `PRAGMA foreign_key_check` | 0 filas | 0 filas |
+
+**Cumple**: la migración solo agrega la tabla vacía y no cambia ningún dato.
 
 ## T023: LCP del catálogo con el sello activo
 
@@ -62,4 +77,4 @@ Pendiente del propietario. Puede hacerse después de publicar (tasks.md, Notes).
 
 ## T026: publicación y revisión en producción
 
-Pendiente. Depende de T021, T022 (con el respaldo del día) y T024, y de que el propietario haga el push a `main` y pulse Implementar en Easypanel.
+Pendiente. Depende de T024 (T021 y T022 ya están), y de que el propietario haga el push a `main` y pulse Implementar en Easypanel.
