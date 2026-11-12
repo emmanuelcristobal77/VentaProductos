@@ -17,20 +17,23 @@ La spec no deja preguntas abiertas. Este documento registra las decisiones técn
 
 - **Decision**: se cuentan los **caracteres que ve una persona**, con `Intl.Segmenter` en modo `grapheme`. Así, «ñ», «á» o un emoji cuentan como 1. Antes de contar, el texto se normaliza a NFC y se le quitan los espacios del principio y del final. El mismo cálculo, en `src/dominio/promocion.ts`, lo usan el contador del formulario y la validación del servidor. El campo es de una sola línea.
 - **Rationale**: FR-004 habla de caracteres y el vendedor ve caracteres, no unidades de código. Con `string.length`, un emoji contaría 2 o más y el contador no coincidiría con lo que se ve. `Intl.Segmenter` existe en Node 24 y en los navegadores actuales.
-- **Alternatives considered**: el atributo `maxLength` del campo cuenta unidades UTF-16. Se deja como tope de seguridad de 80, pero la regla la da el contador.
+- **Tope de bytes**: la base y `validarSello` limitan el texto a 400 bytes en UTF-8 ([data-model.md](data-model.md)). Un texto que pasa de ese tope se rechaza con el mismo mensaje de los 40 caracteres.
+- **Alternatives considered**: el atributo `maxLength` del campo cuenta unidades UTF-16, no caracteres visibles: con 40 banderas (4 unidades cada una) el navegador no dejaría escribir ni la mitad. Por eso el campo no lleva `maxLength`; la regla la dan el contador y la validación del servidor.
 
 ## 3. Los colores
 
 - **Decision**: cuatro colores fijos, en este orden, cada uno con un fondo y un color de texto ya probados:
 
-  | Clave | Nombre | Fondo | Texto | Contraste aproximado |
-  |---|---|---|---|---|
-  | `rojo` | Rojo | `#B42318` | `#FFFFFF` | 6.6 : 1 |
-  | `verde` | Verde | `#1F6F43` | `#FFFFFF` | 6.1 : 1 |
-  | `dorado` | Dorado | `#F2C14E` | `#3B2A12` | 8.2 : 1 |
-  | `azul` | Azul | `#1E4FA3` | `#FFFFFF` | 7.8 : 1 |
+  | Clave | Nombre | Fondo | Texto | Contraste aproximado | Texto de ejemplo | Contraste aproximado |
+  |---|---|---|---|---|---|---|
+  | `rojo` | Rojo | `#B42318` | `#FFFFFF` | 6.6 : 1 | `#FDE2DF` | 5.4 : 1 |
+  | `verde` | Verde | `#1F6F43` | `#FFFFFF` | 6.1 : 1 | `#D3F0DF` | 5.1 : 1 |
+  | `dorado` | Dorado | `#F2C14E` | `#3B2A12` | 8.2 : 1 | `#5C4318` | 5.5 : 1 |
+  | `azul` | Azul | `#1E4FA3` | `#FFFFFF` | 7.8 : 1 | `#DCE6F9` | 6.2 : 1 |
 
-  La base guarda la clave (`CHECK color IN (...)`), y los valores de color viven en `src/dominio/promocion.ts`. Una prueba unitaria calcula el contraste de cada par y exige al menos 4.5 : 1 (WCAG AA). axe lo vuelve a revisar en el navegador.
+  El **texto de ejemplo** es el color de «Escribe el texto del sello» en la vista previa cuando no hay texto. Es un color fijo y no una opacidad, para que su contraste se pueda probar.
+
+  La base guarda la clave (`CHECK color IN (...)`), y los valores de color viven en `src/dominio/promocion.ts`. Una prueba unitaria calcula el contraste de cada par, incluido el del texto de ejemplo, y exige al menos 4.5 : 1 (WCAG AA). axe lo vuelve a revisar en el navegador.
 - **Rationale**: FR-005 y FR-014. El dorado lleva texto oscuro porque, con texto blanco, no llega a 4.5 : 1.
 - **Alternatives considered**: cualquier color (opción C de la aclaración), que el propietario descartó.
 

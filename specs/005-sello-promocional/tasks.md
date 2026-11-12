@@ -53,10 +53,10 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 - [ ] T002 [P] Escribir tests/unit/promocion.test.ts contra `src/dominio/promocion.ts` (aún no existe; debe fallar):
   - `COLORES` trae exactamente las claves `rojo`, `verde`, `dorado` y `azul`, en ese orden, con los nombres «Rojo», «Verde», «Dorado» y «Azul» (FR-005);
-  - el contraste WCAG de cada par fondo/texto es de al menos 4.5 : 1, calculado en la prueba con la fórmula de luminancia relativa (FR-014, research 3);
+  - el contraste WCAG de cada par fondo/texto y fondo/texto de ejemplo es de al menos 4.5 : 1, calculado en la prueba con la fórmula de luminancia relativa (FR-014, research 3);
   - `normalizarTexto` aplica NFC y quita los espacios del principio y del final;
   - `contarCaracteres` cuenta grafemas con `Intl.Segmenter`: «Ñandú» = 5, «Venta navideña 🎄» = 16, una «á» escrita como «a» más acento combinante = 1 (research 2);
-  - `validarSello` rechaza activar con texto vacío o con solo espacios y devuelve el mensaje «Escribe el texto del sello para mostrarlo.» (FR-003); permite desactivar con texto vacío («Desactivar sin texto»); rechaza 41 caracteres con «El texto puede tener hasta 40 caracteres.» y acepta exactamente 40 (FR-004); rechaza un color fuera de la lista;
+  - `validarSello` rechaza activar con texto vacío o con solo espacios y devuelve el mensaje «Escribe el texto del sello para mostrarlo.» (FR-003); permite desactivar con texto vacío («Desactivar sin texto»); rechaza 41 caracteres con «El texto puede tener hasta 40 caracteres.» y acepta exactamente 40 (FR-004); acepta 40 «👍🏽» (320 bytes) y rechaza con el mismo mensaje un texto de hasta 40 caracteres visibles que pasa de 400 bytes (data-model.md); rechaza un color fuera de la lista con «Elige uno de los colores de la lista.» en `campos.color`;
   - `textoContador` devuelve «Te quedan 40 caracteres», «Te queda 1 carácter», «Te quedan 0 caracteres», «Te pasaste por 1 carácter» y «Te pasaste por 3 caracteres» (contracts/interfaz.md)
 - [ ] T003 [P] Escribir tests/integration/migracion-0003.test.ts siguiendo el patrón de tests/integration/migracion-0002.test.ts: aplicar las migraciones hasta la `0002`, insertar un producto, una foto y una operación con pago, aplicar todas, y comprobar que existe la tabla `sello_promocional` vacía y que el producto, la foto, la operación y el pago no cambiaron. Comprobar también los `CHECK`: `id = 2` se rechaza, `color = 'morado'` se rechaza y `activo = 1` con `texto = '  '` se rechaza (data-model.md)
 - [ ] T004 [P] Escribir tests/integration/promocion.test.ts con `usarBaseTemporal()` contra `src/servicios/promocion.ts` (aún no existe):
@@ -64,17 +64,20 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
   - FR-002: `guardarSello({ texto: "Buen Fin · Pregunta por tu descuento", color: "rojo", activo: true })` guarda y `obtenerSello()` lo devuelve; un segundo guardado reemplaza la misma fila y la tabla sigue con una sola fila;
   - FR-007: desactivar conserva el texto y el color;
   - FR-003: activar con texto vacío lanza `ErrorNegocio("DATOS_INVALIDOS")` con `campos.texto`;
+  - FR-004: guardar 40 «👍🏽» funciona y la base no lanza error de `CHECK`;
+  - FR-001, «Sin sesión»: `guardarPromocion` sin sesión devuelve el error `NO_AUTORIZADO` y la tabla sigue sin cambios, con el mismo arnés de sesión que tests/integration/sesion.test.ts;
+  - FR-008: `obtenerSello()` no cambia `activo` por sí solo; leer el sello varias veces, sin guardar nada, devuelve siempre lo último guardado;
   - FR-013: `listarCatalogo` devuelve los mismos `precioVentaCentavos` con el sello activo y desactivado, en 5 productos
 
 ### Implementación base
 
-- [ ] T005 Agregar `selloPromocional` a src/db/esquema.ts, según data-model.md: `id` integer llave primaria con `CHECK (id = 1)`; `texto` text no nulo; `color` text no nulo con `CHECK (color IN ('rojo', 'verde', 'dorado', 'azul'))`; `activo` integer `mode: "boolean"` no nulo; `actualizado_en` text no nulo con la fecha ISO; `CHECK (activo = 0 OR length(trim(texto)) > 0)` y `CHECK (length(CAST(texto AS BLOB)) <= 160)`
+- [ ] T005 Agregar `selloPromocional` a src/db/esquema.ts, según data-model.md: `id` integer llave primaria con `CHECK (id = 1)`; `texto` text no nulo; `color` text no nulo con `CHECK (color IN ('rojo', 'verde', 'dorado', 'azul'))`; `activo` integer `mode: "boolean"` no nulo; `actualizado_en` text no nulo con la fecha ISO; `CHECK (activo = 0 OR length(trim(texto)) > 0)` y `CHECK (length(CAST(texto AS BLOB)) <= 400)`
 - [ ] T006 Generar la migración con `npm run db:generar`, revisar que src/db/migraciones/0003_*.sql solo haga `CREATE TABLE sello_promocional` sin `INSERT` ni cambios a otras tablas, y que se agreguen el snapshot y la entrada del diario en src/db/migraciones/meta/. Dejar T003 en verde
 - [ ] T007 [P] Crear src/dominio/promocion.ts, sin base ni disco, con:
-  - `COLORES`: lista ordenada de `{ clave, nombre, fondo, texto }`, con Rojo `#B42318`/`#FFFFFF`, Verde `#1F6F43`/`#FFFFFF`, Dorado `#F2C14E`/`#3B2A12` y Azul `#1E4FA3`/`#FFFFFF` (research 3), y el tipo `ClaveColor`;
-  - `MAXIMO_CARACTERES = 40`, `normalizarTexto`, `contarCaracteres` y `textoContador`;
-  - `validarSello({ texto, color, activo })`, que devuelve los errores por campo;
-  - las constantes con los mensajes y etiquetas de contracts/interfaz.md: «Escribe el texto del sello para mostrarlo.», «El texto puede tener hasta 40 caracteres.», «Listo. El sello se muestra en la página.», «Listo. El sello está desactivado.», «Escribe el texto del sello», «Texto del sello», «Color», «Mostrar el sello en la página», «Así se verá» y «Promoción»;
+  - `COLORES`: lista ordenada de `{ clave, nombre, fondo, texto, textoEjemplo }`, con Rojo `#B42318`/`#FFFFFF`/`#FDE2DF`, Verde `#1F6F43`/`#FFFFFF`/`#D3F0DF`, Dorado `#F2C14E`/`#3B2A12`/`#5C4318` y Azul `#1E4FA3`/`#FFFFFF`/`#DCE6F9` (research 3), y el tipo `ClaveColor`;
+  - `MAXIMO_CARACTERES = 40`, `MAXIMO_BYTES = 400`, `normalizarTexto`, `contarCaracteres` y `textoContador`;
+  - `validarSello({ texto, color, activo })`, que devuelve los errores por campo; el texto se rechaza si pasa de 40 caracteres visibles o de 400 bytes en UTF-8, con el mismo mensaje;
+  - las constantes con los mensajes y etiquetas de contracts/interfaz.md: «Escribe el texto del sello para mostrarlo.», «El texto puede tener hasta 40 caracteres.», «Elige uno de los colores de la lista.», «Listo. El sello se muestra en la página.», «Listo. El sello está desactivado.», «Escribe el texto del sello», «Texto del sello», «Color», «Mostrar el sello en la página», «Así se verá» y «Promoción»;
   - `SELLO_INICIAL = { texto: "", color: "rojo", activo: false }`.
 
   Dejar T002 en verde
@@ -96,25 +99,28 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
   - US1-1 y «Primera vez»: sin guardar nada, el catálogo no tiene `[data-sello-promocional]`;
   - FR-001: en móvil, el botón «Promoción» del encabezado es visible y su caja no se encima con la marca «Productos Eli's» ni con «Salir» (comparar `boundingBox()`); en portátil, el enlace «Promoción» está en la navegación «Administración» y queda con `aria-current="page"` en /admin/promocion;
   - FR-001, «Sin sesión»: sin sesión, /admin/promocion manda a /admin/entrar;
-  - US1-2: escribir «Buen Fin · Pregunta por tu descuento», elegir «Rojo», marcar «Mostrar el sello en la página», guardar y ver «Listo. El sello se muestra en la página.»;
+  - US1-2, FR-008: escribir «Buen Fin · Pregunta por tu descuento», elegir «Rojo», marcar «Mostrar el sello en la página», guardar y ver «Listo. El sello se muestra en la página.»;
+  - US2-3, FR-003: marcar la casilla con el texto vacío y guardar, y luego con solo espacios: no se guarda y aparece «Escribe el texto del sello para mostrarlo.» junto al campo (va aquí porque el error junto al campo es parte de T014);
   - US1-3, FR-009: la franja aparece con ese texto debajo del encabezado en `/`, en una página de producto, en /mis-apartados, en /encargos y en /aviso-de-privacidad;
+  - SC-002: a 390 px, al cargar el catálogo y sin desplazarse, la caja de la franja queda completa dentro de la ventana;
+  - «Productos agotados»: con el sello activo, un producto agotado sigue mostrando «Agotado, disponible por encargo» completo;
   - FR-009: la franja no contiene enlaces ni botones, y no hay control para cerrarla;
   - US1-4, FR-011: a 390 px, `document.documentElement.scrollWidth` no supera el ancho de la ventana y la franja no se cruza con la primera tarjeta de producto;
   - FR-012: con el texto `<b>Hola</b>`, la franja muestra literalmente `<b>Hola</b>` y no contiene un elemento `b`;
-  - US1-5, FR-007: al desmarcar la casilla y guardar aparece «Listo. El sello está desactivado.», la franja desaparece del catálogo, y en «Promoción» siguen el texto y el color;
+  - US1-5, FR-007, FR-008: al desmarcar la casilla y guardar aparece «Listo. El sello está desactivado.», la franja desaparece del catálogo, y en «Promoción» siguen el texto y el color;
   - «Desactivar sin texto»: con la casilla desmarcada y el texto vacío, guardar no da error;
-  - US1-6, FR-013, SC-003: con el sello activo, el precio de un producto en el catálogo y el precio propuesto en «Registrar venta» son los mismos que con el sello desactivado;
+  - US1-6, FR-013, SC-003: con el sello activo, el precio de un producto en el catálogo y el precio propuesto al registrar una venta, un apartado y un encargo son los mismos que con el sello desactivado;
   - FR-014, SC-005: con el sello activo en cada uno de los 4 colores, axe no encuentra faltas en el catálogo
 - [ ] T010 [P] [US1] Agregar /admin/promocion a la lista de rutas de tests/e2e/accesibilidad-admin.spec.ts y comprobar axe sin faltas en móvil y portátil (Principio VII)
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Crear src/components/sello-promocional.tsx, un componente que sirve en el servidor y en el cliente (sin `"use client"` ni hooks), que recibe `{ texto, color }` y dibuja según contracts/interfaz.md: `<div data-sello-promocional data-color={color}>` a todo lo ancho, con el `fondo` y el `texto` de `COLORES` como estilos en línea, y un `<p>` centrado con `break-words`, de al menos 14 px (`text-sm`) y `font-medium`. Sin enlace, sin botón, sin `role` y sin `dangerouslySetInnerHTML`. Si recibe `vacio`, muestra el texto de ejemplo «Escribe el texto del sello» con opacidad reducida, solo para la vista previa
+- [ ] T011 [P] [US1] Crear src/components/sello-promocional.tsx, un componente que sirve en el servidor y en el cliente (sin `"use client"` ni hooks), que recibe `{ texto, color }` y dibuja según contracts/interfaz.md: `<div data-sello-promocional data-color={color}>` a todo lo ancho, con el `fondo` y el `texto` de `COLORES` como estilos en línea, y un `<p>` centrado con `break-words`, de al menos 14 px (`text-sm`) y `font-medium`. Sin enlace, sin botón, sin `role` y sin `dangerouslySetInnerHTML`. Si recibe `vacio`, muestra el texto de ejemplo «Escribe el texto del sello» con el color `textoEjemplo` de `COLORES`, sin opacidad, solo para la vista previa
 - [ ] T012 [US1] En src/app/(cliente)/layout.tsx, agregar `export const dynamic = "force-dynamic"`, leer `obtenerSello()` y, si `activo`, dibujar `<SelloPromocional>` justo después de `</header>` y antes de `<main>`, fuera del encabezado fijo. Con el sello desactivado el HTML queda igual que antes (FR-009, FR-010, research 5)
-- [ ] T013 [P] [US1] Crear src/acciones/promocion.ts con `"use server"` y `guardarPromocion(_anterior, formulario)`, que hace `exigirSesion()`, lee `texto`, `color` y `activo` (`"on"` cuando la casilla está marcada), llama a `guardarSello` dentro de `ejecutar()`, llama a `revalidatePath("/", "layout")` y devuelve `Resultado<{ activo: boolean }>` (contracts/interfaz.md)
+- [ ] T013 [P] [US1] Crear src/acciones/promocion.ts con `"use server"` y `guardarPromocion(_anterior, formulario)`, que hace `exigirSesion()`, lee `texto`, `color` y `activo` (`"on"` cuando la casilla está marcada), llama a `guardarSello` dentro de `ejecutar()`, llama a `revalidatePath("/", "layout")` y devuelve `Resultado<{ activo: boolean; texto: string; color: ClaveColor }>` con lo que quedó guardado (contracts/interfaz.md)
 - [ ] T014 [US1] Crear src/components/admin/formulario-promocion.tsx con `"use client"` y `useActionState(guardarPromocion)`, que recibe el sello guardado y dibuja, con los textos de `src/dominio/promocion.ts`:
-  - el campo de una línea «Texto del sello» (`name="texto"`, `maxLength={80}` como tope de seguridad), con el error de `campos.texto` junto al campo y `aria-describedby`;
-  - el grupo de radios nativos «Color» (`<fieldset>` con `<legend>`), con las 4 opciones de `COLORES`, cada una con su nombre escrito y una muestra `aria-hidden`;
+  - el campo de una línea «Texto del sello» (`name="texto"`, sin `maxLength`, research 2), con el error de `campos.texto` junto al campo y `aria-describedby`;
+  - el grupo de radios nativos «Color» (`<fieldset>` con `<legend>`), con las 4 opciones de `COLORES`, cada una con su nombre escrito y una muestra `aria-hidden`, y el error de `campos.color` junto al grupo;
   - la casilla nativa «Mostrar el sello en la página» (`name="activo"`);
   - el botón «Guardar»;
   - el mensaje de resultado en `aria-live="polite"`: «Listo. El sello se muestra en la página.» o «Listo. El sello está desactivado.»
@@ -125,7 +131,7 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
   - en el mismo archivo, mostrar el subtítulo «Administración» solo desde `sm` (`hidden sm:inline`)
 - [ ] T017 [US1] Correr `npx playwright test tests/e2e/us16-sello-promocional.spec.ts tests/e2e/accesibilidad-admin.spec.ts` y dejar T009 y T010 en verde. Si alguna prueba anterior buscaba el subtítulo «Administración» en móvil, ajustarla sin cambiar lo que comprueba
 
-**Checkpoint**: US1 funciona sola. Con el sello en Rojo ya se puede anunciar el Buen Fin (pasos 1 a 10 y 14 a 17 de quickstart.md)
+**Checkpoint**: US1 funciona sola (pasos 1 a 10 y 14 a 17 de quickstart.md). No se publica hasta terminar US2
 
 ---
 
@@ -140,7 +146,7 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 - [ ] T018 [US2] Escribir tests/e2e/us17-cambiar-sello.spec.ts (debe fallar), con `test.afterAll` que deja el sello desactivado:
   - US2-1, FR-010: con el sello activo en Rojo, cambiar a «Venta navideña 🎄» en Verde, guardar, recargar el catálogo y ver la franja con `data-color="verde"` y el texto nuevo, sin el anterior;
   - US2-2, FR-006: al escribir y al cambiar de color, la vista previa «Así se verá» cambia antes de guardar; sin texto muestra «Escribe el texto del sello»;
-  - US2-3, FR-003: marcar la casilla con el texto vacío y guardar, y luego con solo espacios: no se guarda y aparece «Escribe el texto del sello para mostrarlo.» junto al campo;
+  - «Dos vendedores editando a la vez»: guardar «  Hola  » activo y ver «Hola» en el campo después de guardar, sin espacios; luego guardar otro texto desde una segunda pestaña, recargar la primera y ver lo último guardado;
   - US2-4, FR-004: al escribir, el contador dice «Te quedan N caracteres»; con 41 caracteres dice «Te pasaste por 1 carácter» y «Guardar» queda deshabilitado; con 40 se guarda;
   - US2-5, FR-005: el grupo «Color» tiene los radios «Rojo», «Verde», «Dorado» y «Azul», en ese orden, accesibles por su nombre
 
@@ -149,7 +155,8 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 - [ ] T019 [US2] En src/components/admin/formulario-promocion.tsx, agregar el estado local del texto y del color y, con él:
   - el contador debajo del campo, con `textoContador(contarCaracteres(normalizarTexto(texto)))`, en `aria-live="polite"` y con el color de error cuando pasa de 40;
   - `disabled` en «Guardar» mientras el texto pasa de 40;
-  - la vista previa «Así se verá» con `<SelloPromocional>` y el texto y el color actuales, aunque la casilla esté desmarcada, o con `vacio` si no hay texto (FR-006)
+  - la vista previa «Así se verá» con `<SelloPromocional>` y el texto y el color actuales, aunque la casilla esté desmarcada, o con `vacio` si no hay texto (FR-006);
+  - al guardar con éxito, el estado local toma el texto y el color que quedaron guardados, ya normalizados, para que el panel muestre siempre lo guardado («Dos vendedores editando a la vez»). La acción los devuelve en `Resultado<{ activo, texto, color }>`
 - [ ] T020 [US2] Correr `npx playwright test tests/e2e/us17-cambiar-sello.spec.ts` y dejar T018 en verde
 
 **Checkpoint**: US1 y US2 funcionan juntas; los pasos 11 a 13 de quickstart.md pasan
@@ -160,7 +167,7 @@ Las pruebas e2e se llaman `us16-sello-promocional.spec.ts` (US1) y `us17-cambiar
 
 **Purpose**: regresión, rendimiento, ensayo de la migración y aceptación
 
-- [ ] T021 Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de las specs 001 a 004, y dejar todo en verde (Principio V). Registrar el número de pruebas en specs/005-sello-promocional/checklists/aceptacion.md
+- [ ] T021 Crear specs/005-sello-promocional/checklists/aceptacion.md con la estructura de la de la spec 004. Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de las specs 001 a 004, y dejar todo en verde (Principio V). Registrar el número de pruebas en ese archivo
 - [ ] T022 Ensayar la migración `0003` sobre una copia del último respaldo de producción, como T045 de la spec 004: el número de productos, fotos, operaciones y pagos no cambia y la tabla `sello_promocional` queda vacía. Registrar antes y después en specs/005-sello-promocional/checklists/aceptacion.md
 - [ ] T023 [P] Con el sello activo, medir en local el LCP del catálogo a 390 px y compararlo con el de la spec 002; no debe empeorar de forma apreciable (plan, Performance Goals). Registrar el resultado en specs/005-sello-promocional/checklists/aceptacion.md
 - [ ] T024 Ejecutar en local los pasos 1 a 18 de specs/005-sello-promocional/quickstart.md, con el paso 9 en un celular real en modo claro y oscuro, y el paso 18 con la ventana a unos 800 px. Registrar los resultados en specs/005-sello-promocional/checklists/aceptacion.md. Si en el paso 18 los enlaces se enciman, mostrar solo iconos entre `md` y `lg` en src/components/admin/navegacion.tsx (research 7, riesgo conocido)
@@ -223,14 +230,11 @@ Task: "T013 Acción guardarPromocion en src/acciones/promocion.ts"
 1. Completar Setup y Foundational
 2. Completar US1
 3. **Detenerse y validar** con los pasos 1 a 10 y 14 a 17 de quickstart.md
-4. Se puede publicar para el Buen Fin: el vendedor ya escribe el texto, elige el color y activa la franja. Solo faltan el contador y la vista previa; el servidor ya rechaza más de 40 caracteres
+4. Seguir con US2 sin publicar todavía
 
-### Incremental Delivery
+### Entrega
 
-1. Franja configurable con texto y color: US1 (MVP, Buen Fin)
-2. Contador, botón deshabilitado y vista previa: US2 (antes de la Venta navideña)
-
-Si el tiempo alcanza, lo recomendable es publicar las dos juntas. Cada entrega deja `npm run verificar` en verde.
+El propietario decidió el 2026-11-11 publicar **US1 y US2 juntas** para el Buen Fin, con la spec completa. US1 sola no se publica, porque le faltarían el contador (FR-004) y la vista previa (FR-006). Cada historia deja `npm run verificar` en verde.
 
 ---
 

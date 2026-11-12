@@ -66,7 +66,8 @@ specs/005-sello-promocional/
 ├── contracts/
 │   └── interfaz.md          # Franja, página /admin/promocion, navegación y acción
 ├── checklists/
-│   └── requirements.md
+│   ├── requirements.md
+│   └── aceptacion.md        # Resultados de pruebas, ensayo, LCP y quickstart (T021)
 └── tasks.md                 # Lo genera /speckit-tasks
 ```
 
@@ -115,7 +116,7 @@ tests/
 
 | Riesgo | Mitigación |
 |---|---|
-| El Buen Fin empieza en días | La función es chica y no tiene dependencias nuevas. La historia 1 (P1) sola ya permite anunciar el Buen Fin. Si hay prisa, se publica primero con el color Rojo y la historia 2 después, sin cambiar la spec |
+| El Buen Fin empieza en días | La función es chica y no tiene dependencias nuevas. El propietario decidió el 2026-11-11 publicar las historias 1 y 2 juntas, para que la spec salga completa |
 | Los enlaces del panel se enciman en el celular | El enlace va en el encabezado en celular y la barra inferior no cambia. La prueba e2e a 390 px comprueba que no se enciman ([research 7](research.md#7-el-enlace-promoción-en-la-navegación-del-panel)) |
 | La navegación superior no cabe entre 768 y 1,024 px | Paso 18 del quickstart. Si se enciman, se muestran solo iconos en ese rango |
 | Un navegador recolorea la página en su modo oscuro forzado | Los 4 pares tienen contraste alto; paso 9 del quickstart en un celular real ([research 4](research.md#4-modo-claro-y-modo-oscuro)) |
