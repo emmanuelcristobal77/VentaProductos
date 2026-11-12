@@ -69,12 +69,19 @@
 
 ## T024: quickstart en local
 
-Pendiente del propietario. Los pasos que se comprueban desde la app los cubren las pruebas e2e (`us16` y `us17`), pero la tarea pide hacerlos a mano, con el paso 9 en un celular real en modo claro y oscuro y el paso 18 con la ventana a unos 800 px.
+- **Fecha**: 2026-11-12, en local (`npm run dev`, con la migración `0003` aplicada a la base local), desde la laptop y desde el celular del propietario (`http://192.168.0.16:3000`).
+- **Quién**: el propietario.
+- **Resultado**: los **pasos 1 a 18, correctos**, según lo informó el propietario. Esto incluye:
+  - el **paso 9**, en el celular real: la franja se lee bien en modo claro y en modo oscuro (FR-014, SC-005);
+  - el **paso 18**, con la ventana a unos 800 px: los enlaces del panel no se enciman (FR-001). Por eso no hizo falta mostrar solo iconos entre `md` y `lg` (research 7).
+- **Cumple.**
 
 ## T025: prueba de SC-004 con 10 personas
 
-Pendiente del propietario. Puede hacerse después de publicar (tasks.md, Notes).
+- **Fecha**: 2026-11-12.
+- **Resultado**: el propietario informó el **paso 19 como correcto**: al menos 9 de 10 personas leyeron el sello completo sin zoom y siguieron encontrando el nombre, el precio y la disponibilidad.
+- **Falta registrar**: cuántas personas lo leyeron completo y las observaciones, que pide la tarea.
 
 ## T026: publicación y revisión en producción
 
-Pendiente. Depende de T024 (T021 y T022 ya están), y de que el propietario haga el push a `main` y pulse Implementar en Easypanel.
+Pendiente. T021, T022 y T024 ya están; falta que el propietario haga el push a `main` y pulse Implementar en Easypanel.
