@@ -111,3 +111,12 @@ La spec no deja preguntas abiertas: la única pregunta se resolvió el 2026-11-1
 
 - **Decision**: verificar en el quickstart que la ciudad que muestra el tablero sea la del visitante y no la del VPS.
 - **Rationale**: Umami toma la IP de la cabecera `X-Forwarded-For`, que agrega el proxy de Easypanel (Traefik). Si no llegara, todas las visitas aparecerían en la ciudad del servidor. Es configuración del servicio de Umami, fuera del código de la app.
+
+## 12. Notas de implementación
+
+Revisado el 2026-11-12 en `node_modules/next/dist/docs/01-app/02-guides/scripts.md`, `03-api-reference/02-components/script.md` y en `node_modules/next/dist/client/script.js` (Next.js 16.4). El plan no cambia:
+
+- **Layout anidado**: `afterInteractive` puede ir en cualquier página o layout, y solo se carga cuando se abre esa sección. Next.js garantiza que el script se carga **una sola vez**, aunque se navegue entre páginas del mismo layout.
+- **Componente cliente**: `Script` funciona igual dentro de un componente con `"use client"`. `onLoad`, `onReady` y `onError` solo funcionan ahí, pero este plan no los usa.
+- **Atributos `data-*`**: `Script` pasa los atributos que no reconoce con `setAttributesFromProps` antes de `document.body.appendChild`. Así, `data-website-id`, `data-domains` y `data-before-send` ya están cuando Umami lee `document.currentScript`.
+- **El script se queda en `<body>`**: Next.js lo agrega al final de `<body>`, fuera del árbol de React. Si alguien pasa sin recargar de la sección de cliente al panel, la etiqueta sigue ahí y Umami sigue escuchando el historial. Esto confirma que el filtro `antesDeEnviarUmami` hace falta ([sección 4](#4-que-el-panel-nunca-se-cuente)). La prueba e2e de FR-002 abre el panel con una carga completa.

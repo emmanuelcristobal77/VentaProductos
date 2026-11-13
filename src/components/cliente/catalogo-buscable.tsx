@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BotonVerMas } from "@/components/boton-ver-mas";
 import { BuscadorProductos } from "@/components/buscador-productos";
 import { useListaPaginada, type FiltroLista, type ParteLista } from "@/lib/usar-lista-paginada";
+import { EnlaceTelefono } from "./enlace-telefono";
 import { TarjetaProducto } from "./tarjeta-producto";
 import type { ProductoPublico } from "@/consultas/publicas";
 
@@ -42,9 +43,12 @@ export function CatalogoBuscable({
               artículos por encargo
             </Link>{" "}
             o llámanos al{" "}
-            <a href={telefono.enlace} className="text-primary font-medium whitespace-nowrap underline underline-offset-4">
+            <EnlaceTelefono
+              enlace={telefono.enlace}
+              className="text-primary font-medium whitespace-nowrap underline underline-offset-4"
+            >
               {telefono.texto}
-            </a>
+            </EnlaceTelefono>
             .
           </p>
         ) : (

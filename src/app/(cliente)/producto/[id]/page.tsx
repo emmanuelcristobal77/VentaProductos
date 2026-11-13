@@ -46,7 +46,7 @@ export default async function PaginaProducto({ params }: { params: Promise<{ id:
           <p className="text-exito font-medium">{textoDisponible(producto.disponible)}</p>
         )}
         <p className="whitespace-pre-line">{producto.descripcion}</p>
-        <LeyendaProducto />
+        <LeyendaProducto producto={producto.nombre} />
       </div>
     </article>
   );

@@ -1,3 +1,4 @@
+import { EnlaceTelefono } from "@/components/cliente/enlace-telefono";
 import { formatearFecha, inicioDeDia } from "@/dominio/fechas";
 import { AVISO_PRIVACIDAD } from "@/lib/aviso-privacidad";
 import { telefonoNegocio } from "@/lib/contacto";
@@ -40,9 +41,9 @@ export default function PaginaAvisoPrivacidad() {
           {seccion.id === "dudas" && (
             <p className="leading-relaxed">
               Teléfono:{" "}
-              <a href={telefono.enlace} className={enlace}>
+              <EnlaceTelefono enlace={telefono.enlace} className={enlace}>
                 {telefono.texto}
-              </a>
+              </EnlaceTelefono>
             </p>
           )}
         </section>

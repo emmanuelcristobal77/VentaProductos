@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Phone } from "lucide-react";
+import { EnlaceTelefono } from "@/components/cliente/enlace-telefono";
+import { MedicionVisitas } from "@/components/cliente/medicion-visitas";
 import { NavegacionInferior, NavegacionSuperior } from "@/components/cliente/navegacion";
 import { SelloPromocional } from "@/components/sello-promocional";
 import { telefonoNegocio } from "@/lib/contacto";
@@ -29,10 +31,10 @@ export default function LayoutCliente({ children }: { children: React.ReactNode 
       <footer className="border-t">
         <div className="text-muted-foreground mx-auto flex max-w-6xl flex-col gap-1 px-4 py-6 text-sm">
           <p>¿Te interesa algún producto? Contáctanos.</p>
-          <a href={telefono.enlace} className="text-foreground inline-flex items-center gap-2 font-medium">
+          <EnlaceTelefono enlace={telefono.enlace} className="text-foreground inline-flex items-center gap-2 font-medium">
             <Phone aria-hidden className="size-4" />
             {telefono.texto}
-          </a>
+          </EnlaceTelefono>
           <Link
             href="/aviso-de-privacidad"
             className="text-foreground mt-2 inline-flex min-h-11 items-center self-start underline underline-offset-4"
@@ -43,6 +45,8 @@ export default function LayoutCliente({ children }: { children: React.ReactNode 
       </footer>
 
       <NavegacionInferior />
+
+      <MedicionVisitas />
     </div>
   );
 }

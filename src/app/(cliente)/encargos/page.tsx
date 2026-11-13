@@ -40,7 +40,7 @@ export default function PaginaEncargos() {
               <h2 className="text-lg font-medium">{articulo.nombre}</h2>
               <p className="text-muted-foreground text-sm whitespace-pre-line">{articulo.descripcion}</p>
               <p className="font-semibold">{formatearPrecio(articulo.precioCentavos)}</p>
-              <LeyendaProducto />
+              <LeyendaProducto producto={articulo.nombre} />
             </li>
           ))}
         </ul>

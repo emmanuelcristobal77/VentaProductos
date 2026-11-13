@@ -46,7 +46,7 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 **Purpose**: lectura previa que pide AGENTS.md
 
-- [ ] T001 Leer node_modules/next/dist/docs/01-app/03-api-reference/02-components/script.md y node_modules/next/dist/docs/01-app/02-guides/scripts.md. Confirmar tres cosas:
+- [X] T001 Leer node_modules/next/dist/docs/01-app/03-api-reference/02-components/script.md y node_modules/next/dist/docs/01-app/02-guides/scripts.md. Confirmar tres cosas:
   - que `<Script strategy="afterInteractive">` funciona dentro de un componente cliente en un layout anidado (no el raíz);
   - que se carga una sola vez por documento aunque se navegue entre páginas del mismo layout;
   - cómo pasa los atributos `data-*` a la etiqueta `<script>`.
@@ -61,13 +61,13 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 **⚠️ CRITICAL**: ninguna historia puede empezar antes de terminar esta fase
 
-- [ ] T002 [P] Escribir tests/unit/estadisticas.test.ts contra `src/lib/estadisticas.ts` (aún no existe; debe fallar):
+- [X] T002 [P] Escribir tests/unit/estadisticas.test.ts contra `src/lib/estadisticas.ts` (aún no existe; debe fallar):
   - `FR-003`: `UMAMI.script` es `https://estadisticas.cristobalia.com/script.js`, `UMAMI.idSitio` es `49b620b8-b094-49c2-9ff2-edf6ba9d0c38` y `UMAMI.dominios` es `app.cristobalia.com`;
   - `FR-002`: `antesDeEnviarUmami("event", { url: "/admin" })` y `antesDeEnviarUmami("event", { url: "/admin/operaciones/3" })` devuelven `false`, y también `{ url: "https://app.cristobalia.com/admin/promocion" }`;
   - con `{ url: "/" }`, `{ url: "/producto/12?utm_source=whatsapp" }`, `{ url: "/administrador-falso" }` y una carga sin `url` devuelve la misma carga sin cambios (contracts/interfaz.md, sección 1);
   - `paginaActual("/producto/12")` devuelve `"/producto/12"`. La función recibe `location.pathname` y no le agrega consulta ni `#`;
   - `EVENTO_INTERES` es `"interes-telefono"`.
-- [ ] T003 [P] Crear src/lib/estadisticas.ts, sin `window` ni React, con:
+- [X] T003 [P] Crear src/lib/estadisticas.ts, sin `window` ni React, con:
   - `UMAMI = { script, idSitio, dominios } as const`, con los valores de T002;
   - `EVENTO_INTERES = "interes-telefono"`;
   - `NOMBRE_FILTRO = "antesDeEnviarUmami"`;
@@ -76,7 +76,7 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
   - un bloque `declare global { interface Window { umami?: { track: (nombre: string, datos?: Record<string, string>) => unknown }; antesDeEnviarUmami?: typeof antesDeEnviarUmami } }`.
 
   Dejar T002 en verde
-- [ ] T004 [P] Crear tests/e2e/ayudantes-medicion.ts con:
+- [X] T004 [P] Crear tests/e2e/ayudantes-medicion.ts con:
   - `simularUmami(page)`: con `page.route("https://estadisticas.cristobalia.com/script.js", …)`, responde un script falso que define `window.umami = { track: (...a) => { window.__llamadasUmami.push(a) } }` e inicializa `window.__llamadasUmami = []`;
   - `llamadasUmami(page)`: devuelve ese arreglo;
   - `bloquearUmami(page)`: aborta esa ruta con `route.abort()`;
@@ -96,7 +96,7 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 ### Tests for User Story 1
 
-- [ ] T005 [US1] Escribir tests/e2e/us18-medicion-visitas.spec.ts, `test.describe("US1")`, con `simularUmami` en `beforeEach` (debe fallar):
+- [X] T005 [US1] Escribir tests/e2e/us18-medicion-visitas.spec.ts, `test.describe("US1")`, con `simularUmami` en `beforeEach` (debe fallar):
   - `FR-001`: en `/`, en una página de producto (tomada del catálogo con los ayudantes de tests/e2e/ayudantes.ts, como en `us2-catalogo-cliente`), en `/encargos`, en `/mis-apartados` y en `/aviso-de-privacidad`, `scriptUmami(page)` existe una sola vez, con `data-website-id="49b620b8-b094-49c2-9ff2-edf6ba9d0c38"`, `data-domains="app.cristobalia.com"` y `data-before-send="antesDeEnviarUmami"`;
   - `FR-002 / US1-4`: en `/admin/entrar` y, después de `entrar()`, en `/admin` y `/admin/operaciones`, `scriptUmami(page)` no existe;
   - `FR-002`: en `/`, `window.antesDeEnviarUmami` existe y devuelve `false` para `{ url: "/admin" }`;
@@ -106,12 +106,12 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Crear src/components/cliente/medicion-visitas.tsx con `"use client"`:
+- [X] T006 [US1] Crear src/components/cliente/medicion-visitas.tsx con `"use client"`:
   - a nivel de módulo, si `typeof window !== "undefined"`, asigna `window.antesDeEnviarUmami = antesDeEnviarUmami`;
   - dibuja `<Script src={UMAMI.script} strategy="afterInteractive" data-website-id={UMAMI.idSitio} data-domains={UMAMI.dominios} data-before-send={NOMBRE_FILTRO} />` de `next/script`;
   - sin `onError` que muestre nada (FR-005, research 3 y 4)
-- [ ] T007 [US1] En src/app/(cliente)/layout.tsx, agregar `<MedicionVisitas />` al final del contenedor, después de `<NavegacionInferior />`. No tocar src/app/layout.tsx ni nada de src/app/admin/ (FR-001, FR-002)
-- [ ] T008 [US1] Correr `npx playwright test tests/e2e/us18-medicion-visitas.spec.ts -g US1` y dejar T005 en verde
+- [X] T007 [US1] En src/app/(cliente)/layout.tsx, agregar `<MedicionVisitas />` al final del contenedor, después de `<NavegacionInferior />`. No tocar src/app/layout.tsx ni nada de src/app/admin/ (FR-001, FR-002)
+- [X] T008 [US1] Correr `npx playwright test tests/e2e/us18-medicion-visitas.spec.ts -g US1` y dejar T005 en verde
 
 **Checkpoint**: el script está en la sección de cliente y en ningún lugar del panel
 
@@ -125,17 +125,17 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 ### Tests for User Story 4
 
-- [ ] T009 [P] [US4] Agregar a tests/unit/aviso-privacidad.test.ts un `describe("Spec 006: medición de visitas")` (debe fallar), sin cambiar los casos existentes de la spec 003:
+- [X] T009 [P] [US4] Agregar a tests/unit/aviso-privacidad.test.ts un `describe("Spec 006: medición de visitas")` (debe fallar), sin cambiar los casos existentes de la spec 003:
   - `FR-009`: `texto("datos")` contiene «de forma anónima», «No usamos cookies», «no guardamos tu dirección IP» y «no sirven para identificarte»;
   - `texto("finalidades")` contiene «qué productos interesan más»;
   - `texto("terceros")` contiene «mismo servidor» y «no los compartimos con nadie»;
   - `FR-008`: las secciones siguen siendo 8, con los mismos títulos y en el mismo orden (ya lo cubre la prueba de la spec 003; solo confirmar que corre);
   - `FR-010`: `AVISO_PRIVACIDAD.actualizado` es mayor o igual que `"2026-11-12"`.
-- [ ] T010 [US4] Agregar a tests/e2e/us18-medicion-visitas.spec.ts un `test.describe("US4")`: en `/aviso-de-privacidad`, `US4-1 / SC-007` ve el texto «medimos de forma anónima» y «No usamos cookies» (debe fallar)
+- [X] T010 [US4] Agregar a tests/e2e/us18-medicion-visitas.spec.ts un `test.describe("US4")`: en `/aviso-de-privacidad`, `US4-1 / SC-007` ve el texto «medimos de forma anónima» y «No usamos cookies» (debe fallar)
 
 ### Implementation for User Story 4
 
-- [ ] T011 [US4] En src/lib/aviso-privacidad.ts, agregar al final de los `parrafos` de `datos`, `finalidades` y `terceros` los tres párrafos de contracts/interfaz.md, sección 3, copiados palabra por palabra.
+- [X] T011 [US4] En src/lib/aviso-privacidad.ts, agregar al final de los `parrafos` de `datos`, `finalidades` y `terceros` los tres párrafos de contracts/interfaz.md, sección 3, copiados palabra por palabra.
   - Cambiar `actualizado` a `"2026-11-12"`. T024 la cambia a la fecha real de publicación si es otra.
   - No tocar otras secciones ni los párrafos existentes (FR-008).
 
@@ -153,7 +153,7 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 ### Tests for User Story 3
 
-- [ ] T012 [US3] Agregar a tests/e2e/us18-medicion-visitas.spec.ts un `test.describe("US3")` con `simularUmami` (debe fallar). Antes de cada clic, instalar en la página un listener `click` en `document`, en fase de burbuja, que guarde `event.defaultPrevented` en `window.__prevenido` y después llame a `preventDefault()`, para que el navegador de prueba no intente abrir `tel:`. Casos:
+- [X] T012 [US3] Agregar a tests/e2e/us18-medicion-visitas.spec.ts un `test.describe("US3")` con `simularUmami` (debe fallar). Antes de cada clic, instalar en la página un listener `click` en `document`, en fase de burbuja, que guarde `event.defaultPrevented` en `window.__prevenido` y después llame a `preventDefault()`, para que el navegador de prueba no intente abrir `tel:`. Casos:
   - `US3-1 / FR-006`: en una página de producto, el enlace «Contacto: 55 1234 5678» tiene `href="tel:+525512345678"`. Al tocarlo, `llamadasUmami` contiene exactamente `["interes-telefono", { pagina: "/producto/<id>", producto: "<nombre del producto>" }]` y `window.__prevenido` es `false`;
   - `US3-2`: en `/encargos`, el teléfono de un artículo envía `pagina: "/encargos"` y `producto` con el nombre del artículo. El teléfono del pie de página en `/` envía `{ pagina: "/" }` sin `producto`;
   - en `/aviso-de-privacidad`, el teléfono de «Dudas» envía `{ pagina: "/aviso-de-privacidad" }`;
@@ -165,21 +165,21 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 ### Implementation for User Story 3
 
-- [ ] T013 [US3] Crear src/components/cliente/enlace-telefono.tsx con `"use client"`:
+- [X] T013 [US3] Crear src/components/cliente/enlace-telefono.tsx con `"use client"`:
   - recibe `{ enlace, producto?, className?, children }` y dibuja `<a href={enlace} className={className}>{children}</a>`;
   - en `onClick` hace `try { window.umami?.track(EVENTO_INTERES, producto ? { pagina: paginaActual(location.pathname), producto } : { pagina: paginaActual(location.pathname) }) } catch {}`;
   - sin `preventDefault`, sin `await` y sin cambiar el marcado (contracts/interfaz.md, sección 2; research 5)
-- [ ] T014 [US3] Usar `EnlaceTelefono` en src/components/cliente/leyenda-producto.tsx:
+- [X] T014 [US3] Usar `EnlaceTelefono` en src/components/cliente/leyenda-producto.tsx:
   - `LeyendaProducto` recibe un nuevo `producto?: string` y lo pasa;
   - se conservan el icono `Phone` con `aria-hidden`, el texto «Contacto: …» y las clases;
   - pasar `producto={producto.nombre}` en src/app/(cliente)/producto/[id]/page.tsx y `producto={articulo.nombre}` en src/app/(cliente)/encargos/page.tsx.
-- [ ] T015 [US3] Sustituir por `EnlaceTelefono`, sin `producto` y con las mismas clases e hijos, los enlaces `tel:` de:
+- [X] T015 [US3] Sustituir por `EnlaceTelefono`, sin `producto` y con las mismas clases e hijos, los enlaces `tel:` de:
   - src/app/(cliente)/layout.tsx (pie de página);
   - src/components/cliente/catalogo-buscable.tsx (búsqueda sin resultados);
   - src/app/(cliente)/aviso-de-privacidad/page.tsx (sección «Dudas»).
 
   Confirmar con `grep -rn "telefono.enlace" src` que no queda ningún `<a href={telefono.enlace}>` en la sección de cliente
-- [ ] T016 [US3] Correr `npx playwright test tests/e2e/us18-medicion-visitas.spec.ts -g US3` y dejar T012 en verde
+- [X] T016 [US3] Correr `npx playwright test tests/e2e/us18-medicion-visitas.spec.ts -g US3` y dejar T012 en verde
 
 **Checkpoint**: cada teléfono de contacto cuenta un interesado y sigue abriendo la llamada
 
@@ -191,7 +191,7 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 **Independent Test**: abrir `/?utm_source=whatsapp&utm_campaign=prueba` y comprobar que el catálogo se ve igual y que el script está cargado.
 
-- [ ] T017 [US2] Agregar a tests/e2e/us18-medicion-visitas.spec.ts un `test.describe("US2")` con `simularUmami`:
+- [X] T017 [US2] Agregar a tests/e2e/us18-medicion-visitas.spec.ts un `test.describe("US2")` con `simularUmami`:
   - `US2-1 / US2-2`: `/?utm_source=whatsapp&utm_campaign=prueba` muestra el mismo `<h1>` y la misma cantidad de tarjetas de producto que `/`, y el script está una sola vez;
   - `page.url()` conserva `utm_source=whatsapp` y `utm_campaign=prueba` después de cargar, para que Umami las lea;
   - «Etiquetas mal escritas»: `/?utm_sorce=x` también carga normal.
@@ -206,9 +206,9 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 
 **Purpose**: condición de merge, velocidad, aprobación del aviso y publicación
 
-- [ ] T018 Crear specs/006-medicion-visitas/checklists/aceptacion.md con la estructura de la de la spec 005. Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de las specs 001 a 005 con axe, y dejar todo en verde (Principio V). Registrar el número de pruebas y cualquier falla intermitente con su repetición, como en la spec 005
+- [X] T018 Crear specs/006-medicion-visitas/checklists/aceptacion.md con la estructura de la de la spec 005. Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de las specs 001 a 005 con axe, y dejar todo en verde (Principio V). Registrar el número de pruebas y cualquier falla intermitente con su repetición, como en la spec 005
 - [ ] T019 [P] Ejecutar en local el paso 1 de quickstart.md: con `npm run dev`, abrir el catálogo y 2 productos y confirmar en el tablero que no se contó nada (FR-003). Registrar en specs/006-medicion-visitas/checklists/aceptacion.md
-- [ ] T020 [P] **Antes de publicar**, medir 3 veces el LCP de producción con el comando de quickstart.md («Antes de publicar») y registrar las 3 cifras y la mediana en specs/006-medicion-visitas/checklists/aceptacion.md (research 8)
+- [X] T020 [P] **Antes de publicar**, medir 3 veces el LCP de producción con el comando de quickstart.md («Antes de publicar») y registrar las 3 cifras y la mediana en specs/006-medicion-visitas/checklists/aceptacion.md (research 8)
 - [ ] T021 Pedir al propietario que apruebe la redacción de los tres párrafos del aviso (contracts/interfaz.md, sección 3). Registrar la fecha de aprobación en specs/006-medicion-visitas/checklists/aceptacion.md. Si pide cambios, se ajustan el contrato, T011 y T009 antes de seguir
 - [ ] T022 Publicar:
   - con el respaldo del día ya hecho, ajustar `actualizado` en src/lib/aviso-privacidad.ts a la fecha de publicación si no es `2026-11-12` (FR-010);

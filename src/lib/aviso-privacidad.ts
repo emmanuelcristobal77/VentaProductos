@@ -21,7 +21,7 @@ export const AVISO_PRIVACIDAD = {
   domicilio: DOMICILIO,
   correo: CORREO,
   /** Fecha de la última actualización, en `AAAA-MM-DD` de la Ciudad de México. */
-  actualizado: "2026-11-06",
+  actualizado: "2026-11-12",
   secciones: [
     {
       id: "responsable",
@@ -37,6 +37,8 @@ export const AVISO_PRIVACIDAD = {
         "Cuando haces un apartado o un encargo, o cuando compras y decides darnos tus datos, el vendedor registra tu nombre y tu teléfono.",
         "Junto con ellos guardamos las ventas, apartados y encargos que haces, y los pagos que registras en cada uno.",
         "No recabamos datos sensibles.",
+        // Spec 006, contracts/interfaz.md, sección 3.
+        "Cuando visitas esta página, medimos de forma anónima qué páginas ves, la ciudad o el país aproximados desde donde entras, el tipo de dispositivo, el tamaño de la pantalla, el navegador y su idioma, el sitio desde el que llegaste y cuántas veces se toca el teléfono de contacto. No usamos cookies, no guardamos tu dirección IP y estos datos no sirven para identificarte.",
       ],
     },
     {
@@ -44,6 +46,7 @@ export const AVISO_PRIVACIDAD = {
       titulo: "Para qué los usamos",
       parrafos: [
         "Usamos tus datos para registrar y dar seguimiento a tus ventas, apartados y encargos, para contactarte sobre ellos y para que puedas consultar tus apartados y encargos en la sección «Mis apartados».",
+        "Usamos los datos de visitas solo para saber qué productos interesan más y mejorar la página.",
       ],
     },
     {
@@ -52,6 +55,7 @@ export const AVISO_PRIVACIDAD = {
       parrafos: [
         "No usamos tus datos para publicidad ni los compartimos con terceros para que los usen con sus propios fines.",
         "Se guardan con proveedores de tecnología que solo los almacenan por cuenta nuestra: el servidor donde funciona esta página y el servicio donde guardamos las copias de respaldo.",
+        "Los datos de visitas se guardan en el mismo servidor donde funciona esta página y no los compartimos con nadie.",
       ],
     },
     {

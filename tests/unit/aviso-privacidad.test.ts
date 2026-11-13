@@ -67,3 +67,29 @@ describe("FR-004 y SC-005: elementos mínimos del aviso de privacidad", () => {
     expect(texto("cambios")).toMatch(/esta (misma )?página/);
   });
 });
+
+describe("Spec 006: medición de visitas", () => {
+  it("FR-009: «Datos que recabamos» explica la medición anónima, sin cookies y sin guardar la IP", () => {
+    const datos = texto("datos");
+    for (const frase of ["de forma anónima", "No usamos cookies", "no guardamos tu dirección IP", "no sirven para identificarte"]) {
+      expect(datos).toContain(frase);
+    }
+  });
+
+  it("FR-009: «Para qué los usamos» dice para qué sirven los datos de visitas", () => {
+    expect(texto("finalidades")).toContain("qué productos interesan más");
+  });
+
+  it("FR-009: «Con quién los compartimos» dice que se quedan en el mismo servidor", () => {
+    expect(texto("terceros")).toContain("mismo servidor");
+    expect(texto("terceros")).toContain("no los compartimos con nadie");
+  });
+
+  it("FR-008: conserva las 8 secciones de la spec 003", () => {
+    expect(AVISO_PRIVACIDAD.secciones).toHaveLength(8);
+  });
+
+  it("FR-010: la fecha de actualización es la de la publicación de la spec 006 o posterior", () => {
+    expect(AVISO_PRIVACIDAD.actualizado >= "2026-11-12").toBe(true);
+  });
+});
