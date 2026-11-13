@@ -30,7 +30,7 @@ Es más alta que los 1.04 s de la spec 002 sin ningún cambio de esta spec: es l
 
 ## T021: aprobación del texto del aviso
 
-Pendiente.
+- **Aprobado por el propietario el 2026-11-12**, sin cambios: los tres párrafos de contracts/interfaz.md, sección 3, tal como están en `src/lib/aviso-privacidad.ts`.
 
 ## T022 a T025: publicación y comprobación en producción
 
