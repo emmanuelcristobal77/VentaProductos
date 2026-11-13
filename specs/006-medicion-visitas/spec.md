@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-12
 
-**Status**: Draft
+**Status**: Approved
 
 **Input**: User description: "Medición de visitas con Umami. El propietario quiere saber cuántas personas visitan el catálogo, qué páginas y productos ven, desde qué país o ciudad aproximada, con qué dispositivo y de dónde llegan (por ejemplo, de qué grupo de WhatsApp, usando etiquetas utm en los enlaces que comparte). Umami ya está instalado por el propietario en su propio Easypanel en https://estadisticas.cristobalia.com con el sitio registrado (data-website-id 49b620b8-b094-49c2-9ff2-edf6ba9d0c38). Alcance: (1) cargar el script de Umami solo en la sección de cliente, nunca en el panel admin, y solo contar visitas del dominio app.cristobalia.com (no desarrollo ni pruebas); (2) registrar un evento cuando un cliente hace un apartado, para saber cuántas visitas terminan en apartado; (3) actualizar el aviso de privacidad (spec 003) para informar la medición anónima de visitas: sin cookies, sin guardar la IP, datos que no identifican a la persona, usados solo para saber qué productos interesan y mejorar la página; los datos se quedan en el servidor propio, sin terceros nuevos; con nueva fecha de actualización; (4) el script no debe empeorar de forma notable la velocidad: el LCP en producción debe seguir alrededor de 1 s. Fuera de alcance: identificar personas, guardar IPs, banner de cookies, Google Analytics, publicidad."
 
