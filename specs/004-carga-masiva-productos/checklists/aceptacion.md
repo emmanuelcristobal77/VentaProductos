@@ -55,3 +55,12 @@
 
 - T047 (SC-007 y SC-001): **diferida por decisión del propietario (2026-11-07)**. Por ahora solo el propietario hace las cargas, así que no hay a quién probar sin ayuda. Se hace cuando otra persona vaya a usar la función. Mientras tanto, SC-007 y SC-001 quedan sin comprobar.
 - T048: **publicada el 2026-11-07** desde `main` (ac35dbe), con Implementar en Easypanel. Revisión sin sesión desde la laptop: `/admin/productos/carga-masiva` redirige a «Entrar» (307), `POST /api/admin/cargas` responde 401 `NO_AUTORIZADO`, lo que confirma que la ruta nueva está publicada, y el catálogo responde 200. **Los pasos 2, 5, 14, 16 y 20 en producción quedan para la primera carga real de productos nuevos** (decisión del propietario, 2026-11-07); se registran aquí cuando se haga. El paso 24 sigue diferido hasta la primera carga grande.
+
+## T048: primera carga real en producción
+
+- **Fecha**: 2026-11-10 (martes), en producción (`https://app.cristobalia.com`), desde la laptop del propietario.
+- **Carga**: 14 productos reales. Según el propietario, todo salió bien.
+- **Paso 2**: cumple. La pantalla «Carga masiva» se abrió y se usó para la carga.
+- **Paso 5**: cumple. Se subió el comprimido y los productos quedaron registrados.
+- **Pasos 14 y 16** (productos existentes con cambios): pendientes de confirmar.
+- **Paso 20** (celular): se da por cubierto con la prueba en celular real hecha en local el 2026-11-07 (ver T046). Decisión del propietario del 2026-11-13: por el momento la carga masiva se hará solo desde la laptop. Si después se usa desde el celular, se repite este paso en producción.
