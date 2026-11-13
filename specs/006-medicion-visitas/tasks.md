@@ -207,7 +207,7 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
 **Purpose**: condición de merge, velocidad, aprobación del aviso y publicación
 
 - [X] T018 Crear specs/006-medicion-visitas/checklists/aceptacion.md con la estructura de la de la spec 005. Ejecutar `npm run verificar` y `npm run test:e2e`, incluidas las pruebas de las specs 001 a 005 con axe, y dejar todo en verde (Principio V). Registrar el número de pruebas y cualquier falla intermitente con su repetición, como en la spec 005
-- [ ] T019 [P] Ejecutar en local el paso 1 de quickstart.md: con `npm run dev`, abrir el catálogo y 2 productos y confirmar en el tablero que no se contó nada (FR-003). Registrar en specs/006-medicion-visitas/checklists/aceptacion.md
+- [X] T019 [P] Ejecutar en local el paso 1 de quickstart.md: con `npm run dev`, abrir el catálogo y 2 productos y confirmar en el tablero que no se contó nada (FR-003). Registrar en specs/006-medicion-visitas/checklists/aceptacion.md
 - [X] T020 [P] **Antes de publicar**, medir 3 veces el LCP de producción con el comando de quickstart.md («Antes de publicar») y registrar las 3 cifras y la mediana en specs/006-medicion-visitas/checklists/aceptacion.md (research 8)
 - [X] T021 Pedir al propietario que apruebe la redacción de los tres párrafos del aviso (contracts/interfaz.md, sección 3). Registrar la fecha de aprobación en specs/006-medicion-visitas/checklists/aceptacion.md. Si pide cambios, se ajustan el contrato, T011 y T009 antes de seguir
 - [ ] T022 Publicar:

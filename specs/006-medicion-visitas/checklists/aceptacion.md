@@ -12,7 +12,7 @@
 
 ## T019: desarrollo no cuenta visitas (FR-003)
 
-Pendiente: lo hace el propietario con acceso al tablero.
+- **2026-11-12, propietario**: con `npm run dev`, abrió `http://localhost:3000` y 2 productos. Después de esperar, el tablero de `https://estadisticas.cristobalia.com/dashboard` seguía **vacío**. **Cumple FR-003 y US1-5.**
 
 ## T020: LCP de producción antes de publicar
 
