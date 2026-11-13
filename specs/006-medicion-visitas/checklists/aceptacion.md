@@ -87,6 +87,12 @@ Celular Android del propietario con datos móviles, 2026-11-12, alrededor de las
 - **Resultado**: la mediana de después es 0.09 s menor que la de antes, así que no supera el límite de +0.1 s (research 8). La diferencia es variación de la red; el script no retrasa el catálogo (FR-011, SC-006).
 - **Confirmación del propietario**: confirmada el 2026-11-13. Acepta la mediana de 1.17 s.
 
-## T025
+## T025: dispositivos excluidos de las estadísticas
 
-Pendiente.
+- **Fecha**: 2026-11-13. Se siguió «Al terminar» del quickstart (`localStorage["umami.disabled"] = "1"`).
+- **Dispositivos excluidos (2)**:
+  1. Una laptop.
+  2. Un celular.
+- Si se borran los datos del navegador, o si se usa otro navegador o un dispositivo nuevo, hay que repetir la exclusión.
+
+**T025 completa**.
