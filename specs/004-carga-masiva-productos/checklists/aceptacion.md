@@ -62,5 +62,7 @@
 - **Carga**: 14 productos reales. Según el propietario, todo salió bien.
 - **Paso 2**: cumple. La pantalla «Carga masiva» se abrió y se usó para la carga.
 - **Paso 5**: cumple. Se subió el comprimido y los productos quedaron registrados.
-- **Pasos 14 y 16** (productos existentes con cambios): pendientes de confirmar.
+- **Pasos 14 y 16** (productos existentes con cambios): **diferidos por decisión del propietario (2026-11-13)**. La carga del 2026-11-10 solo trajo productos nuevos. Se harán en producción la primera vez que una carga traiga productos que ya existen, y su resultado se agrega aquí. Mientras tanto, la actualización de existentes queda comprobada solo en local (T046).
 - **Paso 20** (celular): se da por cubierto con la prueba en celular real hecha en local el 2026-11-07 (ver T046). Decisión del propietario del 2026-11-13: por el momento la carga masiva se hará solo desde la laptop. Si después se usa desde el celular, se repite este paso en producción.
+
+**T048 completa** el 2026-11-13: los pasos 2, 5 y 20 cumplen; los pasos 14 y 16 y el paso 24 quedan diferidos por decisión del propietario y no bloquean el cierre. La spec 004 queda cerrada; T047 sigue diferida.
