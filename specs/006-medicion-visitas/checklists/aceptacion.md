@@ -73,6 +73,20 @@ Celular Android del propietario con datos móviles, 2026-11-12, alrededor de las
 
 **T023 completa**: pasos 3 a 11, 13 y 14 cumplen.
 
-## T024 y T025
+## T024: LCP de producción después de publicar
+
+- **Fecha**: 2026-11-12, alrededor de las 11:55 p. m., desde la laptop de desarrollo, con el mismo comando que en T020. En las 3 corridas, Lighthouse cargó `estadisticas.cristobalia.com/script.js`.
+
+| Corrida | Antes (T020) | Después |
+|---|---|---|
+| 1 | 1.12 s | 1.25 s |
+| 2 | 1.30 s | 1.12 s |
+| 3 | 1.26 s | 1.17 s |
+| **Mediana** | **1.26 s** | **1.17 s** |
+
+- **Resultado**: la mediana de después es 0.09 s menor que la de antes, así que no supera el límite de +0.1 s (research 8). La diferencia es variación de la red; el script no retrasa el catálogo (FR-011, SC-006).
+- **Confirmación del propietario**: confirmada el 2026-11-13. Acepta la mediana de 1.17 s.
+
+## T025
 
 Pendiente.

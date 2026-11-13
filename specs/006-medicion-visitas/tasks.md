@@ -215,7 +215,7 @@ La prueba e2e se llama `us18-medicion-visitas.spec.ts`, después de `us17` de la
   - hacer merge a `main`, push y pulsar **Implementar** en Easypanel (FR-007: aviso y script en el mismo despliegue);
   - confirmar que `https://app.cristobalia.com` carga.
 - [X] T023 En producción, ejecutar desde un celular con datos móviles los pasos 3 a 11 de quickstart.md, más los pasos 13 (sin cookies) y 14 (sin columna de IP en `umami-db`). Registrar los resultados en specs/006-medicion-visitas/checklists/aceptacion.md (SC-001 a SC-005, SC-007 y FR-004). Si en el paso 4 la ciudad es la del servidor, anotarlo y revisar con el propietario que el proxy de Easypanel pase `X-Forwarded-For` al servicio `umami` (research 11)
-- [ ] T024 Medir 3 veces el LCP después de publicar (quickstart, paso 12) y registrar las cifras y la mediana. Criterio, el mismo de la spec 002: no más de 0.1 s sobre la mediana de T020, y el propietario confirma la cifra. Registrar su confirmación con la fecha (SC-006, FR-011, research 8)
+- [X] T024 Medir 3 veces el LCP después de publicar (quickstart, paso 12) y registrar las cifras y la mediana. Criterio, el mismo de la spec 002: no más de 0.1 s sobre la mediana de T020, y el propietario confirma la cifra. Registrar su confirmación con la fecha (SC-006, FR-011, research 8)
 - [ ] T025 Con el propietario, excluir sus dispositivos y los del vendedor siguiendo «Al terminar» de quickstart.md, y registrar cuáles quedaron excluidos en specs/006-medicion-visitas/checklists/aceptacion.md
 
 ---
