@@ -39,7 +39,9 @@ npx -y lighthouse@12.8.2 https://app.cristobalia.com/ --only-categories=performa
 | 9 | En la laptop, entra al panel y úsalo 5 minutos: productos, operaciones, «Promoción» | En el tablero no aparece ninguna página que empiece con `/admin` | US1-4, FR-002, SC-004 |
 | 10 | Consulta «Mis apartados» con tu teléfono. Luego busca ese teléfono en el tablero: páginas, eventos y datos de eventos | El teléfono no aparece en ningún lugar; solo la página `/mis-apartados` | FR-004, SC-005 |
 | 11 | En el navegador con bloqueador, abre el catálogo, un producto y toca el teléfono | Todo se ve y funciona igual; la llamada se abre. Esa visita puede no aparecer en el tablero | FR-005, «Bloqueadores» |
-| 12 | Mide otra vez la velocidad, 3 veces, con el comando de arriba y `--output-path=./lcp-despues.json` | La mediana del LCP no supera a la de antes en más de 0.1 s, ni pasa de 1.2 s | FR-011, SC-006 |
+| 12 | Mide otra vez la velocidad, 3 veces, con el comando de arriba y `--output-path=./lcp-despues.json` | La mediana del LCP no supera a la de antes en más de 0.1 s, y el propietario confirma la cifra, como en la spec 002 | FR-011, SC-006 |
+| 13 | En el celular o la laptop, abre el catálogo y revisa las cookies del sitio (en Chrome: candado de la barra → «Cookies y datos de sitios»; en la laptop, F12 → Application → Cookies) | `app.cristobalia.com` no tiene cookies, y `estadisticas.cristobalia.com` tampoco aparece con cookies | FR-004 (sin cookies) |
+| 14 | En Easypanel, abre `umami-db` y en su consola o en PgWeb revisa las columnas de las tablas `session` y `website_event` | Ninguna columna guarda la dirección IP; solo hay país, región, ciudad, dispositivo, navegador, idioma y pantalla | FR-004 (sin guardar IP) |
 
 ## Al terminar: no contar tus propias visitas
 

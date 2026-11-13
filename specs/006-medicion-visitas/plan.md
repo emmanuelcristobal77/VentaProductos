@@ -27,7 +27,7 @@ La spec agrega la medición anónima de visitas en la sección de cliente, con e
 
 **Project Type**: aplicación web de un solo proyecto
 
-**Performance Goals**: el script pesa 2.5 KB, carga con `async` después de hidratar y no debe mover el LCP de producción: no más de 0.1 s sobre la medición previa, ni más de 1.2 s ([research 8](research.md#8-velocidad-fr-011-y-sc-006))
+**Performance Goals**: el script pesa 2.5 KB, carga con `async` después de hidratar y no debe mover el LCP de producción: no más de 0.1 s sobre la medición previa, y el propietario confirma la cifra, como en la spec 002 ([research 8](research.md#8-velocidad-fr-011-y-sc-006))
 
 **Constraints**:
 - Sin cookies, sin guardar IP y sin datos personales en lo que se envía (FR-004).

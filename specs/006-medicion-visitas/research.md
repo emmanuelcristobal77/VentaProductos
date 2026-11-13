@@ -82,7 +82,7 @@ La spec no deja preguntas abiertas: la única pregunta se resolvió el 2026-11-1
   npx -y lighthouse@12.8.2 https://app.cristobalia.com/ --only-categories=performance --form-factor=mobile --throttling.rttMs=60 --throttling.throughputKbps=9000 --output=json --output-path=./lcp.json
   ```
 
-  Se toman 3 corridas y se usa la mediana. **Criterio:** el LCP después no supera al de antes en más de 0.1 s, ni pasa de 1.2 s.
+  Se toman 3 corridas y se usa la mediana. **Criterio** (decidido por el propietario el 2026-11-12, en el análisis): el mismo de la spec 002. La mediana después no supera a la de antes en más de 0.1 s, y **el propietario confirma la cifra** al registrarla, igual que aceptó 1.04 s en la spec 002. No hay un tope fijo de 1.2 s.
 - **Rationale**: SC-006 dice «1 segundo o menos, igual que antes». En la spec 002 el propietario aceptó 1.04 s como cumplimiento de esa misma meta. Medir antes y después aísla el efecto del script del ruido de la red.
 - **Alternatives considered**: medir solo después. No distingue el efecto del script de la variación normal entre días.
 
