@@ -93,6 +93,7 @@ Celular Android del propietario con datos móviles, 2026-11-12, alrededor de las
 - **Dispositivos excluidos (2)**:
   1. Una laptop.
   2. Un celular.
+- **Comprobación**: después de aplicar la exclusión, el propietario revisó el tablero de estadísticas y las visitas de esos dispositivos ya no aparecen.
 - Si se borran los datos del navegador, o si se usa otro navegador o un dispositivo nuevo, hay que repetir la exclusión.
 
 **T025 completa**.
